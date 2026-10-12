@@ -754,85 +754,64 @@ export const READING_PASSAGES: ReadingPassage[] = [
     paragraphs: [
       "Drawing has always been a very popular hobby. Young children draw with a pencil as (1) ______ as they can hold one. Drawing is often seen as a special skill, and it is (2) ______ that some people seem to draw perfect pictures without any effort. Yet drawing, like writing, can be (3) ______; you can draw accurately if you work really hard at it.",
       "Drawing is first (4) ______ all about looking carefully. It sounds easy to say that all you (5) ______ to do is look at things, but it really is that simple. The best way to draw a familiar (6) ______ is to imagine that you are looking at it for the first (7) ______.",
-      "Nowadays there are (8) ______ courses and materials available than ever before, (9) ______ means that you can experiment to improve your skills. The only (10) ______ is your imagination.",
+      "Nowadays there are (8) ______ courses and materials available than ever before, which means that you can experiment to improve your skills. The only limit is your imagination.",
     ],
     questions: [
       {
         id: "p3-q1",
         number: 1,
-        prompt: "Young children draw with a pencil as (1) ______ as they can hold one.",
+        prompt: "Blank (1)",
         options: ["fast", "immediately", "soon", "shortly"],
         correctAnswer: "soon",
       },
       {
         id: "p3-q2",
         number: 2,
-        prompt:
-          "Drawing is often seen as a special skill, and it is (2) ______ that some people seem to draw perfect pictures without any effort.",
+        prompt: "Blank (2)",
         options: ["true", "actual", "exact", "real"],
         correctAnswer: "true",
       },
       {
         id: "p3-q3",
         number: 3,
-        prompt:
-          "Yet drawing, like writing, can be (3) ______; you can draw accurately if you work really hard at it.",
+        prompt: "Blank (3)",
         options: ["discovered", "made", "learnt", "reached"],
         correctAnswer: "learnt",
       },
       {
         id: "p3-q4",
         number: 4,
-        prompt: "Drawing is first (4) ______ all about looking carefully.",
+        prompt: "Blank (4)",
         options: ["of", "in", "from", "for"],
         correctAnswer: "of",
       },
       {
         id: "p3-q5",
         number: 5,
-        prompt:
-          "It sounds easy to say that all you (5) ______ to do is look at things, but it really is that simple.",
+        prompt: "Blank (5)",
         options: ["should", "need", "must", "could"],
         correctAnswer: "need",
       },
       {
         id: "p3-q6",
         number: 6,
-        prompt:
-          "The best way to draw a familiar (6) ______ is to imagine that you are looking at it for the first time.",
+        prompt: "Blank (6)",
         options: ["topic", "subject", "area", "person"],
         correctAnswer: "subject",
       },
       {
         id: "p3-q7",
         number: 7,
-        prompt:
-          "The best way to draw a familiar subject is to imagine that you are looking at it for the first (7) ______.",
+        prompt: "Blank (7)",
         options: ["period", "term", "moment", "time"],
         correctAnswer: "time",
       },
       {
         id: "p3-q8",
         number: 8,
-        prompt:
-          "Nowadays there are (8) ______ courses and materials available than ever before...",
+        prompt: "Blank (8)",
         options: ["more", "many", "plenty", "much"],
         correctAnswer: "more",
-      },
-      {
-        id: "p3-q9",
-        number: 9,
-        prompt:
-          "...(9) ______ means that you can experiment to improve your skills.",
-        options: ["who", "what", "where", "which"],
-        correctAnswer: "which",
-      },
-      {
-        id: "p3-q10",
-        number: 10,
-        prompt: "The only (10) ______ is your imagination.",
-        options: ["final", "end", "limit", "finish"],
-        correctAnswer: "limit",
       },
     ],
   },

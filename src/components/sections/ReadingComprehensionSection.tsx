@@ -75,25 +75,28 @@ export function ReadingComprehensionSection({
 
   const preparedPassages = useMemo(() => {
     return READING_PASSAGES.map((passage, pIdx) => {
-      const shuffledQuestions = seededShuffle(
-        passage.questions,
-        seed + pIdx * 101
-      );
+      const shuffledQuestions =
+        passage.type === "cloze"
+          ? [...passage.questions].sort((a, b) => a.number - b.number)
+          : seededShuffle(passage.questions, seed + pIdx * 101);
       const optionsMap: Record<string, string[]> = {};
       const tfMap: Record<string, { statement: string; isTrue: boolean }> = {};
 
       shuffledQuestions.forEach((q, qIdx) => {
-        optionsMap[q.id] = seededShuffle(
-          q.options,
-          seed + pIdx * 37 + qIdx * 13
-        );
+        optionsMap[q.id] =
+          passage.type === "cloze"
+            ? q.options
+            : seededShuffle(q.options, seed + pIdx * 37 + qIdx * 13);
         const isTrue = (seed + pIdx + qIdx) % 2 === 0;
         const wrongOpts = q.options.filter((o) => o !== q.correctAnswer);
         const chosen = isTrue
           ? q.correctAnswer
           : seededShuffle(wrongOpts, seed + qIdx * 19)[0] ?? q.correctAnswer;
         tfMap[q.id] = {
-          statement: `${q.prompt} → "${chosen}"`,
+          statement:
+            passage.type === "cloze"
+              ? `Blank (${q.number}) → "${chosen}"`
+              : `${q.prompt} → "${chosen}"`,
           isTrue,
         };
       });
@@ -223,6 +226,77 @@ export function ReadingComprehensionSection({
     setSeed(Math.floor(Math.random() * 100000) + 1);
   };
 
+  const OPTION_LETTERS = ["A", "B", "C", "D"];
+
+  const renderClozeParagraph = (
+    para: string,
+    questionsByNumber: Record<number, MultipleChoiceItem>
+  ) => {
+    const parts = para.split(/(\(\d+\)\s*_{3,})/g);
+    return parts.map((part, idx) => {
+      const match = part.match(/^\((\d+)\)\s*_{3,}$/);
+      if (!match) {
+        return <React.Fragment key={idx}>{part}</React.Fragment>;
+      }
+      const num = parseInt(match[1], 10);
+      const q = questionsByNumber[num];
+      if (!q) {
+        return <React.Fragment key={idx}>{part}</React.Fragment>;
+      }
+      const qIdx = num - 1;
+      const fmt = getQuestionFormat("cloze", qIdx);
+      const isSubmitted = Boolean(submittedIds[q.id]);
+      const chosenText =
+        fmt === "fill-in-the-blank"
+          ? (fillInputs[q.id] || "").trim()
+          : mcSelections[q.id] || "";
+      const isCorrect =
+        isSubmitted &&
+        (fmt === "fill-in-the-blank"
+          ? isFillBlankCorrect(chosenText, q.correctAnswer)
+          : fmt === "true-false"
+          ? false
+          : chosenText === q.correctAnswer);
+
+      if (!isSubmitted) {
+        return (
+          <span
+            key={idx}
+            className={`mx-1 inline-flex items-baseline gap-1 rounded-md border px-2 py-0.5 font-mono text-xs font-bold transition-all ${
+              chosenText
+                ? "border-[#6e3556] bg-[#6e3556] text-white dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                : "border-[#dfc2d2] bg-white/90 text-[#4f243d] dark:border-[#52243e] dark:bg-stone-900 dark:text-[#e6b8d2]"
+            }`}
+          >
+            <span>({num})</span>
+            <span>{chosenText || "______"}</span>
+          </span>
+        );
+      }
+
+      return (
+        <span
+          key={idx}
+          className={`mx-1 inline-flex items-baseline gap-1 rounded-md border px-2 py-0.5 font-mono text-xs font-bold ${
+            isCorrect
+              ? "border-emerald-600 bg-emerald-50 text-emerald-900 dark:border-emerald-500/70 dark:bg-emerald-950/60 dark:text-emerald-200"
+              : "border-rose-500 bg-rose-50 text-rose-900 dark:border-rose-500/70 dark:bg-rose-950/60 dark:text-rose-200"
+          }`}
+        >
+          <span>({num})</span>
+          <span className={isCorrect ? "" : "line-through"}>
+            {chosenText || "—"}
+          </span>
+          {!isCorrect && (
+            <span className="ml-0.5 font-bold text-emerald-700 dark:text-emerald-300">
+              [{q.correctAnswer}]
+            </span>
+          )}
+        </span>
+      );
+    });
+  };
+
   return (
     <section className="space-y-6">
       <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#1f5c44] dark:border-l-[#43a07a]">
@@ -231,7 +305,7 @@ export function ReadingComprehensionSection({
             <div>
               <span className="inline-flex items-center gap-2 rounded-md border border-[#b8decb] bg-[#ebf5f0] px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase text-[#143d2d] dark:border-[#1c4d39] dark:bg-[#11281f] dark:text-[#6fd4aa]">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#1f5c44] dark:bg-[#43a07a]" />
-                Sec 05 • Passages 1, 2 & 3 (20 Questions)
+                Sec 05 • Passages 1, 2 & 3 ({scoreSummary.total} Questions)
               </span>
               <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
                 5. Reading Comprehension
@@ -239,7 +313,8 @@ export function ReadingComprehensionSection({
               <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
                 Includes Passage 1 (Our School Newspaper), Passage 2
                 (Whale-Watching Trip), and Passage 3 (The Art of Drawing — Cloze
-                Test). Submit each question individually for immediate feedback.
+                Test 1→8). Submit each question individually for immediate
+                feedback.
               </p>
             </div>
 
@@ -356,114 +431,389 @@ export function ReadingComprehensionSection({
           {preparedPassages.map((passage, pIdx) => {
             const palette =
               PASSAGE_PALETTES[pIdx % PASSAGE_PALETTES.length];
+            const questionsByNumber: Record<number, MultipleChoiceItem> = {};
+            passage.shuffledQuestions.forEach((q) => {
+              questionsByNumber[q.number] = q;
+            });
+            const allClozeSubmitted =
+              passage.type === "cloze" &&
+              passage.shuffledQuestions.every((q) => submittedIds[q.id]);
+
             return (
               <div
                 key={passage.id}
                 className={`studio-card overflow-hidden rounded-2xl border ${palette.topBorder}`}
               >
                 <div className={`border-b px-6 py-4 ${palette.headerBand}`}>
-                  <span
-                    className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase ${palette.badge}`}
-                  >
-                    <span className={`h-1.5 w-1.5 rounded-full ${palette.dot}`} />
-                    {passage.type === "cloze"
-                      ? `Passage ${pIdx + 1} • Cloze Reading Test`
-                      : `Passage ${pIdx + 1} • Reading Comprehension`}
-                  </span>
-                  <h3 className="font-display mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
-                    {passage.title}
-                  </h3>
-                  {passage.subtitle && (
-                    <p className="mt-0.5 text-xs text-stone-600 dark:text-stone-400">
-                      {passage.subtitle}
-                    </p>
-                  )}
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase ${palette.badge}`}
+                      >
+                        <span
+                          className={`h-1.5 w-1.5 rounded-full ${palette.dot}`}
+                        />
+                        {passage.type === "cloze"
+                          ? `Passage ${pIdx + 1} • Cloze Test (1 → ${passage.shuffledQuestions.length})`
+                          : `Passage ${pIdx + 1} • Reading Comprehension`}
+                      </span>
+                      <h3 className="font-display mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
+                        {passage.title}
+                      </h3>
+                      {passage.subtitle && (
+                        <p className="mt-0.5 text-xs text-stone-600 dark:text-stone-400">
+                          {passage.subtitle}
+                        </p>
+                      )}
+                    </div>
+
+                    {passage.type === "cloze" && (
+                      <div className="flex items-center gap-2">
+                        {allClozeSubmitted ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSubmittedIds((prev) => {
+                                const next = { ...prev };
+                                passage.shuffledQuestions.forEach((q) => {
+                                  delete next[q.id];
+                                });
+                                return next;
+                              });
+                            }}
+                            className="rounded-xl border border-stone-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#6e3556] hover:text-[#4f243d] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                          >
+                            Retry All (1→{passage.shuffledQuestions.length})
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSubmittedIds((prev) => {
+                                const next = { ...prev };
+                                passage.shuffledQuestions.forEach((q) => {
+                                  next[q.id] = true;
+                                });
+                                return next;
+                              });
+                            }}
+                            className="rounded-xl border border-[#6e3556] bg-[#6e3556] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#532640] dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                          >
+                            Submit All (1→{passage.shuffledQuestions.length})
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="space-y-5 p-6">
+                <div className="space-y-4 p-6">
                   {/* Passage Text */}
                   <div
                     className={`space-y-3.5 rounded-xl border p-5 text-[15.5px] leading-relaxed text-stone-800 dark:text-stone-200 ${palette.passageBox}`}
                   >
                     {passage.paragraphs.map((para, paraIdx) => (
-                      <p key={paraIdx}>{para}</p>
+                      <p key={paraIdx} className="leading-8">
+                        {passage.type === "cloze"
+                          ? renderClozeParagraph(para, questionsByNumber)
+                          : para}
+                      </p>
                     ))}
                   </div>
 
-                  {/* Passage Questions */}
-                  <div className="space-y-4 pt-1">
-                    {passage.shuffledQuestions.map((q, qIdx) => {
-                      const fmt = getQuestionFormat(passage.type, qIdx);
-                      const indexLabel = `${passage.title.split(":")[0]} • Item ${
-                        qIdx + 1
-                      } of ${passage.shuffledQuestions.length} (Original #${
-                        q.number
-                      })`;
-                      const isItemSubmitted = Boolean(submittedIds[q.id]);
+                  {/* Compact Cloze Questions (1 -> 8) without repeating sentence prompts */}
+                  {passage.type === "cloze" && activeMode !== "true-false" ? (
+                    <div className="studio-subcard divide-y divide-stone-200/80 overflow-hidden rounded-xl border dark:divide-stone-800">
+                      {passage.shuffledQuestions.map((q, qIdx) => {
+                        const fmt = getQuestionFormat(passage.type, qIdx);
+                        const opts = passage.optionsMap[q.id] || q.options;
+                        const isItemSubmitted = Boolean(submittedIds[q.id]);
 
-                      if (fmt === "fill-in-the-blank") {
+                        if (fmt === "fill-in-the-blank") {
+                          const userVal = fillInputs[q.id] || "";
+                          const isCorrect =
+                            isItemSubmitted &&
+                            isFillBlankCorrect(userVal, q.correctAnswer);
+
+                          return (
+                            <div
+                              key={q.id}
+                              className="flex flex-col gap-2.5 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between"
+                            >
+                              <div className="flex flex-wrap items-center gap-2.5">
+                                <span className="inline-flex h-7 w-9 shrink-0 items-center justify-center rounded-lg border border-[#dfc2d2] bg-[#f7eff3] font-mono text-xs font-bold text-[#4f243d] dark:border-[#52243e] dark:bg-[#2a1521] dark:text-[#e6b8d2]">
+                                  ({q.number})
+                                </span>
+                                <input
+                                  type="text"
+                                  disabled={isItemSubmitted}
+                                  value={userVal}
+                                  onChange={(e) =>
+                                    setFillInputs((prev) => ({
+                                      ...prev,
+                                      [q.id]: e.target.value,
+                                    }))
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (
+                                      e.key === "Enter" &&
+                                      !isItemSubmitted &&
+                                      userVal.trim()
+                                    ) {
+                                      e.preventDefault();
+                                      handleSubmitOne(q.id);
+                                    }
+                                  }}
+                                  placeholder={`Type word for (${q.number})...`}
+                                  className={`w-36 rounded-lg border px-2.5 py-1 text-xs font-medium focus:outline-none ${
+                                    !isItemSubmitted
+                                      ? "border-stone-300 bg-white text-stone-900 focus:border-[#6e3556] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
+                                      : isCorrect
+                                      ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-900 dark:border-emerald-500/70 dark:bg-emerald-950/50 dark:text-emerald-200"
+                                      : "border-rose-500 bg-rose-50 text-rose-900 line-through dark:border-rose-500/70 dark:bg-rose-950/50 dark:text-rose-200"
+                                  }`}
+                                />
+                                <div className="flex flex-wrap items-center gap-1">
+                                  {opts.map((opt) => (
+                                    <button
+                                      key={opt}
+                                      type="button"
+                                      disabled={isItemSubmitted}
+                                      onClick={() =>
+                                        setFillInputs((prev) => ({
+                                          ...prev,
+                                          [q.id]: opt,
+                                        }))
+                                      }
+                                      className={`rounded-md border px-2 py-0.5 text-xs transition-all ${
+                                        userVal.trim().toLowerCase() ===
+                                        opt.toLowerCase()
+                                          ? "border-[#6e3556] bg-[#6e3556] font-semibold text-white dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                                          : "border-stone-200 bg-white/80 text-stone-600 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                      }`}
+                                    >
+                                      {opt}
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+
+                              <div className="flex shrink-0 items-center gap-2 self-end sm:self-center">
+                                {isItemSubmitted && !isCorrect && (
+                                  <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                                    Ans: {q.correctAnswer}
+                                  </span>
+                                )}
+                                {isItemSubmitted ? (
+                                  <button
+                                    type="button"
+                                    onClick={() => handleResetOne(q.id)}
+                                    className="rounded-lg border border-stone-300 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700 hover:border-stone-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                  >
+                                    Retry
+                                  </button>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    disabled={!userVal.trim()}
+                                    onClick={() => handleSubmitOne(q.id)}
+                                    className="rounded-lg border border-[#6e3556] bg-[#6e3556] px-2.5 py-1 text-xs font-semibold text-white disabled:opacity-40 dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                                  >
+                                    Check
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        // Compact Multiple Choice Row (1 -> 8)
+                        const selectedOpt = mcSelections[q.id];
+                        const isCorrect =
+                          isItemSubmitted && selectedOpt === q.correctAnswer;
+
                         return (
-                          <FillInTheBlankQuestion
+                          <div
                             key={q.id}
-                            indexLabel={indexLabel}
-                            headerBadge="Fill in the Blank"
-                            prompt={q.prompt}
-                            userAnswer={fillInputs[q.id] || ""}
-                            correctAnswer={q.correctAnswer}
-                            wordBank={passage.optionsMap[q.id] || q.options}
-                            submitted={isItemSubmitted}
-                            onChange={(val) =>
-                              setFillInputs((prev) => ({ ...prev, [q.id]: val }))
-                            }
-                            onSubmit={() => handleSubmitOne(q.id)}
-                            onReset={() => handleResetOne(q.id)}
-                          />
+                            className="flex flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center"
+                          >
+                            <span className="inline-flex h-7 w-9 shrink-0 items-center justify-center rounded-lg border border-[#dfc2d2] bg-[#f7eff3] font-mono text-xs font-bold text-[#4f243d] dark:border-[#52243e] dark:bg-[#2a1521] dark:text-[#e6b8d2]">
+                              {q.number}.
+                            </span>
+
+                            <div className="grid flex-1 grid-cols-2 gap-1.5 sm:grid-cols-4">
+                              {opts.map((opt, optIdx) => {
+                                const letter =
+                                  OPTION_LETTERS[optIdx] || String(optIdx + 1);
+                                const isSelected = selectedOpt === opt;
+                                const isRightOpt = opt === q.correctAnswer;
+
+                                let btnClass =
+                                  "border-stone-200/90 bg-white/90 text-stone-800 hover:border-[#6e3556]/60 hover:bg-[#f7eff3]/50 dark:border-stone-800 dark:bg-stone-900/80 dark:text-stone-200 dark:hover:border-[#c97da8]/60";
+
+                                if (!isItemSubmitted && isSelected) {
+                                  btnClass =
+                                    "border-[#6e3556] bg-[#6e3556] text-white shadow-2xs dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950";
+                                } else if (isItemSubmitted) {
+                                  if (isRightOpt) {
+                                    btnClass =
+                                      "border-emerald-600 bg-emerald-50/95 font-bold text-emerald-950 dark:border-emerald-500/80 dark:bg-emerald-950/60 dark:text-emerald-100";
+                                  } else if (isSelected && !isRightOpt) {
+                                    btnClass =
+                                      "border-rose-500 bg-rose-50/90 text-rose-950 line-through dark:border-rose-500/80 dark:bg-rose-950/50 dark:text-rose-200";
+                                  } else {
+                                    btnClass =
+                                      "border-stone-200/60 bg-stone-100/50 text-stone-400 opacity-65 dark:border-stone-800/60 dark:bg-stone-900/40 dark:text-stone-500";
+                                  }
+                                }
+
+                                return (
+                                  <button
+                                    key={opt}
+                                    type="button"
+                                    disabled={isItemSubmitted}
+                                    onClick={() =>
+                                      setMcSelections((prev) => ({
+                                        ...prev,
+                                        [q.id]: opt,
+                                      }))
+                                    }
+                                    className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left text-xs font-medium transition-all ${btnClass}`}
+                                  >
+                                    <span
+                                      className={`font-mono text-[11px] font-bold ${
+                                        !isItemSubmitted && isSelected
+                                          ? "text-white/90 dark:text-stone-950"
+                                          : isItemSubmitted && isRightOpt
+                                          ? "text-emerald-700 dark:text-emerald-300"
+                                          : "text-stone-400 dark:text-stone-500"
+                                      }`}
+                                    >
+                                      {letter}.
+                                    </span>
+                                    <span className="truncate">{opt}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            <div className="flex shrink-0 items-center justify-end gap-1.5 sm:w-24">
+                              {isItemSubmitted ? (
+                                <>
+                                  <span
+                                    className={`font-mono text-xs font-bold ${
+                                      isCorrect
+                                        ? "text-emerald-700 dark:text-emerald-400"
+                                        : "text-rose-600 dark:text-rose-400"
+                                    }`}
+                                  >
+                                    {isCorrect ? "✓" : "✗"}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleResetOne(q.id)}
+                                    className="rounded-lg border border-stone-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-stone-700 transition-all hover:border-stone-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                  >
+                                    Retry
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  disabled={!selectedOpt}
+                                  onClick={() => handleSubmitOne(q.id)}
+                                  className="rounded-lg border border-[#6e3556] bg-[#6e3556] px-2.5 py-1 text-[11px] font-semibold text-white transition-all hover:bg-[#532640] disabled:cursor-not-allowed disabled:opacity-35 dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                                >
+                                  Check
+                                </button>
+                              )}
+                            </div>
+                          </div>
                         );
-                      }
+                      })}
+                    </div>
+                  ) : (
+                    /* Standard Passage Comprehension Questions */
+                    <div className="space-y-4 pt-1">
+                      {passage.shuffledQuestions.map((q, qIdx) => {
+                        const fmt = getQuestionFormat(passage.type, qIdx);
+                        const indexLabel = `${
+                          passage.title.split(":")[0]
+                        } • Item ${qIdx + 1} of ${
+                          passage.shuffledQuestions.length
+                        } (Original #${q.number})`;
+                        const isItemSubmitted = Boolean(submittedIds[q.id]);
 
-                      if (fmt === "true-false") {
-                        const tf = passage.tfMap[q.id];
+                        if (fmt === "fill-in-the-blank") {
+                          return (
+                            <FillInTheBlankQuestion
+                              key={q.id}
+                              indexLabel={indexLabel}
+                              headerBadge="Fill in the Blank"
+                              prompt={q.prompt}
+                              userAnswer={fillInputs[q.id] || ""}
+                              correctAnswer={q.correctAnswer}
+                              wordBank={passage.optionsMap[q.id] || q.options}
+                              submitted={isItemSubmitted}
+                              onChange={(val) =>
+                                setFillInputs((prev) => ({
+                                  ...prev,
+                                  [q.id]: val,
+                                }))
+                              }
+                              onSubmit={() => handleSubmitOne(q.id)}
+                              onReset={() => handleResetOne(q.id)}
+                            />
+                          );
+                        }
+
+                        if (fmt === "true-false") {
+                          const tf = passage.tfMap[q.id];
+                          return (
+                            <TrueFalseQuestion
+                              key={q.id}
+                              indexLabel={indexLabel}
+                              headerBadge="True / False"
+                              statement={tf.statement}
+                              selectedValue={tfSelections[q.id]}
+                              correctAnswer={tf.isTrue}
+                              submitted={isItemSubmitted}
+                              evidence={`Correct answer: "${q.correctAnswer}"`}
+                              onSelect={(val) =>
+                                setTfSelections((prev) => ({
+                                  ...prev,
+                                  [q.id]: val,
+                                }))
+                              }
+                              onSubmit={() => handleSubmitOne(q.id)}
+                              onReset={() => handleResetOne(q.id)}
+                            />
+                          );
+                        }
+
                         return (
-                          <TrueFalseQuestion
+                          <MultipleChoiceQuestion
                             key={q.id}
                             indexLabel={indexLabel}
-                            headerBadge="True / False"
-                            statement={tf.statement}
-                            selectedValue={tfSelections[q.id]}
-                            correctAnswer={tf.isTrue}
+                            headerBadge="Multiple Choice"
+                            prompt={q.prompt}
+                            options={passage.optionsMap[q.id] || q.options}
+                            selectedOption={mcSelections[q.id]}
+                            correctAnswer={q.correctAnswer}
                             submitted={isItemSubmitted}
-                            evidence={`Correct answer: "${q.correctAnswer}"`}
-                            onSelect={(val) =>
-                              setTfSelections((prev) => ({
+                            onSelect={(opt) =>
+                              setMcSelections((prev) => ({
                                 ...prev,
-                                [q.id]: val,
+                                [q.id]: opt,
                               }))
                             }
                             onSubmit={() => handleSubmitOne(q.id)}
                             onReset={() => handleResetOne(q.id)}
                           />
                         );
-                      }
-
-                      return (
-                        <MultipleChoiceQuestion
-                          key={q.id}
-                          indexLabel={indexLabel}
-                          headerBadge="Multiple Choice"
-                          prompt={q.prompt}
-                          options={passage.optionsMap[q.id] || q.options}
-                          selectedOption={mcSelections[q.id]}
-                          correctAnswer={q.correctAnswer}
-                          submitted={isItemSubmitted}
-                          onSelect={(opt) =>
-                            setMcSelections((prev) => ({ ...prev, [q.id]: opt }))
-                          }
-                          onSubmit={() => handleSubmitOne(q.id)}
-                          onReset={() => handleResetOne(q.id)}
-                        />
-                      );
-                    })}
-                  </div>
+                      })}
+                    </div>
+                  )}
                 </div>
               </div>
             );
@@ -475,7 +825,7 @@ export function ReadingComprehensionSection({
         <div className="studio-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-4">
           <span className="text-xs text-stone-500 dark:text-stone-400">
             {allSubmitted
-              ? "All 20 reading questions have been submitted. Click Try Again on any question or Reset & Randomize."
+              ? `All ${scoreSummary.total} reading questions have been submitted. Click Retry on any question or Reset & Randomize.`
               : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} reading questions. Submit each question individually or submit all remaining.`}
           </span>
           <div className="flex items-center gap-3">
