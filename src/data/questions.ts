@@ -209,9 +209,9 @@ export const SPEAKING_TOPICS: SpeakingTopic[] = [
     id: "speaking-33",
     topicNumber: 33,
     title: "Topic 33: Describe a park you like visiting",
-    highlightedTerm: "Thống Nhất Park",
+    highlightedTerm: "Tao Đàn Park",
     modelAnswer:
-      "I would like to talk about Thống Nhất Park, the park I like most. It is in the center of Hanoi, about ten minutes from my house. I often visit it on weekends, and I went there last Sunday morning. The park is very big and green. There are tall old trees, a large lake, and many flower gardens. It also has a children’s playground and some benches. I like it because the air is fresh and quiet. It helps me relax after a busy week. I also enjoy walking around the lake and taking photos.",
+      "I would like to talk about Tao Đàn Park, the park I like most. It is in the center of Ho Chi Minh City, about ten minutes from my house. I often visit it on weekends, and I went there last Sunday morning. The park is very big and green. There are tall old trees, nice walking paths, and many flower gardens. It also has a children’s playground and some benches. I like it because the air is fresh and quiet. It helps me relax after a busy week. I also enjoy walking around the park and taking photos.",
     followUpQuestions: [
       "Do you often go to parks?",
       "What do people usually do in a park?",
@@ -227,7 +227,7 @@ export const SPEAKING_TOPICS: SpeakingTopic[] = [
     title: "Topic 35: Describe a time when you spent a lot of money on something",
     highlightedTerm: "MacBook Air M2",
     modelAnswer:
-      "I would like to talk about the time I spent a lot of money on something. Last year, I bought a MacBook Air M2 for my study. I bought it in August, before my new school year started. I got it from the Apple store in Vincom Center. It cost me about twenty-five million dong, which was a lot for me. I spent so much money because my old laptop was very slow and often broke down. I really needed a good one for my online classes and homework.",
+      "I would like to talk about the time I spent a lot of money on something. Last year, I bought a MacBook Air M2 for my study. I bought it in August, before my new school year started. I got it from the Apple store in Vincom Center in Ho Chi Minh City. It cost me about twenty-five million dong, which was a lot for me. I spent so much money because my old laptop was very slow and often broke down. I really needed a good one for my online classes and homework.",
     followUpQuestions: [
       "Do you often spend a lot of money on things?",
       "Do you like shopping? Why or why not?",
@@ -241,9 +241,9 @@ export const SPEAKING_TOPICS: SpeakingTopic[] = [
     id: "speaking-36",
     topicNumber: 36,
     title: "Topic 36: Describe a school you went to in your childhood",
-    highlightedTerm: "Lê Lợi Primary School",
+    highlightedTerm: "Nguyễn Bỉnh Khiêm Primary School",
     modelAnswer:
-      "I would like to talk about Lê Lợi Primary School, the school I went to when I was a child. It was in my old neighborhood, about five minutes from my house. The school was not very big, but it was clean and friendly. There were small classrooms, a green yard, and many old trees. I learned math, Vietnamese, English, and drawing. My teachers were kind and helped me a lot. I felt very happy there because I had many good friends. I still remember it as a wonderful place.",
+      "I would like to talk about Nguyễn Bỉnh Khiêm Primary School, the school I went to when I was a child. It was in my old neighborhood in Ho Chi Minh City, about five minutes from my house. The school was not very big, but it was clean and friendly. There were small classrooms, a big yard, and many green trees. I learned math, Vietnamese, English, and drawing. My teachers were kind and helped me a lot. I felt very happy there because I had many good friends. I still remember it as a wonderful place.",
     followUpQuestions: [
       "Do you remember your first teacher?",
       "What subjects did you like most at school?",
