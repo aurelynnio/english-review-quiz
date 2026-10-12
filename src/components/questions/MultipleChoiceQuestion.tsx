@@ -4,6 +4,7 @@ import React from "react";
 import {
   getBadgeClasses,
   getDotClasses,
+  getHeaderBandClasses,
   getSubmitButtonClasses,
   getTopBorderClasses,
 } from "@/utils/themeColors";
@@ -43,48 +44,49 @@ export function MultipleChoiceQuestion({
   const isUnanswered = submitted && !selectedOption;
   const badgeLabel = headerBadge || "Multiple Choice";
   const topBorder = getTopBorderClasses(badgeLabel);
+  const headerBand = getHeaderBandClasses(badgeLabel);
   const dotColor = getDotClasses(badgeLabel);
   const badgeColor = getBadgeClasses(badgeLabel);
   const submitBtnClass = getSubmitButtonClasses(badgeLabel);
 
   return (
-    <div
-      className={`rounded-2xl border border-t-2 border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900 ${topBorder}`}
-    >
-      <div className="mb-3.5 flex items-center justify-between gap-2 border-b border-neutral-100 pb-3 dark:border-neutral-800/80">
-        <span className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+    <div className={`overflow-hidden rounded-2xl border p-6 ${topBorder}`}>
+      <div
+        className={`-mx-6 -mt-6 mb-5 flex flex-wrap items-center justify-between gap-2 border-b px-6 py-3.5 ${headerBand}`}
+      >
+        <span className="inline-flex items-center gap-2 font-mono text-xs font-semibold text-stone-700 dark:text-stone-300">
           <span className={`h-2 w-2 rounded-full ${dotColor}`} />
           {indexLabel}
         </span>
         <div className="flex items-center gap-2">
           {headerBadge && (
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${badgeColor}`}
+              className={`rounded-md border px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider ${badgeColor}`}
             >
               {headerBadge}
             </span>
           )}
           {submitted && (
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${
+              className={`rounded-md border px-2.5 py-0.5 font-mono text-[11px] font-semibold ${
                 isCorrect
-                  ? "border-green-300 bg-green-50 text-green-800 dark:border-green-700/80 dark:bg-green-950/60 dark:text-green-300"
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-700/80 dark:bg-emerald-950/60 dark:text-emerald-300"
                   : "border-red-300 bg-red-50 text-red-800 dark:border-red-700/80 dark:bg-red-950/60 dark:text-red-300"
               }`}
             >
               {isCorrect
-                ? "Correct"
+                ? "✓ Correct"
                 : isUnanswered
                 ? "Unanswered"
-                : "Incorrect"}
+                : "✕ Incorrect"}
             </span>
           )}
         </div>
       </div>
 
-      {preContent && <div className="mb-4">{preContent}</div>}
+      {preContent && <div className="mb-5">{preContent}</div>}
 
-      <p className="mb-5 text-[15px] font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
+      <p className="mb-5 text-[15px] font-medium leading-relaxed text-stone-900 dark:text-stone-100">
         {prompt}
       </p>
 
@@ -94,21 +96,21 @@ export function MultipleChoiceQuestion({
           const isThisCorrect = option === correctAnswer;
 
           let buttonStyle =
-            "border-neutral-200/90 bg-neutral-50/40 text-neutral-800 hover:border-sky-300 hover:bg-sky-50/40 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-200 dark:hover:border-sky-700/70 dark:hover:bg-sky-950/30";
+            "studio-subcard text-stone-800 hover:border-[#1f5c44]/60 hover:bg-[#e6f2ec]/50 dark:text-stone-200 dark:hover:border-[#52b788]/60 dark:hover:bg-[#12291f]/40";
 
           if (!submitted && isSelected) {
             buttonStyle =
-              "border-sky-500 bg-sky-50/90 text-sky-950 font-semibold shadow-2xs dark:border-sky-500/90 dark:bg-sky-950/60 dark:text-sky-100";
+              "border-[#1f5c44] bg-[#e6f2ec] text-[#113828] font-semibold shadow-2xs dark:border-[#52b788] dark:bg-[#163628] dark:text-[#b8f2d6]";
           } else if (submitted) {
             if (isThisCorrect) {
               buttonStyle =
-                "border-green-400 bg-green-50/80 text-green-900 font-medium dark:border-green-700 dark:bg-green-950/40 dark:text-green-200";
+                "border-emerald-500 bg-emerald-50/90 text-emerald-950 font-semibold dark:border-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-200";
             } else if (isSelected && !isThisCorrect) {
               buttonStyle =
                 "border-red-400 bg-red-50/80 text-red-900 line-through dark:border-red-700 dark:bg-red-950/40 dark:text-red-200";
             } else {
               buttonStyle =
-                "border-neutral-200/60 bg-neutral-50/50 text-neutral-400 dark:border-neutral-800/60 dark:bg-neutral-900/40 dark:text-neutral-600";
+                "border-stone-200/60 bg-stone-100/40 text-stone-400 dark:border-stone-800/60 dark:bg-stone-900/30 dark:text-stone-600";
             }
           }
 
@@ -123,14 +125,14 @@ export function MultipleChoiceQuestion({
               }`}
             >
               <span
-                className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ${
+                className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border font-mono text-xs font-bold ${
                   !submitted && isSelected
-                    ? "border-sky-600 bg-sky-600 text-white dark:border-sky-400 dark:bg-sky-500 dark:text-neutral-950"
+                    ? "border-[#1f5c44] bg-[#1f5c44] text-white dark:border-[#52b788] dark:bg-[#52b788] dark:text-stone-950"
                     : submitted && isThisCorrect
-                    ? "border-green-500 bg-green-100/70 text-green-800 dark:border-green-600 dark:bg-green-900/40 dark:text-green-300"
+                    ? "border-emerald-600 bg-emerald-600 text-white dark:border-emerald-500 dark:bg-emerald-500 dark:text-stone-950"
                     : submitted && isSelected && !isThisCorrect
-                    ? "border-red-500 bg-red-100/70 text-red-800 dark:border-red-600 dark:bg-red-900/40 dark:text-red-300"
-                    : "border-sky-200 bg-sky-50/80 text-sky-700 dark:border-sky-800/80 dark:bg-sky-950/60 dark:text-sky-300"
+                    ? "border-red-500 bg-red-100 text-red-800 dark:border-red-600 dark:bg-red-900/50 dark:text-red-200"
+                    : "border-stone-300 bg-white/90 text-stone-700 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
                 }`}
               >
                 {OPTION_LETTERS[idx] ?? idx + 1}
@@ -142,36 +144,36 @@ export function MultipleChoiceQuestion({
       </div>
 
       {!submitted && onSubmit && (
-        <div className="mt-4 flex items-center justify-between gap-3 border-t border-neutral-100 pt-3.5 dark:border-neutral-800/80">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="mt-5 flex items-center justify-between gap-3 border-t border-stone-200/70 pt-4 dark:border-stone-800/80">
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {selectedOption
-              ? "Option selected — click Submit to check your answer."
-              : "Select an option above, then click Submit."}
+              ? "Option selected — click Submit Answer to check."
+              : "Select an option above, then click Submit Answer."}
           </span>
           <button
             type="button"
             onClick={onSubmit}
             className={`rounded-xl border px-4 py-1.5 text-xs font-semibold shadow-2xs transition-all ${submitBtnClass}`}
           >
-            Submit Answer
+            Submit Answer →
           </button>
         </div>
       )}
 
       {submitted && (
-        <div className="mt-4 flex flex-wrap items-start justify-between gap-3 border-t border-neutral-100 pt-3.5 text-xs text-neutral-700 dark:border-neutral-800/80 dark:text-neutral-300">
+        <div className="mt-5 flex flex-wrap items-start justify-between gap-3 border-t border-stone-200/70 pt-4 text-xs text-stone-700 dark:border-stone-800/80 dark:text-stone-300">
           <div className="space-y-1">
             <div>
-              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+              <span className="font-semibold text-stone-900 dark:text-stone-100">
                 Correct Answer:{" "}
               </span>
-              <span className="font-medium text-green-700 dark:text-green-400">
+              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
                 {correctAnswer}
               </span>
             </div>
             {note && (
-              <div className="text-neutral-600 dark:text-neutral-400">
-                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+              <div className="text-stone-600 dark:text-stone-400">
+                <span className="font-semibold text-stone-800 dark:text-stone-200">
                   Note:{" "}
                 </span>
                 {note}
@@ -182,7 +184,7 @@ export function MultipleChoiceQuestion({
             <button
               type="button"
               onClick={onReset}
-              className="shrink-0 rounded-xl border border-neutral-200/90 bg-neutral-50/80 px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:border-neutral-400 hover:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:bg-neutral-800"
+              className="studio-subcard shrink-0 rounded-xl border px-3.5 py-1.5 text-xs font-semibold text-stone-700 transition-all hover:border-stone-400 dark:text-stone-200 dark:hover:border-stone-600"
             >
               Try Again
             </button>

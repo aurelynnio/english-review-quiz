@@ -1,6 +1,18 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import {
+  Fraunces,
+  Plus_Jakarta_Sans,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
+
+const fraunces = Fraunces({
+  subsets: ["latin", "vietnamese"],
+  weight: ["500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin", "vietnamese"],
@@ -11,13 +23,13 @@ const jakarta = Plus_Jakarta_Sans({
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin", "vietnamese"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   variable: "--font-jetbrains-mono",
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "English Review — Writing, Speaking, Grammar, Reading & Listening",
+  title: "English Review Atelier — Writing, Speaking, Grammar, Reading & Listening",
   description:
     "Tổng hợp Ôn tập Tiếng Anh: Writing • Speaking • Grammar • Reading • Listening",
 };
@@ -32,6 +44,8 @@ const themeInitScript = `
     } else {
       document.documentElement.classList.remove('dark');
     }
+    var style = localStorage.getItem('english_review_style') || 'atelier';
+    document.documentElement.setAttribute('data-style', style);
   } catch (e) {}
 })();
 `;
@@ -45,12 +59,13 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${jakarta.variable} ${jetbrainsMono.variable}`}
+      data-style="atelier"
+      className={`${fraunces.variable} ${jakarta.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="min-h-screen bg-[#f8f8f7] font-sans text-neutral-800 antialiased selection:bg-neutral-800 selection:text-white dark:bg-[#0e0e10] dark:text-neutral-100 dark:selection:bg-neutral-200 dark:selection:text-neutral-900">
+      <body className="min-h-screen font-sans antialiased">
         {children}
       </body>
     </html>

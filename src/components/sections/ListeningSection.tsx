@@ -18,44 +18,54 @@ type ListeningMode = "standard" | "type-all-gaps" | "flashcard";
 
 const LISTENING_PALETTES = [
   {
-    topBorder: "border-t-4 border-t-violet-500 dark:border-t-violet-400",
+    topBorder: "border-l-4 border-l-[#6e3556] dark:border-l-[#c97da8]",
+    headerBand:
+      "border-[#dfc2d2]/70 bg-gradient-to-r from-[#f7eff3]/85 via-[#f7eff3]/30 to-transparent dark:border-[#52243e]/50 dark:from-[#2a1521]/55 dark:via-[#2a1521]/20 dark:to-transparent",
     badge:
-      "border-violet-200/80 bg-violet-50 text-violet-700 dark:border-violet-800/60 dark:bg-violet-950/50 dark:text-violet-300",
-    dot: "bg-violet-500 dark:bg-violet-400",
+      "border-[#dfc2d2] bg-[#f7eff3] text-[#4f243d] dark:border-[#52243e] dark:bg-[#2a1521] dark:text-[#e6b8d2]",
+    dot: "bg-[#6e3556] dark:bg-[#c97da8]",
     transcriptBox:
-      "border-violet-200/80 border-l-4 border-l-violet-500 bg-violet-50/35 dark:border-violet-900/50 dark:border-l-violet-400 dark:bg-violet-950/20",
+      "border-[#dfc2d2]/80 border-l-4 border-l-[#6e3556] bg-[#f7eff3]/35 dark:border-[#52243e]/60 dark:border-l-[#c97da8] dark:bg-[#2a1521]/20",
   },
   {
-    topBorder: "border-t-4 border-t-sky-500 dark:border-t-sky-400",
+    topBorder: "border-l-4 border-l-[#25416b] dark:border-l-[#6894d4]",
+    headerBand:
+      "border-[#c5d4e8]/70 bg-gradient-to-r from-[#edf2f8]/85 via-[#edf2f8]/30 to-transparent dark:border-[#1e3559]/50 dark:from-[#132036]/55 dark:via-[#132036]/20 dark:to-transparent",
     badge:
-      "border-sky-200/80 bg-sky-50 text-sky-700 dark:border-sky-800/60 dark:bg-sky-950/50 dark:text-sky-300",
-    dot: "bg-sky-500 dark:bg-sky-400",
+      "border-[#c5d4e8] bg-[#edf2f8] text-[#1b3152] dark:border-[#1e3559] dark:bg-[#132036] dark:text-[#acc4e8]",
+    dot: "bg-[#25416b] dark:bg-[#6894d4]",
     transcriptBox:
-      "border-sky-200/80 border-l-4 border-l-sky-500 bg-sky-50/35 dark:border-sky-900/50 dark:border-l-sky-400 dark:bg-sky-950/20",
+      "border-[#c5d4e8]/80 border-l-4 border-l-[#25416b] bg-[#edf2f8]/35 dark:border-[#1e3559]/60 dark:border-l-[#6894d4] dark:bg-[#132036]/20",
   },
   {
-    topBorder: "border-t-4 border-t-amber-500 dark:border-t-amber-400",
+    topBorder: "border-l-4 border-l-[#a36c1d] dark:border-l-[#e0a84e]",
+    headerBand:
+      "border-[#e6cda5]/70 bg-gradient-to-r from-[#faf2e3]/85 via-[#faf2e3]/30 to-transparent dark:border-[#63410e]/50 dark:from-[#2b1f0d]/55 dark:via-[#2b1f0d]/20 dark:to-transparent",
     badge:
-      "border-amber-200/80 bg-amber-50 text-amber-800 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-300",
-    dot: "bg-amber-500 dark:bg-amber-400",
+      "border-[#e6cda5] bg-[#faf2e3] text-[#784f12] dark:border-[#63410e] dark:bg-[#2b1f0d] dark:text-[#f2cf94]",
+    dot: "bg-[#a36c1d] dark:bg-[#e0a84e]",
     transcriptBox:
-      "border-amber-200/80 border-l-4 border-l-amber-500 bg-amber-50/35 dark:border-amber-900/50 dark:border-l-amber-400 dark:bg-amber-950/20",
+      "border-[#e6cda5]/80 border-l-4 border-l-[#a36c1d] bg-[#faf2e3]/35 dark:border-[#63410e]/60 dark:border-l-[#e0a84e] dark:bg-[#2b1f0d]/20",
   },
   {
-    topBorder: "border-t-4 border-t-rose-500 dark:border-t-rose-400",
+    topBorder: "border-l-4 border-l-[#9e3337] dark:border-l-[#d96266]",
+    headerBand:
+      "border-[#ebbfc1]/70 bg-gradient-to-r from-[#fcedee]/85 via-[#fcedee]/30 to-transparent dark:border-[#6e2124]/50 dark:from-[#2b1214]/55 dark:via-[#2b1214]/20 dark:to-transparent",
     badge:
-      "border-rose-200/80 bg-rose-50 text-rose-700 dark:border-rose-800/60 dark:bg-rose-950/50 dark:text-rose-300",
-    dot: "bg-rose-500 dark:bg-rose-400",
+      "border-[#ebbfc1] bg-[#fcedee] text-[#732124] dark:border-[#6e2124] dark:bg-[#2b1214] dark:text-[#f2a7aa]",
+    dot: "bg-[#9e3337] dark:bg-[#d96266]",
     transcriptBox:
-      "border-rose-200/80 border-l-4 border-l-rose-500 bg-rose-50/35 dark:border-rose-900/50 dark:border-l-rose-400 dark:bg-rose-950/20",
+      "border-[#ebbfc1]/80 border-l-4 border-l-[#9e3337] bg-[#fcedee]/35 dark:border-[#6e2124]/60 dark:border-l-[#d96266] dark:bg-[#2b1214]/20",
   },
   {
-    topBorder: "border-t-4 border-t-teal-500 dark:border-t-teal-400",
+    topBorder: "border-l-4 border-l-[#1f5c44] dark:border-l-[#43a07a]",
+    headerBand:
+      "border-[#b8decb]/70 bg-gradient-to-r from-[#ebf5f0]/85 via-[#ebf5f0]/30 to-transparent dark:border-[#1c4d39]/50 dark:from-[#11281f]/55 dark:via-[#11281f]/20 dark:to-transparent",
     badge:
-      "border-teal-200/80 bg-teal-50 text-teal-700 dark:border-teal-800/60 dark:bg-teal-950/50 dark:text-teal-300",
-    dot: "bg-teal-500 dark:bg-teal-400",
+      "border-[#b8decb] bg-[#ebf5f0] text-[#143d2d] dark:border-[#1c4d39] dark:bg-[#11281f] dark:text-[#6fd4aa]",
+    dot: "bg-[#1f5c44] dark:bg-[#43a07a]",
     transcriptBox:
-      "border-teal-200/80 border-l-4 border-l-teal-500 bg-teal-50/35 dark:border-teal-900/50 dark:border-l-teal-400 dark:bg-teal-950/20",
+      "border-[#b8decb]/80 border-l-4 border-l-[#1f5c44] bg-[#ebf5f0]/35 dark:border-[#1c4d39]/60 dark:border-l-[#43a07a] dark:bg-[#11281f]/20",
   },
 ];
 
@@ -260,74 +270,92 @@ export function ListeningSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-neutral-200/80 border-t-4 border-t-rose-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-rose-400 dark:bg-neutral-900">
-        <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 md:flex-row md:items-center dark:border-neutral-800/80">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200/80 bg-rose-50 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:border-rose-800/60 dark:bg-rose-950/50 dark:text-rose-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 dark:bg-rose-400" />
-              Section 6 • Texts 2, 9, 16, 53 & 54 (50 Questions)
-            </span>
-            <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-              6. Listening Practice
-            </h2>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              Includes True/False verification with evidence notes and Gap-fill
-              exercises. Submit each question individually for immediate
-              feedback.
-            </p>
-          </div>
+      <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#9e3337] dark:border-l-[#d96266]">
+        <div className="border-b border-[#ebbfc1]/70 bg-gradient-to-r from-[#fcedee]/90 via-[#fcedee]/35 to-transparent px-6 py-5 dark:border-[#6e2124]/50 dark:from-[#2b1214]/60 dark:via-[#2b1214]/20 dark:to-transparent">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-md border border-[#ebbfc1] bg-[#fcedee] px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase text-[#732124] dark:border-[#6e2124] dark:bg-[#2b1214] dark:text-[#f2a7aa]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#9e3337] dark:bg-[#d96266]" />
+                Sec 06 • Texts 2, 9, 16, 53 & 54 (50 Questions)
+              </span>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                6. Listening Practice
+              </h2>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                Includes True/False verification with evidence notes and Gap-fill
+                exercises. Submit each question individually for immediate
+                feedback.
+              </p>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            {(
-              [
-                { id: "standard", label: "Standard (T/F + Gap-Fill)" },
-                { id: "type-all-gaps", label: "Type All Gap-Fills" },
-                { id: "flashcard", label: "Flashcards" },
-              ] as { id: ListeningMode; label: string }[]
-            ).map((tab) => {
-              const isSelected = activeMode === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => {
-                    setMode(tab.id);
-                    setSubmittedIds({});
-                  }}
-                  className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                    isSelected
-                      ? "border-rose-600 bg-rose-600 text-white shadow-2xs dark:border-rose-500 dark:bg-rose-500 dark:text-white"
-                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-rose-300 hover:bg-rose-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-rose-700 dark:hover:bg-rose-950/40"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+            <div className="studio-subcard flex flex-wrap items-center gap-1 rounded-xl border p-1">
+              {(
+                [
+                  { id: "standard", label: "Standard (T/F + Gap-Fill)" },
+                  { id: "type-all-gaps", label: "Type All Gap-Fills" },
+                  { id: "flashcard", label: "Flashcards" },
+                ] as { id: ListeningMode; label: string }[]
+              ).map((tab) => {
+                const isSelected = activeMode === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setMode(tab.id);
+                      setSubmittedIds({});
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                      isSelected
+                        ? "bg-[#9e3337] text-white shadow-2xs dark:bg-[#d96266] dark:text-stone-950"
+                        : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-rose-200/80 bg-rose-50/50 px-4 py-3 dark:border-rose-800/60 dark:bg-rose-950/30">
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div>
-                <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                  Progress:{" "}
+          <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5">
+            <div className="flex flex-wrap items-center gap-5 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                  Progress
                 </span>
-                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  {scoreSummary.submittedCount} / {scoreSummary.total} Submitted
+                <div className="h-2 w-28 overflow-hidden rounded-full bg-stone-200/90 dark:bg-stone-800">
+                  <div
+                    className="h-full rounded-full bg-[#9e3337] transition-all duration-300 dark:bg-[#d96266]"
+                    style={{
+                      width: `${
+                        scoreSummary.total > 0
+                          ? Math.round(
+                              (scoreSummary.submittedCount /
+                                scoreSummary.total) *
+                                100
+                            )
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-xs font-bold text-[#732124] dark:text-[#f2a7aa]">
+                  {scoreSummary.submittedCount}/{scoreSummary.total}
                 </span>
               </div>
               {scoreSummary.submittedCount > 0 && (
-                <div>
-                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                    Score:{" "}
+                <div className="flex items-center gap-2 border-l border-stone-200 pl-4 dark:border-stone-800">
+                  <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                    Accuracy:
                   </span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-mono text-xs font-bold ${
                       scoreSummary.correct === scoreSummary.submittedCount
-                        ? "text-green-700 dark:text-green-400"
-                        : "text-rose-700 dark:text-rose-300"
+                        ? "text-emerald-700 dark:text-emerald-400"
+                        : "text-[#732124] dark:text-[#f2a7aa]"
                     }`}
                   >
                     {scoreSummary.correct} / {scoreSummary.submittedCount} (
@@ -344,7 +372,7 @@ export function ListeningSection({
                 <button
                   type="button"
                   onClick={handleSubmitAll}
-                  className="rounded-xl border border-rose-600 bg-rose-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-rose-700 dark:border-rose-500 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
+                  className="rounded-xl border border-[#ebbfc1] bg-[#fcedee]/80 px-3.5 py-1.5 text-xs font-semibold text-[#732124] transition-all hover:bg-[#9e3337] hover:text-white dark:border-[#6e2124] dark:bg-[#2b1214] dark:text-[#f2a7aa] dark:hover:bg-[#d96266] dark:hover:text-stone-950"
                 >
                   Submit All Remaining
                 </button>
@@ -352,7 +380,7 @@ export function ListeningSection({
               <button
                 type="button"
                 onClick={handleRetry}
-                className="rounded-xl border border-rose-300 bg-white px-3.5 py-1.5 text-xs font-medium text-rose-700 transition-all hover:border-rose-600 hover:bg-rose-600 hover:text-white dark:border-rose-700 dark:bg-neutral-900 dark:text-rose-300 dark:hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:text-white"
+                className="rounded-xl border border-[#9e3337] bg-[#9e3337] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#7d2428] dark:border-[#d96266] dark:bg-[#d96266] dark:text-stone-950"
               >
                 Reset & Randomize
               </button>
@@ -378,19 +406,19 @@ export function ListeningSection({
             return (
               <div
                 key={sub.id}
-                className={`space-y-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900 ${palette.topBorder}`}
+                className={`studio-card space-y-4 rounded-2xl border p-6 ${palette.topBorder}`}
               >
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-3.5 dark:border-neutral-800/80">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/70 pb-3.5 dark:border-stone-800/80">
                   <div>
                     <span
-                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${palette.badge}`}
+                      className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase ${palette.badge}`}
                     >
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${palette.dot}`}
                       />
                       {sub.subtitle}
                     </span>
-                    <h3 className="mt-1.5 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                    <h3 className="font-display mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
                       {sub.title}
                     </h3>
                   </div>
@@ -666,8 +694,8 @@ export function ListeningSection({
       )}
 
       {activeMode !== "flashcard" && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="studio-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-4">
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {allSubmitted
               ? "All 50 listening questions have been submitted. Click Try Again on any card or Reset & Randomize."
               : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} listening questions. Submit each card individually or submit all remaining.`}
@@ -677,7 +705,7 @@ export function ListeningSection({
               <button
                 type="button"
                 onClick={handleSubmitAll}
-                className="rounded-xl border border-rose-600 bg-rose-600 px-5 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-rose-700 dark:border-rose-500 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
+                className="rounded-xl border border-[#9e3337] bg-[#9e3337] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#7d2428] dark:border-[#d96266] dark:bg-[#d96266] dark:text-stone-950"
               >
                 Submit All Remaining
               </button>
@@ -685,7 +713,7 @@ export function ListeningSection({
             <button
               type="button"
               onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-rose-500 hover:text-rose-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-rose-400 dark:hover:text-rose-300"
+              className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#9e3337] hover:text-[#732124] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-[#d96266] dark:hover:text-[#f2a7aa]"
             >
               Reset & Randomize
             </button>

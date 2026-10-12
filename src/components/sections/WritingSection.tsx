@@ -244,77 +244,96 @@ export function WritingSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-t-4 border-neutral-200/80 border-t-indigo-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-indigo-400 dark:bg-neutral-900">
-        <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 md:flex-row md:items-center dark:border-neutral-800/80">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-indigo-200/90 bg-indigo-50/90 px-2.5 py-0.5 text-xs font-semibold text-indigo-700 dark:border-indigo-800/80 dark:bg-indigo-950/60 dark:text-indigo-300">
-              Section 1 • Questions 41–50
-            </span>
-            <h2 className="mt-2 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-              1. Writing — Sentence Transformation
-            </h2>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              {WRITING_INSTRUCTION}
-            </p>
-          </div>
+      <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#b84a27] dark:border-l-[#e2724d]">
+        <div className="border-b border-[#efb9a6]/60 bg-gradient-to-r from-[#f9ece7]/85 via-[#f9ece7]/35 to-transparent px-6 py-5 dark:border-[#782b12]/50 dark:from-[#2e1913]/60 dark:via-[#2e1913]/20 dark:to-transparent">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-md border border-[#efb9a6] bg-[#f9ece7] px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase text-[#94381b] dark:border-[#782b12] dark:bg-[#2e1913] dark:text-[#f5b8a3]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#b84a27] dark:bg-[#e2724d]" />
+                Sec 01 • Questions 41–50
+              </span>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                1. Writing — Sentence Transformation
+              </h2>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                {WRITING_INSTRUCTION}
+              </p>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            {(
-              [
-                {
-                  id: "type-the-answer",
-                  label: "Type Answer (Word Diff)",
-                },
-                { id: "mixed", label: "Mixed Formats" },
-                { id: "reorder-words", label: "Reorder Words" },
-                { id: "fill-in-the-blank", label: "Fill in the Blank" },
-                { id: "matching", label: "Matching" },
-                { id: "flashcard", label: "Flashcards" },
-              ] as { id: WritingPracticeMode; label: string }[]
-            ).map((tab) => {
-              const isSelected = activeMode === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => {
-                    setMode(tab.id);
-                    setSubmittedIds({});
-                  }}
-                  className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                    isSelected
-                      ? "border-indigo-600 bg-indigo-600 text-white shadow-2xs dark:border-indigo-500 dark:bg-indigo-600 dark:text-white"
-                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-indigo-300 hover:bg-indigo-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/40"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+            <div className="studio-subcard flex flex-wrap items-center gap-1 rounded-xl border p-1">
+              {(
+                [
+                  {
+                    id: "type-the-answer",
+                    label: "Type Answer (Word Diff)",
+                  },
+                  { id: "mixed", label: "Mixed Formats" },
+                  { id: "reorder-words", label: "Reorder Words" },
+                  { id: "fill-in-the-blank", label: "Fill in the Blank" },
+                  { id: "matching", label: "Matching" },
+                  { id: "flashcard", label: "Flashcards" },
+                ] as { id: WritingPracticeMode; label: string }[]
+              ).map((tab) => {
+                const isSelected = activeMode === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setMode(tab.id);
+                      setSubmittedIds({});
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                      isSelected
+                        ? "bg-[#b84a27] text-white shadow-2xs dark:bg-[#d4603b] dark:text-white"
+                        : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-indigo-200/80 bg-indigo-50/50 px-4 py-3 dark:border-indigo-900/60 dark:bg-indigo-950/30">
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div>
-                <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                  Progress:{" "}
+          <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5">
+            <div className="flex flex-wrap items-center gap-5 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                  Progress
                 </span>
-                <span className="font-semibold text-indigo-700 dark:text-indigo-300">
-                  {scoreSummary.submittedCount} / {scoreSummary.total} Submitted
+                <div className="h-2 w-28 overflow-hidden rounded-full bg-stone-200/90 dark:bg-stone-800">
+                  <div
+                    className="h-full rounded-full bg-[#b84a27] transition-all duration-300 dark:bg-[#e2724d]"
+                    style={{
+                      width: `${
+                        scoreSummary.total > 0
+                          ? Math.round(
+                              (scoreSummary.submittedCount /
+                                scoreSummary.total) *
+                                100
+                            )
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-xs font-bold text-[#94381b] dark:text-[#f5b8a3]">
+                  {scoreSummary.submittedCount}/{scoreSummary.total}
                 </span>
               </div>
               {scoreSummary.submittedCount > 0 && (
-                <div>
-                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                    Score:{" "}
+                <div className="flex items-center gap-2 border-l border-stone-200 pl-4 dark:border-stone-800">
+                  <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                    Accuracy:
                   </span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-mono text-xs font-bold ${
                       scoreSummary.correct === scoreSummary.submittedCount
-                        ? "text-green-700 dark:text-green-400"
-                        : "text-indigo-700 dark:text-indigo-300"
+                        ? "text-emerald-700 dark:text-emerald-400"
+                        : "text-[#94381b] dark:text-[#f5b8a3]"
                     }`}
                   >
                     {scoreSummary.correct} / {scoreSummary.submittedCount} (
@@ -331,7 +350,7 @@ export function WritingSection({
                 <button
                   type="button"
                   onClick={handleSubmitAll}
-                  className="rounded-xl border border-indigo-300 bg-white px-3.5 py-1.5 text-xs font-medium text-indigo-700 transition-all hover:border-indigo-600 hover:bg-indigo-600 hover:text-white dark:border-indigo-700 dark:bg-neutral-900 dark:text-indigo-300 dark:hover:border-indigo-500 dark:hover:bg-indigo-600 dark:hover:text-white"
+                  className="rounded-xl border border-[#efb9a6] bg-[#f9ece7]/70 px-3.5 py-1.5 text-xs font-semibold text-[#94381b] transition-all hover:bg-[#b84a27] hover:text-white dark:border-[#782b12] dark:bg-[#2e1913] dark:text-[#f5b8a3] dark:hover:bg-[#d4603b] dark:hover:text-white"
                 >
                   Submit All Remaining
                 </button>
@@ -340,7 +359,7 @@ export function WritingSection({
                 <button
                   type="button"
                   onClick={handleRetry}
-                  className="rounded-xl border border-indigo-600 bg-indigo-600 px-3.5 py-1.5 text-xs font-medium text-white transition-all hover:bg-indigo-700 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                  className="rounded-xl border border-[#b84a27] bg-[#b84a27] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#94381b] dark:border-[#e2724d] dark:bg-[#d4603b]"
                 >
                   Reset & Randomize
                 </button>
@@ -449,8 +468,8 @@ export function WritingSection({
       )}
 
       {activeMode !== "flashcard" && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="studio-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-4">
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {scoreSummary.allSubmitted
               ? "All 10 questions submitted! Click Try Again on any card or Reset & Randomize to practice again."
               : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} questions. You can submit each question individually above or submit all remaining.`}
@@ -460,7 +479,7 @@ export function WritingSection({
               <button
                 type="button"
                 onClick={handleSubmitAll}
-                className="rounded-xl border border-indigo-600 bg-indigo-600 px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-indigo-700 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500"
+                className="rounded-xl border border-[#b84a27] bg-[#b84a27] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#94381b] dark:border-[#e2724d] dark:bg-[#d4603b]"
               >
                 Submit All Remaining
               </button>
@@ -468,7 +487,7 @@ export function WritingSection({
             <button
               type="button"
               onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-indigo-500 hover:text-indigo-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-indigo-400 dark:hover:text-indigo-300"
+              className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#b84a27] hover:text-[#94381b] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-[#e2724d] dark:hover:text-[#f5b8a3]"
             >
               Reset & Randomize Section
             </button>

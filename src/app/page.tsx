@@ -21,7 +21,9 @@ type SectionTab =
 
 const SECTION_NAV: {
   id: SectionTab;
+  num: string;
   label: string;
+  sublabel: string;
   count: string;
   dotClass: string;
   activeClass: string;
@@ -29,73 +31,87 @@ const SECTION_NAV: {
 }[] = [
   {
     id: "writing",
-    label: "1. Writing — Sentence Transformation",
+    num: "01",
+    label: "Writing",
+    sublabel: "Sentence Transformation",
     count: "10",
-    dotClass: "bg-indigo-500 dark:bg-indigo-400",
+    dotClass: "bg-[#b84a27] dark:bg-[#e07a5f]",
     activeClass:
-      "border-indigo-600 bg-indigo-600 text-white shadow-xs dark:border-indigo-500 dark:bg-indigo-600 dark:text-white",
+      "border-[#b84a27] bg-[#b84a27] text-white shadow-sm dark:border-[#e07a5f] dark:bg-[#c85632] dark:text-white",
     badgeClass:
-      "bg-indigo-100/90 text-indigo-700 dark:bg-indigo-950/80 dark:text-indigo-300",
+      "border border-[#e2bfb0] bg-[#faece6] text-[#8f3416] dark:border-[#6e3422] dark:bg-[#331911] dark:text-[#f3a68c]",
   },
   {
     id: "speaking",
-    label: "2. Speaking — Sample Topics",
+    num: "02",
+    label: "Speaking",
+    sublabel: "Sample Topics & Recall",
     count: "3",
-    dotClass: "bg-violet-500 dark:bg-violet-400",
+    dotClass: "bg-[#6e3556] dark:bg-[#d48ab8]",
     activeClass:
-      "border-violet-600 bg-violet-600 text-white shadow-xs dark:border-violet-500 dark:bg-violet-600 dark:text-white",
+      "border-[#6e3556] bg-[#6e3556] text-white shadow-sm dark:border-[#d48ab8] dark:bg-[#824066] dark:text-white",
     badgeClass:
-      "bg-violet-100/90 text-violet-700 dark:bg-violet-950/80 dark:text-violet-300",
+      "border border-[#d9bdd0] bg-[#f6ebf2] text-[#662b50] dark:border-[#5c2c4a] dark:bg-[#2b1423] dark:text-[#e6a5ce]",
   },
   {
     id: "grammar",
-    label: "3. Grammar — Multiple Choice",
+    num: "03",
+    label: "Grammar",
+    sublabel: "Multiple Choice & Mixed",
     count: "23",
-    dotClass: "bg-sky-500 dark:bg-sky-400",
+    dotClass: "bg-[#25416b] dark:bg-[#7ca5de]",
     activeClass:
-      "border-sky-600 bg-sky-600 text-white shadow-xs dark:border-sky-500 dark:bg-sky-600 dark:text-white",
+      "border-[#25416b] bg-[#25416b] text-white shadow-sm dark:border-[#7ca5de] dark:bg-[#31558a] dark:text-white",
     badgeClass:
-      "bg-sky-100/90 text-sky-700 dark:bg-sky-950/80 dark:text-sky-300",
+      "border border-[#bccce3] bg-[#eaeff7] text-[#1d3961] dark:border-[#2c4469] dark:bg-[#132033] dark:text-[#98bae8]",
   },
   {
     id: "signs",
-    label: "4. Reading — Signs & Notices",
+    num: "04",
+    label: "Signs & Notices",
+    sublabel: "Visual Interpretation",
     count: "10",
-    dotClass: "bg-amber-500 dark:bg-amber-400",
+    dotClass: "bg-[#b47b28] dark:bg-[#e0a96d]",
     activeClass:
-      "border-amber-600 bg-amber-600 text-white shadow-xs dark:border-amber-500 dark:bg-amber-600 dark:text-white",
+      "border-[#9e6919] bg-[#a36c1d] text-white shadow-sm dark:border-[#e0a96d] dark:bg-[#b57922] dark:text-white",
     badgeClass:
-      "bg-amber-100/90 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300",
+      "border border-[#e3cc9e] bg-[#fbf2df] text-[#7c5110] dark:border-[#664919] dark:bg-[#2e210b] dark:text-[#f0c775]",
   },
   {
     id: "reading",
-    label: "5. Reading Comprehension",
+    num: "05",
+    label: "Reading",
+    sublabel: "Passages & Cloze Test",
     count: "20",
-    dotClass: "bg-teal-500 dark:bg-teal-400",
+    dotClass: "bg-[#1f5c44] dark:bg-[#52b788]",
     activeClass:
-      "border-teal-600 bg-teal-600 text-white shadow-xs dark:border-teal-500 dark:bg-teal-600 dark:text-white",
+      "border-[#1f5c44] bg-[#1f5c44] text-white shadow-sm dark:border-[#52b788] dark:bg-[#287255] dark:text-white",
     badgeClass:
-      "bg-teal-100/90 text-teal-700 dark:bg-teal-950/80 dark:text-teal-300",
+      "border border-[#b7d3c4] bg-[#e6f2ec] text-[#184e38] dark:border-[#285440] dark:bg-[#12291f] dark:text-[#86d9b3]",
   },
   {
     id: "listening",
-    label: "6. Listening Practice",
+    num: "06",
+    label: "Listening",
+    sublabel: "True/False & Gap-Fills",
     count: "50",
-    dotClass: "bg-rose-500 dark:bg-rose-400",
+    dotClass: "bg-[#9e3337] dark:bg-[#e57373]",
     activeClass:
-      "border-rose-600 bg-rose-600 text-white shadow-xs dark:border-rose-500 dark:bg-rose-600 dark:text-white",
+      "border-[#9e3337] bg-[#9e3337] text-white shadow-sm dark:border-[#e57373] dark:bg-[#b03c40] dark:text-white",
     badgeClass:
-      "bg-rose-100/90 text-rose-700 dark:bg-rose-950/80 dark:text-rose-300",
+      "border border-[#e3bfc0] bg-[#faebeb] text-[#8c262b] dark:border-[#662629] dark:bg-[#301214] dark:text-[#f29d9f]",
   },
   {
     id: "all",
-    label: "All Sections",
+    num: "ALL",
+    label: "Full Workbook",
+    sublabel: "All 6 Sections Combined",
     count: "116",
-    dotClass: "bg-cyan-500 dark:bg-cyan-400",
+    dotClass: "bg-stone-700 dark:bg-stone-300",
     activeClass:
-      "border-cyan-600 bg-cyan-600 text-white shadow-xs dark:border-cyan-500 dark:bg-cyan-600 dark:text-white",
+      "border-stone-900 bg-stone-900 text-stone-50 shadow-sm dark:border-stone-200 dark:bg-stone-100 dark:text-stone-950",
     badgeClass:
-      "bg-cyan-100/90 text-cyan-700 dark:bg-cyan-950/80 dark:text-cyan-300",
+      "border border-stone-300 bg-stone-200/70 text-stone-800 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-200",
   },
 ];
 
@@ -104,50 +120,55 @@ export default function HomePage() {
   const [globalReviewMode, setGlobalReviewMode] = useState<boolean>(false);
 
   return (
-    <div className="min-h-screen bg-[#f8f8f7] text-neutral-800 dark:bg-[#0e0e10] dark:text-neutral-100">
-      {/* Top Header */}
-      <header className="border-b border-neutral-200/80 bg-white/95 backdrop-blur-xs dark:border-neutral-800/80 dark:bg-neutral-900/95">
+    <div className="min-h-screen">
+      {/* Editorial Top Masthead */}
+      <header className="studio-header border-b backdrop-blur-md">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200/80 bg-indigo-50/80 px-3 py-0.5 text-xs font-semibold tracking-wide text-indigo-700 dark:border-indigo-800/70 dark:bg-indigo-950/60 dark:text-indigo-300">
-                <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 dark:bg-indigo-400" />
-                English Review System
-              </div>
-              <h1 className="text-2xl font-semibold tracking-tight text-neutral-900 sm:text-3xl dark:text-neutral-100">
-                {DOCUMENT_HEADER.title}
-              </h1>
-              <p className="text-sm font-medium text-indigo-700 dark:text-indigo-300">
-                {DOCUMENT_HEADER.subtitle}
-              </p>
-              <p className="max-w-3xl text-xs leading-relaxed text-neutral-500 dark:text-neutral-400">
-                {DOCUMENT_HEADER.description}
-              </p>
+          {/* Top Utility Bar: Edition Tag + Theme/Style Controls */}
+          <div className="flex flex-col justify-between gap-4 border-b border-stone-300/60 pb-5 lg:flex-row lg:items-center dark:border-stone-800/80">
+            <div className="flex items-center gap-2.5">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#d9c7b2] bg-[#f4eadc] px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#7d3b1e] dark:border-[#47382c] dark:bg-[#261e18] dark:text-[#e89978]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#b84a27] dark:bg-[#e07a5f]" />
+                Active Recall Atelier
+              </span>
+              <span className="hidden font-mono text-xs text-stone-500 sm:inline dark:text-stone-400">
+                116 Curated Items • 6 Modules
+              </span>
             </div>
 
-            {/* Global Review Mode (Flashcards) Toggle & Dark Mode Toggle */}
-            <div className="flex shrink-0 flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2">
               <ThemeToggle />
               <button
                 type="button"
                 onClick={() => setGlobalReviewMode((prev) => !prev)}
-                className={`rounded-xl border px-4 py-2 text-xs font-semibold transition-all ${
+                className={`rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
                   globalReviewMode
-                    ? "border-indigo-600 bg-indigo-600 text-white shadow-xs dark:border-indigo-500 dark:bg-indigo-600 dark:text-white"
-                    : "border-neutral-200/90 bg-white text-neutral-700 shadow-2xs hover:border-indigo-300 hover:bg-indigo-50/50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/40"
+                    ? "border-[#b84a27] bg-[#b84a27] text-white shadow-xs dark:border-[#e07a5f] dark:bg-[#c85632] dark:text-white"
+                    : "studio-card text-stone-700 hover:border-stone-400 dark:text-stone-200 dark:hover:border-stone-600"
                 }`}
               >
-                {globalReviewMode
-                  ? "Review Mode: Flashcards (On)"
-                  : "Review Mode: Flashcards (Off)"}
+                {globalReviewMode ? "Flashcard Deck: ON" : "Flashcard Deck: OFF"}
               </button>
             </div>
           </div>
 
-          {/* Section Navigation */}
+          {/* Editorial Title Block */}
+          <div className="mt-6 space-y-2">
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl dark:text-stone-100">
+              {DOCUMENT_HEADER.title}
+            </h1>
+            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-[#943719] dark:text-[#e89978]">
+              {DOCUMENT_HEADER.subtitle}
+            </p>
+            <p className="max-w-3xl text-sm leading-relaxed text-stone-600 dark:text-stone-400">
+              {DOCUMENT_HEADER.description}
+            </p>
+          </div>
+
+          {/* Architectural Section Bento Grid */}
           <nav
             aria-label="Sections"
-            className="mt-7 grid grid-cols-1 gap-2.5 border-t border-neutral-100 pt-6 sm:grid-cols-2 lg:grid-cols-4 dark:border-neutral-800/70"
+            className="mt-7 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4"
           >
             {SECTION_NAV.map((item) => {
               const isCurrent = activeTab === item.id;
@@ -156,23 +177,53 @@ export default function HomePage() {
                   key={item.id}
                   type="button"
                   onClick={() => setActiveTab(item.id)}
-                  className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-left text-xs transition-all ${
+                  className={`group flex items-center justify-between rounded-xl border px-3.5 py-3 text-left transition-all ${
                     isCurrent
-                      ? `${item.activeClass} font-semibold`
-                      : "border-neutral-200/80 bg-neutral-50/70 font-medium text-neutral-700 hover:border-neutral-300 hover:bg-white dark:border-neutral-800/80 dark:bg-neutral-900/60 dark:text-neutral-200 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/80"
+                      ? item.activeClass
+                      : "studio-card hover:border-stone-400 dark:hover:border-stone-600"
                   }`}
                 >
-                  <span className="flex items-center gap-2 truncate pr-2">
-                    <span
-                      className={`h-2 w-2 shrink-0 rounded-full ${
-                        isCurrent ? "bg-white" : item.dotClass
+                  <div className="min-w-0 pr-2">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className={`h-2 w-2 shrink-0 rounded-full ${
+                          isCurrent ? "bg-current opacity-90" : item.dotClass
+                        }`}
+                      />
+                      <span
+                        className={`font-mono text-[10px] font-semibold uppercase tracking-wider ${
+                          isCurrent
+                            ? "opacity-80"
+                            : "text-stone-500 dark:text-stone-400"
+                        }`}
+                      >
+                        Sec {item.num}
+                      </span>
+                    </div>
+                    <div
+                      className={`mt-0.5 truncate text-xs font-semibold ${
+                        isCurrent
+                          ? ""
+                          : "text-stone-900 dark:text-stone-100"
                       }`}
-                    />
-                    <span className="truncate">{item.label}</span>
-                  </span>
+                    >
+                      {item.label}
+                    </div>
+                    <div
+                      className={`truncate text-[11px] ${
+                        isCurrent
+                          ? "opacity-85"
+                          : "text-stone-500 dark:text-stone-400"
+                      }`}
+                    >
+                      {item.sublabel}
+                    </div>
+                  </div>
                   <span
-                    className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
-                      isCurrent ? "bg-white/20 text-white" : item.badgeClass
+                    className={`shrink-0 rounded-lg px-2 py-0.5 font-mono text-[11px] font-semibold ${
+                      isCurrent
+                        ? "bg-black/15 text-current dark:bg-white/20"
+                        : item.badgeClass
                     }`}
                   >
                     {item.count}
@@ -211,16 +262,15 @@ export default function HomePage() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="mt-16 border-t border-neutral-200/80 bg-white dark:border-neutral-800/80 dark:bg-neutral-900/80">
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-2 px-4 py-6 text-xs text-neutral-500 sm:flex-row sm:items-center sm:px-6 lg:px-8 dark:text-neutral-400">
-          <span>
-            Content source: content.md • 6 Sections • 8 Active Recall Question
-            Formats
+      {/* Editorial Footer */}
+      <footer className="studio-header mt-16 border-t">
+        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-2 px-4 py-6 text-xs text-stone-500 sm:flex-row sm:items-center sm:px-6 lg:px-8 dark:text-stone-400">
+          <span className="font-mono text-[11px]">
+            SOURCE: CONTENT.MD • 6 SECTIONS • 116 ACTIVE RECALL ITEMS
           </span>
           <span>
-            Formats: Multiple Choice • True/False • Fill Blank • Type Answer •
-            Flashcard • Matching • Reorder Words • Error Spotting
+            Multiple Choice • True/False • Fill Blank • Type Answer • Flashcard
+            • Matching • Reorder Words • Error Spotting
           </span>
         </div>
       </footer>

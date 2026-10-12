@@ -579,81 +579,99 @@ export function GrammarSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-neutral-200/80 border-t-4 border-t-sky-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-sky-400 dark:bg-neutral-900">
-        <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 dark:border-neutral-800/80">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-sky-200/80 bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-700 dark:border-sky-800/60 dark:bg-sky-950/50 dark:text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-500 dark:bg-sky-400" />
-              Section 3 • Questions 121–143 (23 Items)
-            </span>
-            <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-              3. Grammar — Multiple Choice & Active Retention Formats
-            </h2>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              Practice all 23 grammar items using Mixed Retention Formats
-              (combining Multiple Choice, Fill in the Blank, True/False, Error
-              Spotting, Reorder Words, Type the Answer, and Matching) or select
-              a single format below.
-            </p>
-          </div>
+      <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#25416b] dark:border-l-[#6894d4]">
+        <div className="border-b border-[#c5d4e8]/70 bg-gradient-to-r from-[#edf2f8]/90 via-[#edf2f8]/35 to-transparent px-6 py-5 dark:border-[#1e3559]/50 dark:from-[#132036]/60 dark:via-[#132036]/20 dark:to-transparent">
+          <div className="flex flex-col justify-between gap-4">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-md border border-[#c5d4e8] bg-[#edf2f8] px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase text-[#1b3152] dark:border-[#1e3559] dark:bg-[#132036] dark:text-[#acc4e8]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#25416b] dark:bg-[#6894d4]" />
+                Sec 03 • Questions 121–143 (23 Items)
+              </span>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                3. Grammar — Multiple Choice & Active Retention Formats
+              </h2>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                Practice all 23 grammar items using Mixed Retention Formats
+                (combining Multiple Choice, Fill in the Blank, True/False, Error
+                Spotting, Reorder Words, Type the Answer, and Matching) or select
+                a single format below.
+              </p>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            {(
-              [
-                { id: "mixed", label: "Mixed Formats (Recommended)" },
-                { id: "multiple-choice", label: "Multiple Choice" },
-                { id: "true-false", label: "True / False" },
-                { id: "fill-in-the-blank", label: "Fill in the Blank" },
-                { id: "type-the-answer", label: "Type the Answer" },
-                { id: "reorder-words", label: "Reorder Words" },
-                { id: "error-spotting", label: "Error Spotting" },
-                { id: "matching", label: "Matching" },
-                { id: "flashcard", label: "Flashcards" },
-              ] as { id: GrammarMode; label: string }[]
-            ).map((tab) => {
-              const isSelected = activeMode === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => {
-                    setMode(tab.id);
-                    setSubmittedIds({});
-                  }}
-                  className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                    isSelected
-                      ? "border-sky-600 bg-sky-600 text-white shadow-2xs dark:border-sky-500 dark:bg-sky-500 dark:text-white"
-                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-sky-300 hover:bg-sky-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-sky-700 dark:hover:bg-sky-950/40"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+            <div className="studio-subcard flex flex-wrap items-center gap-1 rounded-xl border p-1">
+              {(
+                [
+                  { id: "mixed", label: "Mixed Formats (Recommended)" },
+                  { id: "multiple-choice", label: "Multiple Choice" },
+                  { id: "true-false", label: "True / False" },
+                  { id: "fill-in-the-blank", label: "Fill in the Blank" },
+                  { id: "type-the-answer", label: "Type the Answer" },
+                  { id: "reorder-words", label: "Reorder Words" },
+                  { id: "error-spotting", label: "Error Spotting" },
+                  { id: "matching", label: "Matching" },
+                  { id: "flashcard", label: "Flashcards" },
+                ] as { id: GrammarMode; label: string }[]
+              ).map((tab) => {
+                const isSelected = activeMode === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setMode(tab.id);
+                      setSubmittedIds({});
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                      isSelected
+                        ? "bg-[#25416b] text-white shadow-2xs dark:bg-[#527bb8] dark:text-stone-950"
+                        : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-sky-200/80 bg-sky-50/50 px-4 py-3 dark:border-sky-800/60 dark:bg-sky-950/30">
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div>
-                <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                  Progress:{" "}
+          <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5">
+            <div className="flex flex-wrap items-center gap-5 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                  Progress
                 </span>
-                <span className="font-semibold text-sky-700 dark:text-sky-300">
-                  {scoreSummary.submittedCount} / {scoreSummary.total} Submitted
+                <div className="h-2 w-28 overflow-hidden rounded-full bg-stone-200/90 dark:bg-stone-800">
+                  <div
+                    className="h-full rounded-full bg-[#25416b] transition-all duration-300 dark:bg-[#6894d4]"
+                    style={{
+                      width: `${
+                        scoreSummary.total > 0
+                          ? Math.round(
+                              (scoreSummary.submittedCount /
+                                scoreSummary.total) *
+                                100
+                            )
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-xs font-bold text-[#1b3152] dark:text-[#acc4e8]">
+                  {scoreSummary.submittedCount}/{scoreSummary.total}
                 </span>
               </div>
               {scoreSummary.submittedCount > 0 && (
-                <div>
-                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                    Score:{" "}
+                <div className="flex items-center gap-2 border-l border-stone-200 pl-4 dark:border-stone-800">
+                  <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                    Accuracy:
                   </span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-mono text-xs font-bold ${
                       scoreSummary.correct === scoreSummary.submittedCount
-                        ? "text-green-700 dark:text-green-400"
-                        : "text-sky-700 dark:text-sky-300"
+                        ? "text-emerald-700 dark:text-emerald-400"
+                        : "text-[#1b3152] dark:text-[#acc4e8]"
                     }`}
                   >
                     {scoreSummary.correct} / {scoreSummary.submittedCount} (
@@ -670,7 +688,7 @@ export function GrammarSection({
                 <button
                   type="button"
                   onClick={handleSubmitAll}
-                  className="rounded-xl border border-sky-300 bg-white px-3.5 py-1.5 text-xs font-medium text-sky-700 transition-all hover:border-sky-600 hover:bg-sky-600 hover:text-white dark:border-sky-700 dark:bg-neutral-900 dark:text-sky-300 dark:hover:border-sky-500 dark:hover:bg-sky-500 dark:hover:text-white"
+                  className="rounded-xl border border-[#c5d4e8] bg-[#edf2f8]/80 px-3.5 py-1.5 text-xs font-semibold text-[#1b3152] transition-all hover:bg-[#25416b] hover:text-white dark:border-[#1e3559] dark:bg-[#132036] dark:text-[#acc4e8] dark:hover:bg-[#527bb8] dark:hover:text-stone-950"
                 >
                   Submit All Remaining
                 </button>
@@ -679,7 +697,7 @@ export function GrammarSection({
                 <button
                   type="button"
                   onClick={handleRetry}
-                  className="rounded-xl border border-sky-600 bg-sky-600 px-3.5 py-1.5 text-xs font-medium text-white transition-all hover:bg-sky-700 dark:border-sky-500 dark:bg-sky-500 dark:hover:bg-sky-400"
+                  className="rounded-xl border border-[#25416b] bg-[#25416b] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#1b3152] dark:border-[#527bb8] dark:bg-[#527bb8] dark:text-stone-950"
                 >
                   Reset & Randomize
                 </button>
@@ -758,8 +776,8 @@ export function GrammarSection({
       )}
 
       {activeMode !== "flashcard" && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="studio-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-4">
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {scoreSummary.allSubmitted
               ? "All 23 grammar items submitted! Click Try Again on any card or Reset & Randomize to practice again."
               : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} grammar items. Submit each question individually above or submit all remaining.`}
@@ -769,7 +787,7 @@ export function GrammarSection({
               <button
                 type="button"
                 onClick={handleSubmitAll}
-                className="rounded-xl border border-sky-600 bg-sky-600 px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-sky-700 dark:border-sky-500 dark:bg-sky-500 dark:text-white dark:hover:bg-sky-400"
+                className="rounded-xl border border-[#25416b] bg-[#25416b] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#1b3152] dark:border-[#527bb8] dark:bg-[#527bb8] dark:text-stone-950"
               >
                 Submit All Remaining
               </button>
@@ -777,7 +795,7 @@ export function GrammarSection({
             <button
               type="button"
               onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-sky-500 hover:text-sky-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-sky-400 dark:hover:text-sky-300"
+              className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#25416b] hover:text-[#1b3152] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-[#6894d4] dark:hover:text-[#acc4e8]"
             >
               Reset & Randomize Section
             </button>

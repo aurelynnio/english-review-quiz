@@ -305,77 +305,95 @@ export function SignsSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-neutral-200/80 border-t-4 border-t-amber-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-amber-400 dark:bg-neutral-900">
-        <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 dark:border-neutral-800/80">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
-              Section 4 • Signs 1–10
-            </span>
-            <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-              4. Reading — Signs & Notices
-            </h2>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              Read each sign or notice carefully and submit each question
-              individually for immediate feedback.
-            </p>
-          </div>
+      <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#a36c1d] dark:border-l-[#e0a84e]">
+        <div className="border-b border-[#e6cda5]/70 bg-gradient-to-r from-[#faf2e3]/90 via-[#faf2e3]/35 to-transparent px-6 py-5 dark:border-[#63410e]/50 dark:from-[#2b1f0d]/60 dark:via-[#2b1f0d]/20 dark:to-transparent">
+          <div className="flex flex-col justify-between gap-4">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-md border border-[#e6cda5] bg-[#faf2e3] px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase text-[#784f12] dark:border-[#63410e] dark:bg-[#2b1f0d] dark:text-[#f2cf94]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#a36c1d] dark:bg-[#e0a84e]" />
+                Sec 04 • Signs 1–10
+              </span>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                4. Reading — Signs & Notices
+              </h2>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                Read each sign or notice carefully and submit each question
+                individually for immediate feedback.
+              </p>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            {(
-              [
-                { id: "multiple-choice", label: "Multiple Choice" },
-                { id: "mixed", label: "Mixed Formats" },
-                { id: "true-false", label: "True / False" },
-                { id: "matching", label: "Matching" },
-                { id: "reorder-words", label: "Reorder Words" },
-                { id: "type-the-answer", label: "Type the Answer" },
-                { id: "flashcard", label: "Flashcards" },
-              ] as { id: SignsMode; label: string }[]
-            ).map((tab) => {
-              const isSelected = activeMode === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => {
-                    setMode(tab.id);
-                    setSubmittedIds({});
-                  }}
-                  className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                    isSelected
-                      ? "border-amber-600 bg-amber-600 text-white shadow-2xs dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950"
-                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-amber-300 hover:bg-amber-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-amber-700 dark:hover:bg-amber-950/40"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              );
-            })}
+            <div className="studio-subcard flex flex-wrap items-center gap-1 rounded-xl border p-1">
+              {(
+                [
+                  { id: "multiple-choice", label: "Multiple Choice" },
+                  { id: "mixed", label: "Mixed Formats" },
+                  { id: "true-false", label: "True / False" },
+                  { id: "matching", label: "Matching" },
+                  { id: "reorder-words", label: "Reorder Words" },
+                  { id: "type-the-answer", label: "Type the Answer" },
+                  { id: "flashcard", label: "Flashcards" },
+                ] as { id: SignsMode; label: string }[]
+              ).map((tab) => {
+                const isSelected = activeMode === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => {
+                      setMode(tab.id);
+                      setSubmittedIds({});
+                    }}
+                    className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                      isSelected
+                        ? "bg-[#a36c1d] text-white shadow-2xs dark:bg-[#e0a84e] dark:text-stone-950"
+                        : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
 
         {activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-amber-200/80 bg-amber-50/50 px-4 py-3 dark:border-amber-800/60 dark:bg-amber-950/30">
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div>
-                <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                  Progress:{" "}
+          <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5">
+            <div className="flex flex-wrap items-center gap-5 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                  Progress
                 </span>
-                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  {scoreSummary.submittedCount} / {scoreSummary.total} Submitted
+                <div className="h-2 w-28 overflow-hidden rounded-full bg-stone-200/90 dark:bg-stone-800">
+                  <div
+                    className="h-full rounded-full bg-[#a36c1d] transition-all duration-300 dark:bg-[#e0a84e]"
+                    style={{
+                      width: `${
+                        scoreSummary.total > 0
+                          ? Math.round(
+                              (scoreSummary.submittedCount /
+                                scoreSummary.total) *
+                                100
+                            )
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-xs font-bold text-[#784f12] dark:text-[#f2cf94]">
+                  {scoreSummary.submittedCount}/{scoreSummary.total}
                 </span>
               </div>
               {scoreSummary.submittedCount > 0 && (
-                <div>
-                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                    Score:{" "}
+                <div className="flex items-center gap-2 border-l border-stone-200 pl-4 dark:border-stone-800">
+                  <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                    Accuracy:
                   </span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-mono text-xs font-bold ${
                       scoreSummary.correct === scoreSummary.submittedCount
-                        ? "text-green-700 dark:text-green-400"
-                        : "text-amber-700 dark:text-amber-300"
+                        ? "text-emerald-700 dark:text-emerald-400"
+                        : "text-[#784f12] dark:text-[#f2cf94]"
                     }`}
                   >
                     {scoreSummary.correct} / {scoreSummary.submittedCount} (
@@ -392,7 +410,7 @@ export function SignsSection({
                 <button
                   type="button"
                   onClick={handleSubmitAll}
-                  className="rounded-xl border border-amber-600 bg-amber-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400"
+                  className="rounded-xl border border-[#e6cda5] bg-[#faf2e3]/80 px-3.5 py-1.5 text-xs font-semibold text-[#784f12] transition-all hover:bg-[#a36c1d] hover:text-white dark:border-[#63410e] dark:bg-[#2b1f0d] dark:text-[#f2cf94] dark:hover:bg-[#e0a84e] dark:hover:text-stone-950"
                 >
                   Submit All Remaining
                 </button>
@@ -400,7 +418,7 @@ export function SignsSection({
               <button
                 type="button"
                 onClick={handleRetry}
-                className="rounded-xl border border-amber-300 bg-white px-3.5 py-1.5 text-xs font-medium text-amber-800 transition-all hover:border-amber-600 hover:bg-amber-600 hover:text-white dark:border-amber-700 dark:bg-neutral-900 dark:text-amber-300 dark:hover:border-amber-500 dark:hover:bg-amber-500 dark:hover:text-neutral-950"
+                className="rounded-xl border border-[#a36c1d] bg-[#a36c1d] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#825414] dark:border-[#e0a84e] dark:bg-[#e0a84e] dark:text-stone-950"
               >
                 Reset & Randomize
               </button>
@@ -526,8 +544,8 @@ export function SignsSection({
       )}
 
       {activeMode !== "flashcard" && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="studio-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-4">
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {allSubmitted
               ? "All 10 sign questions have been submitted. Click Try Again on any card or Reset & Randomize."
               : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} signs. Submit each card individually or submit all remaining.`}
@@ -537,7 +555,7 @@ export function SignsSection({
               <button
                 type="button"
                 onClick={handleSubmitAll}
-                className="rounded-xl border border-amber-600 bg-amber-600 px-5 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400"
+                className="rounded-xl border border-[#a36c1d] bg-[#a36c1d] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#825414] dark:border-[#e0a84e] dark:bg-[#e0a84e] dark:text-stone-950"
               >
                 Submit All Remaining
               </button>
@@ -545,7 +563,7 @@ export function SignsSection({
             <button
               type="button"
               onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-amber-500 hover:text-amber-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-amber-400 dark:hover:text-amber-300"
+              className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#a36c1d] hover:text-[#784f12] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300 dark:hover:border-[#e0a84e] dark:hover:text-[#f2cf94]"
             >
               Reset & Randomize
             </button>

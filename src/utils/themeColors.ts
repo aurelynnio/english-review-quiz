@@ -1,68 +1,84 @@
 export type BadgeTone =
-  | "indigo"
-  | "violet"
-  | "sky"
-  | "amber"
-  | "teal"
-  | "rose"
-  | "cyan";
+  | "terracotta"
+  | "sage"
+  | "ochre"
+  | "navy"
+  | "plum"
+  | "carmine";
 
 const BADGE_TONE_CLASSES: Record<BadgeTone, string> = {
-  indigo:
-    "border-indigo-200/90 bg-indigo-50/90 text-indigo-700 dark:border-indigo-800/80 dark:bg-indigo-950/60 dark:text-indigo-300",
-  violet:
-    "border-violet-200/90 bg-violet-50/90 text-violet-700 dark:border-violet-800/80 dark:bg-violet-950/60 dark:text-violet-300",
-  sky: "border-sky-200/90 bg-sky-50/90 text-sky-700 dark:border-sky-800/80 dark:bg-sky-950/60 dark:text-sky-300",
-  amber:
-    "border-amber-200/90 bg-amber-50/90 text-amber-800 dark:border-amber-800/80 dark:bg-amber-950/60 dark:text-amber-300",
-  teal: "border-teal-200/90 bg-teal-50/90 text-teal-700 dark:border-teal-800/80 dark:bg-teal-950/60 dark:text-teal-300",
-  rose: "border-rose-200/90 bg-rose-50/90 text-rose-700 dark:border-rose-800/80 dark:bg-rose-950/60 dark:text-rose-300",
-  cyan: "border-cyan-200/90 bg-cyan-50/90 text-cyan-700 dark:border-cyan-800/80 dark:bg-cyan-950/60 dark:text-cyan-300",
+  terracotta:
+    "border-[#e2bfb0] bg-[#faece6] text-[#8f3416] dark:border-[#6e3422] dark:bg-[#331911]/80 dark:text-[#f3a68c]",
+  sage:
+    "border-[#b7d3c4] bg-[#e6f2ec] text-[#184e38] dark:border-[#285440] dark:bg-[#12291f]/80 dark:text-[#86d9b3]",
+  ochre:
+    "border-[#e3cc9e] bg-[#fbf2df] text-[#7c5110] dark:border-[#664919] dark:bg-[#2e210b]/80 dark:text-[#f0c775]",
+  navy:
+    "border-[#bccce3] bg-[#eaeff7] text-[#1d3961] dark:border-[#2c4469] dark:bg-[#132033]/80 dark:text-[#98bae8]",
+  plum:
+    "border-[#d9bdd0] bg-[#f6ebf2] text-[#662b50] dark:border-[#5c2c4a] dark:bg-[#2b1423]/80 dark:text-[#e6a5ce]",
+  carmine:
+    "border-[#e3bfc0] bg-[#faebeb] text-[#8c262b] dark:border-[#662629] dark:bg-[#301214]/80 dark:text-[#f29d9f]",
 };
 
 const DOT_TONE_CLASSES: Record<BadgeTone, string> = {
-  indigo: "bg-indigo-500 dark:bg-indigo-400",
-  violet: "bg-violet-500 dark:bg-violet-400",
-  sky: "bg-sky-500 dark:bg-sky-400",
-  amber: "bg-amber-500 dark:bg-amber-400",
-  teal: "bg-teal-500 dark:bg-teal-400",
-  rose: "bg-rose-500 dark:bg-rose-400",
-  cyan: "bg-cyan-500 dark:bg-cyan-400",
+  terracotta: "bg-[#b84a27] dark:bg-[#e07a5f]",
+  sage: "bg-[#1f5c44] dark:bg-[#52b788]",
+  ochre: "bg-[#b47b28] dark:bg-[#e0a96d]",
+  navy: "bg-[#25416b] dark:bg-[#7ca5de]",
+  plum: "bg-[#6e3556] dark:bg-[#d48ab8]",
+  carmine: "bg-[#9e3337] dark:bg-[#e57373]",
 };
 
 const TOP_BORDER_TONE_CLASSES: Record<BadgeTone, string> = {
-  indigo: "border-t-indigo-500/80 dark:border-t-indigo-400/80",
-  violet: "border-t-violet-500/80 dark:border-t-violet-400/80",
-  sky: "border-t-sky-500/80 dark:border-t-sky-400/80",
-  amber: "border-t-amber-500/80 dark:border-t-amber-400/80",
-  teal: "border-t-teal-500/80 dark:border-t-teal-400/80",
-  rose: "border-t-rose-500/80 dark:border-t-rose-400/80",
-  cyan: "border-t-cyan-500/80 dark:border-t-cyan-400/80",
+  terracotta: "studio-card border-l-[3px] border-l-[#b84a27] dark:border-l-[#e07a5f]",
+  sage: "studio-card border-l-[3px] border-l-[#1f5c44] dark:border-l-[#52b788]",
+  ochre: "studio-card border-l-[3px] border-l-[#b47b28] dark:border-l-[#e0a96d]",
+  navy: "studio-card border-l-[3px] border-l-[#25416b] dark:border-l-[#7ca5de]",
+  plum: "studio-card border-l-[3px] border-l-[#6e3556] dark:border-l-[#d48ab8]",
+  carmine: "studio-card border-l-[3px] border-l-[#9e3337] dark:border-l-[#e57373]",
+};
+
+const HEADER_BAND_TONE_CLASSES: Record<BadgeTone, string> = {
+  terracotta:
+    "border-[#eaded2] bg-[#f7efe6]/80 dark:border-[#302721] dark:bg-[#231c17]/70",
+  sage:
+    "border-[#dce7e0] bg-[#eef5f0]/80 dark:border-[#23332b] dark:bg-[#17231d]/70",
+  ochre:
+    "border-[#eadfce] bg-[#f8f2e7]/80 dark:border-[#332a1d] dark:bg-[#241e15]/70",
+  navy:
+    "border-[#dce3ed] bg-[#eef2f7]/80 dark:border-[#242e3d] dark:bg-[#171e29]/70",
+  plum:
+    "border-[#e8dce4] bg-[#f5eef3]/80 dark:border-[#33232d] dark:bg-[#23181f]/70",
+  carmine:
+    "border-[#eadcdf] bg-[#f7eef0]/80 dark:border-[#362325] dark:bg-[#241719]/70",
 };
 
 const SUBMIT_BUTTON_TONE_CLASSES: Record<BadgeTone, string> = {
-  indigo:
-    "border-indigo-600 bg-indigo-600 text-white hover:bg-indigo-700 dark:border-indigo-500 dark:bg-indigo-600 dark:hover:bg-indigo-500",
-  violet:
-    "border-violet-600 bg-violet-600 text-white hover:bg-violet-700 dark:border-violet-500 dark:bg-violet-600 dark:hover:bg-violet-500",
-  sky: "border-sky-600 bg-sky-600 text-white hover:bg-sky-700 dark:border-sky-500 dark:bg-sky-500 dark:text-white dark:hover:bg-sky-400",
-  amber:
-    "border-amber-600 bg-amber-600 text-white hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400",
-  teal: "border-teal-600 bg-teal-600 text-white hover:bg-teal-700 dark:border-teal-500 dark:bg-teal-500 dark:text-white dark:hover:bg-teal-400",
-  rose: "border-rose-600 bg-rose-600 text-white hover:bg-rose-700 dark:border-rose-500 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400",
-  cyan: "border-cyan-600 bg-cyan-600 text-white hover:bg-cyan-700 dark:border-cyan-500 dark:bg-cyan-500 dark:text-neutral-950 dark:hover:bg-cyan-400",
+  terracotta:
+    "border-[#9e3c1e] bg-[#b84a27] text-white hover:bg-[#9e3c1e] dark:border-[#e07a5f] dark:bg-[#d46543] dark:text-white dark:hover:bg-[#e07a5f]",
+  sage:
+    "border-[#174936] bg-[#1f5c44] text-white hover:bg-[#174936] dark:border-[#52b788] dark:bg-[#2d7a5b] dark:text-white dark:hover:bg-[#38916d]",
+  ochre:
+    "border-[#8a5a14] bg-[#a36c1d] text-white hover:bg-[#8a5a14] dark:border-[#e0a96d] dark:bg-[#b87d24] dark:text-white dark:hover:bg-[#cc8e30]",
+  navy:
+    "border-[#1b3152] bg-[#25416b] text-white hover:bg-[#1b3152] dark:border-[#7ca5de] dark:bg-[#355a91] dark:text-white dark:hover:bg-[#426ba8]",
+  plum:
+    "border-[#562743] bg-[#6e3556] text-white hover:bg-[#562743] dark:border-[#d48ab8] dark:bg-[#87436b] dark:text-white dark:hover:bg-[#9c507d]",
+  carmine:
+    "border-[#7d2629] bg-[#9e3337] text-white hover:bg-[#7d2629] dark:border-[#e57373] dark:bg-[#b54045] dark:text-white dark:hover:bg-[#c94e53]",
 };
 
 export function getFormatTone(headerBadge?: string): BadgeTone {
   const lower = (headerBadge || "").toLowerCase();
-  if (lower.includes("multiple choice")) return "sky";
-  if (lower.includes("true") || lower.includes("false")) return "violet";
-  if (lower.includes("fill") || lower.includes("gap")) return "amber";
-  if (lower.includes("reorder")) return "teal";
-  if (lower.includes("error")) return "rose";
-  if (lower.includes("sign") || lower.includes("notice")) return "amber";
-  if (lower.includes("match")) return "cyan";
-  return "indigo";
+  if (lower.includes("multiple choice")) return "sage";
+  if (lower.includes("true") || lower.includes("false")) return "plum";
+  if (lower.includes("fill") || lower.includes("gap")) return "ochre";
+  if (lower.includes("reorder")) return "navy";
+  if (lower.includes("error")) return "carmine";
+  if (lower.includes("sign") || lower.includes("notice")) return "ochre";
+  if (lower.includes("match")) return "navy";
+  return "terracotta";
 }
 
 export function getBadgeClasses(headerBadge?: string): string {
@@ -77,7 +93,12 @@ export function getTopBorderClasses(headerBadge?: string): string {
   return TOP_BORDER_TONE_CLASSES[getFormatTone(headerBadge)];
 }
 
+export function getHeaderBandClasses(headerBadge?: string): string {
+  return HEADER_BAND_TONE_CLASSES[getFormatTone(headerBadge)];
+}
+
 export function getSubmitButtonClasses(headerBadge?: string): string {
   return SUBMIT_BUTTON_TONE_CLASSES[getFormatTone(headerBadge)];
 }
+
 

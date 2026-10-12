@@ -21,6 +21,7 @@ const TOPIC_PALETTES: Record<
   number,
   {
     topBorder: string;
+    headerBand: string;
     badge: string;
     dot: string;
     modelBox: string;
@@ -32,52 +33,58 @@ const TOPIC_PALETTES: Record<
   }
 > = {
   33: {
-    topBorder: "border-t-teal-500 dark:border-t-teal-400",
+    topBorder: "border-l-4 border-l-[#1f5c44] dark:border-l-[#43a07a]",
+    headerBand:
+      "border-[#b8decb]/70 bg-gradient-to-r from-[#ebf5f0]/85 via-[#ebf5f0]/30 to-transparent dark:border-[#1c4d39]/50 dark:from-[#11281f]/55 dark:via-[#11281f]/20 dark:to-transparent",
     badge:
-      "border-teal-200/90 bg-teal-50/90 text-teal-800 dark:border-teal-800/80 dark:bg-teal-950/60 dark:text-teal-300",
-    dot: "bg-teal-500 dark:bg-teal-400",
+      "border-[#b8decb] bg-[#ebf5f0] text-[#143d2d] dark:border-[#1c4d39] dark:bg-[#11281f] dark:text-[#6fd4aa]",
+    dot: "bg-[#1f5c44] dark:bg-[#43a07a]",
     modelBox:
-      "border-teal-200/80 border-l-4 border-l-teal-500 bg-teal-50/35 dark:border-teal-900/60 dark:border-l-teal-400 dark:bg-teal-950/20",
-    modelLabel: "text-teal-700 dark:text-teal-300",
+      "border-[#b8decb]/80 border-l-4 border-l-[#1f5c44] bg-[#ebf5f0]/35 dark:border-[#1c4d39]/60 dark:border-l-[#43a07a] dark:bg-[#11281f]/20",
+    modelLabel: "text-[#143d2d] dark:text-[#6fd4aa]",
     termBadge:
-      "border-teal-300 bg-teal-100/80 text-teal-950 dark:border-teal-700 dark:bg-teal-900/60 dark:text-teal-200",
+      "border-[#b8decb] bg-[#ebf5f0] text-[#143d2d] dark:border-[#1c4d39] dark:bg-[#1a3b2e] dark:text-[#b2ead1]",
     fqCard:
-      "border-teal-200/60 bg-teal-50/20 dark:border-teal-900/40 dark:bg-teal-950/15",
+      "border-[#b8decb]/60 bg-[#ebf5f0]/20 dark:border-[#1c4d39]/40 dark:bg-[#11281f]/15",
     fqNumberPill:
-      "bg-teal-100 text-teal-800 dark:bg-teal-900/70 dark:text-teal-200",
-    focusBorder: "focus:border-teal-500 dark:focus:border-teal-400",
+      "bg-[#1f5c44] text-white dark:bg-[#43a07a] dark:text-stone-950",
+    focusBorder: "focus:border-[#1f5c44] dark:focus:border-[#43a07a]",
   },
   35: {
-    topBorder: "border-t-sky-500 dark:border-t-sky-400",
+    topBorder: "border-l-4 border-l-[#25416b] dark:border-l-[#6894d4]",
+    headerBand:
+      "border-[#c5d4e8]/70 bg-gradient-to-r from-[#edf2f8]/85 via-[#edf2f8]/30 to-transparent dark:border-[#1e3559]/50 dark:from-[#132036]/55 dark:via-[#132036]/20 dark:to-transparent",
     badge:
-      "border-sky-200/90 bg-sky-50/90 text-sky-800 dark:border-sky-800/80 dark:bg-sky-950/60 dark:text-sky-300",
-    dot: "bg-sky-500 dark:bg-sky-400",
+      "border-[#c5d4e8] bg-[#edf2f8] text-[#1b3152] dark:border-[#1e3559] dark:bg-[#132036] dark:text-[#acc4e8]",
+    dot: "bg-[#25416b] dark:bg-[#6894d4]",
     modelBox:
-      "border-sky-200/80 border-l-4 border-l-sky-500 bg-sky-50/35 dark:border-sky-900/60 dark:border-l-sky-400 dark:bg-sky-950/20",
-    modelLabel: "text-sky-700 dark:text-sky-300",
+      "border-[#c5d4e8]/80 border-l-4 border-l-[#25416b] bg-[#edf2f8]/35 dark:border-[#1e3559]/60 dark:border-l-[#6894d4] dark:bg-[#132036]/20",
+    modelLabel: "text-[#1b3152] dark:text-[#acc4e8]",
     termBadge:
-      "border-sky-300 bg-sky-100/80 text-sky-950 dark:border-sky-700 dark:bg-sky-900/60 dark:text-sky-200",
+      "border-[#c5d4e8] bg-[#edf2f8] text-[#1b3152] dark:border-[#1e3559] dark:bg-[#1b3152] dark:text-[#d5e3f7]",
     fqCard:
-      "border-sky-200/60 bg-sky-50/20 dark:border-sky-900/40 dark:bg-sky-950/15",
+      "border-[#c5d4e8]/60 bg-[#edf2f8]/20 dark:border-[#1e3559]/40 dark:bg-[#132036]/15",
     fqNumberPill:
-      "bg-sky-100 text-sky-800 dark:bg-sky-900/70 dark:text-sky-200",
-    focusBorder: "focus:border-sky-500 dark:focus:border-sky-400",
+      "bg-[#25416b] text-white dark:bg-[#6894d4] dark:text-stone-950",
+    focusBorder: "focus:border-[#25416b] dark:focus:border-[#6894d4]",
   },
   36: {
-    topBorder: "border-t-amber-500 dark:border-t-amber-400",
+    topBorder: "border-l-4 border-l-[#a36c1d] dark:border-l-[#e0a84e]",
+    headerBand:
+      "border-[#e6cda5]/70 bg-gradient-to-r from-[#faf2e3]/85 via-[#faf2e3]/30 to-transparent dark:border-[#63410e]/50 dark:from-[#2b1f0d]/55 dark:via-[#2b1f0d]/20 dark:to-transparent",
     badge:
-      "border-amber-200/90 bg-amber-50/90 text-amber-800 dark:border-amber-800/80 dark:bg-amber-950/60 dark:text-amber-300",
-    dot: "bg-amber-500 dark:bg-amber-400",
+      "border-[#e6cda5] bg-[#faf2e3] text-[#784f12] dark:border-[#63410e] dark:bg-[#2b1f0d] dark:text-[#f2cf94]",
+    dot: "bg-[#a36c1d] dark:bg-[#e0a84e]",
     modelBox:
-      "border-amber-200/80 border-l-4 border-l-amber-500 bg-amber-50/35 dark:border-amber-900/60 dark:border-l-amber-400 dark:bg-amber-950/20",
-    modelLabel: "text-amber-800 dark:text-amber-300",
+      "border-[#e6cda5]/80 border-l-4 border-l-[#a36c1d] bg-[#faf2e3]/35 dark:border-[#63410e]/60 dark:border-l-[#e0a84e] dark:bg-[#2b1f0d]/20",
+    modelLabel: "text-[#784f12] dark:text-[#f2cf94]",
     termBadge:
-      "border-amber-300 bg-amber-100/80 text-amber-950 dark:border-amber-700 dark:bg-amber-900/60 dark:text-amber-200",
+      "border-[#e6cda5] bg-[#faf2e3] text-[#784f12] dark:border-[#63410e] dark:bg-[#3d2b11] dark:text-[#f7deb2]",
     fqCard:
-      "border-amber-200/60 bg-amber-50/20 dark:border-amber-900/40 dark:bg-amber-950/15",
+      "border-[#e6cda5]/60 bg-[#faf2e3]/25 dark:border-[#63410e]/40 dark:bg-[#2b1f0d]/15",
     fqNumberPill:
-      "bg-amber-100 text-amber-900 dark:bg-amber-900/70 dark:text-amber-200",
-    focusBorder: "focus:border-amber-500 dark:focus:border-amber-400",
+      "bg-[#a36c1d] text-white dark:bg-[#e0a84e] dark:text-stone-950",
+    focusBorder: "focus:border-[#a36c1d] dark:focus:border-[#e0a84e]",
   },
 };
 
@@ -251,96 +258,114 @@ export function SpeakingSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-t-4 border-neutral-200/80 border-t-violet-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-violet-400 dark:bg-neutral-900">
-        <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 md:flex-row md:items-center dark:border-neutral-800/80">
-          <div>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-200/90 bg-violet-50/90 px-2.5 py-0.5 text-xs font-semibold text-violet-700 dark:border-violet-800/80 dark:bg-violet-950/60 dark:text-violet-300">
-              Section 2 • Topics 33, 35, 36
-            </span>
-            <h2 className="mt-2 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
-              2. Speaking — Sample Topics
-            </h2>
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              Study the model answers and follow-up questions, or switch to
-              Practice Mode to type from memory and evaluate each topic
-              individually.
-            </p>
-          </div>
+      <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#6e3556] dark:border-l-[#c97da8]">
+        <div className="border-b border-[#dfc2d2]/70 bg-gradient-to-r from-[#f7eff3]/90 via-[#f7eff3]/35 to-transparent px-6 py-5 dark:border-[#52243e]/50 dark:from-[#2a1521]/60 dark:via-[#2a1521]/20 dark:to-transparent">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-md border border-[#dfc2d2] bg-[#f7eff3] px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase text-[#4f243d] dark:border-[#52243e] dark:bg-[#2a1521] dark:text-[#e6b8d2]">
+                <span className="h-1.5 w-1.5 rounded-full bg-[#6e3556] dark:bg-[#c97da8]" />
+                Sec 02 • Topics 33, 35, 36
+              </span>
+              <h2 className="font-display mt-2 text-2xl font-bold tracking-tight text-stone-900 dark:text-stone-100">
+                2. Speaking — Sample Topics
+              </h2>
+              <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
+                Study the model answers and follow-up questions, or switch to
+                Practice Mode to type from memory and evaluate each topic
+                individually.
+              </p>
+            </div>
 
-          <div className="flex flex-wrap items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => {
-                setMode("study");
-              }}
-              className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                activeMode === "study"
-                  ? "border-violet-600 bg-violet-600 text-white shadow-2xs dark:border-violet-500 dark:bg-violet-600 dark:text-white"
-                  : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-violet-300 hover:bg-violet-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-violet-700 dark:hover:bg-violet-950/40"
-              }`}
-            >
-              Study Mode (Model Shown)
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode("practice");
-              }}
-              className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                activeMode === "practice"
-                  ? "border-violet-600 bg-violet-600 text-white shadow-2xs dark:border-violet-500 dark:bg-violet-600 dark:text-white"
-                  : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-violet-300 hover:bg-violet-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-violet-700 dark:hover:bg-violet-950/40"
-              }`}
-            >
-              Practice Mode (Model Hidden)
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode("flashcard")}
-              className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                activeMode === "flashcard"
-                  ? "border-violet-600 bg-violet-600 text-white shadow-2xs dark:border-violet-500 dark:bg-violet-600 dark:text-white"
-                  : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-violet-300 hover:bg-violet-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-violet-700 dark:hover:bg-violet-950/40"
-              }`}
-            >
-              Flashcards
-            </button>
-            <button
-              type="button"
-              onClick={() => setShowHistory((h) => !h)}
-              className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
-                showHistory
-                  ? "border-amber-500 bg-amber-50 text-amber-900 dark:border-amber-600 dark:bg-amber-950/60 dark:text-amber-200"
-                  : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-violet-300 hover:bg-violet-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-violet-700 dark:hover:bg-violet-950/40"
-              }`}
-            >
-              Saved Attempts ({savedAttempts.length})
-            </button>
+            <div className="studio-subcard flex flex-wrap items-center gap-1 rounded-xl border p-1">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("study");
+                }}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                  activeMode === "study"
+                    ? "bg-[#6e3556] text-white shadow-2xs dark:bg-[#b56291] dark:text-white"
+                    : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                }`}
+              >
+                Study Mode (Model Shown)
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("practice");
+                }}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                  activeMode === "practice"
+                    ? "bg-[#6e3556] text-white shadow-2xs dark:bg-[#b56291] dark:text-white"
+                    : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                }`}
+              >
+                Practice Mode (Model Hidden)
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode("flashcard")}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                  activeMode === "flashcard"
+                    ? "bg-[#6e3556] text-white shadow-2xs dark:bg-[#b56291] dark:text-white"
+                    : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                }`}
+              >
+                Flashcards
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowHistory((h) => !h)}
+                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
+                  showHistory
+                    ? "bg-[#a36c1d] text-white shadow-2xs dark:bg-[#e0a84e] dark:text-stone-950"
+                    : "text-stone-600 hover:bg-white/70 hover:text-stone-900 dark:text-stone-300 dark:hover:bg-stone-800/70"
+                }`}
+              >
+                Saved Attempts ({savedAttempts.length})
+              </button>
+            </div>
           </div>
         </div>
 
         {activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-violet-200/80 bg-violet-50/50 px-4 py-3 dark:border-violet-900/60 dark:bg-violet-950/30">
-            <div className="flex flex-wrap items-center gap-4 text-sm">
-              <div>
-                <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                  Progress:{" "}
+          <div className="flex flex-wrap items-center justify-between gap-4 px-6 py-3.5">
+            <div className="flex flex-wrap items-center gap-5 text-sm">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                  Progress
                 </span>
-                <span className="font-semibold text-violet-700 dark:text-violet-300">
-                  {progressSummary.submittedCount} / {progressSummary.total}{" "}
-                  Topics Submitted
+                <div className="h-2 w-28 overflow-hidden rounded-full bg-stone-200/90 dark:bg-stone-800">
+                  <div
+                    className="h-full rounded-full bg-[#6e3556] transition-all duration-300 dark:bg-[#c97da8]"
+                    style={{
+                      width: `${
+                        progressSummary.total > 0
+                          ? Math.round(
+                              (progressSummary.submittedCount /
+                                progressSummary.total) *
+                                100
+                            )
+                          : 0
+                      }%`,
+                    }}
+                  />
+                </div>
+                <span className="font-mono text-xs font-bold text-[#4f243d] dark:text-[#e6b8d2]">
+                  {progressSummary.submittedCount}/{progressSummary.total} Topics
                 </span>
               </div>
               {progressSummary.submittedCount > 0 && (
-                <div>
-                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                    Average Similarity:{" "}
+                <div className="flex items-center gap-2 border-l border-stone-200 pl-4 dark:border-stone-800">
+                  <span className="font-mono text-xs font-semibold uppercase text-stone-500 dark:text-stone-400">
+                    Avg Similarity:
                   </span>
                   <span
-                    className={`font-semibold ${
+                    className={`font-mono text-xs font-bold ${
                       progressSummary.averageSimilarity >= 80
-                        ? "text-green-700 dark:text-green-400"
-                        : "text-violet-700 dark:text-violet-300"
+                        ? "text-emerald-700 dark:text-emerald-400"
+                        : "text-[#4f243d] dark:text-[#e6b8d2]"
                     }`}
                   >
                     {progressSummary.averageSimilarity}%
@@ -353,7 +378,7 @@ export function SpeakingSection({
                 <button
                   type="button"
                   onClick={handleSubmitAll}
-                  className="rounded-xl border border-violet-300 bg-white px-3.5 py-1.5 text-xs font-medium text-violet-700 transition-all hover:border-violet-600 hover:bg-violet-600 hover:text-white dark:border-violet-700 dark:bg-neutral-900 dark:text-violet-300 dark:hover:border-violet-500 dark:hover:bg-violet-600 dark:hover:text-white"
+                  className="rounded-xl border border-[#dfc2d2] bg-[#f7eff3]/80 px-3.5 py-1.5 text-xs font-semibold text-[#4f243d] transition-all hover:bg-[#6e3556] hover:text-white dark:border-[#52243e] dark:bg-[#2a1521] dark:text-[#e6b8d2] dark:hover:bg-[#b56291] dark:hover:text-white"
                 >
                   Submit All Remaining
                 </button>
@@ -362,7 +387,7 @@ export function SpeakingSection({
                 <button
                   type="button"
                   onClick={handleRetry}
-                  className="rounded-xl border border-violet-600 bg-violet-600 px-3.5 py-1.5 text-xs font-medium text-white transition-all hover:bg-violet-700 dark:border-violet-500 dark:bg-violet-600 dark:hover:bg-violet-500"
+                  className="rounded-xl border border-[#6e3556] bg-[#6e3556] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#542741] dark:border-[#c97da8] dark:bg-[#b56291]"
                 >
                   Reset & Randomize
                 </button>
@@ -374,13 +399,13 @@ export function SpeakingSection({
 
       {/* Saved Attempts Drawer */}
       {showHistory && (
-        <div className="rounded-2xl border border-t-2 border-neutral-200/80 border-t-amber-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-amber-400 dark:bg-neutral-900">
-          <div className="mb-4 flex items-center justify-between border-b border-neutral-100 pb-3.5 dark:border-neutral-800">
+        <div className="studio-card rounded-2xl border border-l-4 border-l-[#a36c1d] p-6 dark:border-l-[#e0a84e]">
+          <div className="mb-4 flex items-center justify-between border-b border-stone-200/70 pb-3.5 dark:border-stone-800">
             <div>
-              <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+              <h3 className="font-display text-base font-bold text-stone-900 dark:text-stone-100">
                 Saved Speaking Attempts (localStorage)
               </h3>
-              <p className="text-xs text-neutral-500 dark:text-neutral-400">
+              <p className="text-xs text-stone-500 dark:text-stone-400">
                 Past practice submissions stored locally in your browser for
                 review.
               </p>
@@ -389,7 +414,7 @@ export function SpeakingSection({
               <button
                 type="button"
                 onClick={handleClearHistory}
-                className="rounded-lg border border-neutral-200 px-3 py-1 text-xs font-medium text-neutral-700 transition-all hover:border-red-400 hover:text-red-700 dark:border-neutral-700 dark:text-neutral-300 dark:hover:border-red-500 dark:hover:text-red-400"
+                className="rounded-lg border border-stone-200 px-3 py-1 text-xs font-semibold text-stone-700 transition-all hover:border-rose-400 hover:text-rose-700 dark:border-stone-700 dark:text-stone-300"
               >
                 Clear Saved History
               </button>
@@ -397,7 +422,7 @@ export function SpeakingSection({
           </div>
 
           {savedAttempts.length === 0 ? (
-            <p className="text-xs text-neutral-500 dark:text-neutral-400">
+            <p className="text-xs text-stone-500 dark:text-stone-400">
               No speaking attempts saved yet. Type an answer on any topic card
               and click Submit Topic to record your attempt.
             </p>
@@ -406,46 +431,46 @@ export function SpeakingSection({
               {savedAttempts.map((attempt) => (
                 <div
                   key={attempt.id}
-                  className="rounded-xl border border-neutral-200/80 bg-neutral-50/70 p-4 text-xs dark:border-neutral-800 dark:bg-neutral-950/70"
+                  className="studio-subcard rounded-xl border p-4 text-xs"
                 >
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200/70 pb-2 dark:border-neutral-800">
-                    <span className="font-semibold text-violet-700 dark:text-violet-300">
+                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2 border-b border-stone-200/70 pb-2 dark:border-stone-800">
+                    <span className="font-semibold text-[#6e3556] dark:text-[#e6b8d2]">
                       {attempt.topicTitle}
                     </span>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 font-mono">
                       <span
                         className={
                           attempt.similarityPercent >= 75
-                            ? "font-semibold text-green-700 dark:text-green-400"
-                            : "font-semibold text-red-700 dark:text-red-400"
+                            ? "font-bold text-emerald-700 dark:text-emerald-400"
+                            : "font-bold text-rose-700 dark:text-rose-400"
                         }
                       >
                         Similarity: {attempt.similarityPercent}%
                       </span>
-                      <span className="text-neutral-500 dark:text-neutral-400">
+                      <span className="text-stone-500 dark:text-stone-400">
                         {attempt.timestamp}
                       </span>
                     </div>
                   </div>
-                  <p className="mb-2 text-sm text-neutral-800 dark:text-neutral-200">
+                  <p className="mb-2 text-sm text-stone-800 dark:text-stone-200">
                     {attempt.userAnswer}
                   </p>
                   {attempt.missingKeywords.length > 0 && (
                     <div className="mt-1">
-                      <span className="font-semibold text-red-700 dark:text-red-400">
+                      <span className="font-semibold text-rose-700 dark:text-rose-400">
                         Missing Key Words:{" "}
                       </span>
-                      <span className="text-neutral-700 dark:text-neutral-300">
+                      <span className="text-stone-700 dark:text-stone-300">
                         {attempt.missingKeywords.join(", ")}
                       </span>
                     </div>
                   )}
                   {attempt.differentWording.length > 0 && (
                     <div className="mt-1">
-                      <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+                      <span className="font-semibold text-stone-800 dark:text-stone-200">
                         Different Wording:{" "}
                       </span>
-                      <span className="text-neutral-700 dark:text-neutral-300">
+                      <span className="text-stone-700 dark:text-stone-300">
                         {attempt.differentWording.join(", ")}
                       </span>
                     </div>
@@ -474,13 +499,15 @@ export function SpeakingSection({
             return (
               <div
                 key={topic.id}
-                className={`rounded-2xl border border-t-4 border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900 ${palette.topBorder}`}
+                className={`studio-card overflow-hidden rounded-2xl border ${palette.topBorder}`}
               >
-                <div className="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-3.5 dark:border-neutral-800/80">
+                <div
+                  className={`flex flex-wrap items-center justify-between gap-2 border-b px-6 py-4 ${palette.headerBand}`}
+                >
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
                       <span
-                        className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${palette.badge}`}
+                        className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-0.5 font-mono text-[11px] font-bold tracking-wider uppercase ${palette.badge}`}
                       >
                         <span
                           className={`h-1.5 w-1.5 rounded-full ${palette.dot}`}
@@ -489,12 +516,12 @@ export function SpeakingSection({
                         {topic.topicNumber})
                       </span>
                       <span
-                        className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${palette.termBadge}`}
+                        className={`rounded-md border px-2.5 py-0.5 font-mono text-[11px] font-bold ${palette.termBadge}`}
                       >
                         Focus: {topic.highlightedTerm}
                       </span>
                     </div>
-                    <h3 className="mt-2 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                    <h3 className="font-display mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
                       {topic.title}
                     </h3>
                   </div>
@@ -502,10 +529,10 @@ export function SpeakingSection({
                   {isTopicSubmitted && evalResult && (
                     <div className="flex items-center gap-2">
                       <span
-                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${
+                        className={`rounded-md border px-3 py-1 font-mono text-xs font-bold uppercase ${
                           evalResult.similarityPercent >= 75
-                            ? "border-green-300 bg-green-50 text-green-800 dark:border-green-700 dark:bg-green-950/60 dark:text-green-300"
-                            : "border-red-300 bg-red-50 text-red-800 dark:border-red-700 dark:bg-red-950/60 dark:text-red-300"
+                            ? "border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300"
+                            : "border-rose-300 bg-rose-50 text-rose-800 dark:border-rose-700 dark:bg-rose-950/60 dark:text-rose-300"
                         }`}
                       >
                         Similarity: {evalResult.similarityPercent}%
@@ -514,92 +541,93 @@ export function SpeakingSection({
                   )}
                 </div>
 
-                {/* Model Answer Box */}
-                {showModelAnswer ? (
-                  <div
-                    className={`mb-5 rounded-xl border p-4 ${palette.modelBox}`}
-                  >
+                <div className="p-6">
+                  {/* Model Answer Box */}
+                  {showModelAnswer ? (
                     <div
-                      className={`mb-1.5 text-xs font-semibold ${palette.modelLabel}`}
+                      className={`mb-5 rounded-xl border p-4 ${palette.modelBox}`}
                     >
-                      Model Answer (Topic #{topic.topicNumber})
+                      <div
+                        className={`mb-1.5 font-mono text-xs font-bold uppercase ${palette.modelLabel}`}
+                      >
+                        Model Answer (Topic #{topic.topicNumber})
+                      </div>
+                      <p className="text-[15px] leading-relaxed text-stone-900 dark:text-stone-100">
+                        {topic.modelAnswer
+                          .split(topic.highlightedTerm)
+                          .map((part, pIdx, arr) => (
+                            <React.Fragment key={pIdx}>
+                              {part}
+                              {pIdx < arr.length - 1 && (
+                                <strong
+                                  className={`rounded-md border px-1.5 py-0.5 font-semibold ${palette.termBadge}`}
+                                >
+                                  {topic.highlightedTerm}
+                                </strong>
+                              )}
+                            </React.Fragment>
+                          ))}
+                      </p>
                     </div>
-                    <p className="text-sm leading-relaxed text-neutral-900 dark:text-neutral-100">
-                      {topic.modelAnswer
-                        .split(topic.highlightedTerm)
-                        .map((part, pIdx, arr) => (
-                          <React.Fragment key={pIdx}>
-                            {part}
-                            {pIdx < arr.length - 1 && (
-                              <strong
-                                className={`rounded-md border px-1.5 py-0.5 font-semibold ${palette.termBadge}`}
-                              >
-                                {topic.highlightedTerm}
-                              </strong>
-                            )}
-                          </React.Fragment>
-                        ))}
-                    </p>
-                  </div>
-                ) : (
-                  <div
-                    className={`mb-5 rounded-xl border border-dashed px-4 py-3 text-xs ${palette.fqCard} ${palette.modelLabel}`}
-                  >
-                    Model answer is hidden in Practice Mode. Type your response
-                    from memory below and click Submit Topic #{topic.topicNumber}{" "}
-                    to compare.
-                  </div>
-                )}
+                  ) : (
+                    <div
+                      className={`mb-5 rounded-xl border border-dashed px-4 py-3 text-xs ${palette.fqCard} ${palette.modelLabel}`}
+                    >
+                      Model answer is hidden in Practice Mode. Type your response
+                      from memory below and click Submit Topic #{topic.topicNumber}{" "}
+                      to compare.
+                    </div>
+                  )}
 
-                {/* Memory Recall Textarea */}
-                <div className="mb-4">
-                  <label className="mb-2 block text-xs font-semibold text-neutral-700 dark:text-neutral-300">
-                    Your Speaking Response (Type from memory)
-                  </label>
-                  <textarea
-                    rows={5}
-                    disabled={isTopicSubmitted}
-                    value={userDrafts[topic.id] || ""}
-                    onChange={(e) =>
-                      setUserDrafts((prev) => ({
-                        ...prev,
-                        [topic.id]: e.target.value,
-                      }))
-                    }
-                    placeholder={`Write the speech for "${topic.title}" from memory...`}
-                    className={`w-full rounded-xl border p-4 text-sm leading-relaxed transition-all focus:outline-none ${
-                      !isTopicSubmitted
-                        ? `border-neutral-200/90 bg-neutral-50/50 text-neutral-900 placeholder:text-neutral-400 focus:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-900 ${palette.focusBorder}`
-                        : "border-neutral-200 bg-neutral-50/70 text-neutral-900 dark:border-neutral-800 dark:bg-neutral-950/50 dark:text-neutral-200"
-                    }`}
-                  />
+                  {/* Memory Recall Textarea */}
+                  <div className="mb-4">
+                    <label className="mb-2 block font-mono text-xs font-bold uppercase text-stone-700 dark:text-stone-300">
+                      Your Speaking Response (Type from memory)
+                    </label>
+                    <textarea
+                      rows={5}
+                      disabled={isTopicSubmitted}
+                      value={userDrafts[topic.id] || ""}
+                      onChange={(e) =>
+                        setUserDrafts((prev) => ({
+                          ...prev,
+                          [topic.id]: e.target.value,
+                        }))
+                      }
+                      placeholder={`Write the speech for "${topic.title}" from memory...`}
+                      className={`w-full rounded-xl border p-4 text-sm leading-relaxed transition-all focus:outline-none ${
+                        !isTopicSubmitted
+                          ? `border-stone-200/90 bg-stone-50/50 text-stone-900 placeholder:text-stone-400 focus:bg-white dark:border-stone-700 dark:bg-stone-950 dark:text-stone-100 dark:placeholder:text-stone-500 dark:focus:bg-stone-900 ${palette.focusBorder}`
+                          : "border-stone-200 bg-stone-50/70 text-stone-900 dark:border-stone-800 dark:bg-stone-950/50 dark:text-stone-200"
+                      }`}
+                    />
 
-                  {/* Per-Topic Submit / Retry Bar */}
-                  <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400">
-                      {isTopicSubmitted
-                        ? `Topic #${topic.topicNumber} evaluated and saved to localStorage.`
-                        : `Submit Topic #${topic.topicNumber} to view similarity score, missing keywords, and word diff.`}
-                    </span>
-                    {!isTopicSubmitted ? (
-                      <button
-                        type="button"
-                        onClick={() => handleSubmitTopic(topic)}
-                        className="rounded-xl border border-violet-600 bg-violet-600 px-4 py-1.5 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-violet-700 dark:border-violet-500 dark:bg-violet-600 dark:hover:bg-violet-500"
-                      >
-                        Submit Topic #{topic.topicNumber}
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleResetTopic(topic.id)}
-                        className="rounded-xl border border-neutral-200/90 bg-neutral-50/80 px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:border-neutral-400 hover:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:bg-neutral-800"
-                      >
-                        Try Topic #{topic.topicNumber} Again
-                      </button>
-                    )}
+                    {/* Per-Topic Submit / Retry Bar */}
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                      <span className="text-xs text-stone-500 dark:text-stone-400">
+                        {isTopicSubmitted
+                          ? `Topic #${topic.topicNumber} evaluated and saved to localStorage.`
+                          : `Submit Topic #${topic.topicNumber} to view similarity score, missing keywords, and word diff.`}
+                      </span>
+                      {!isTopicSubmitted ? (
+                        <button
+                          type="button"
+                          onClick={() => handleSubmitTopic(topic)}
+                          className="rounded-xl border border-[#6e3556] bg-[#6e3556] px-4 py-2 text-xs font-semibold text-white shadow-2xs transition-all hover:bg-[#542741] dark:border-[#c97da8] dark:bg-[#b56291]"
+                        >
+                          Submit Topic #{topic.topicNumber}
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleResetTopic(topic.id)}
+                          className="rounded-xl border border-stone-300/90 bg-stone-100/80 px-3.5 py-1.5 text-xs font-semibold text-stone-700 transition-all hover:border-stone-400 hover:bg-white dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                        >
+                          Try Topic #{topic.topicNumber} Again
+                        </button>
+                      )}
+                    </div>
                   </div>
-                </div>
 
                 {/* Evaluation Feedback After Submit */}
                 {isTopicSubmitted && evalResult && (
@@ -794,6 +822,7 @@ export function SpeakingSection({
                     })}
                   </div>
                 </div>
+                </div>
               </div>
             );
           })}
@@ -801,8 +830,8 @@ export function SpeakingSection({
       )}
 
       {activeMode !== "flashcard" && (
-        <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
-          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+        <div className="studio-card flex flex-wrap items-center justify-between gap-4 rounded-2xl border px-6 py-4">
+          <span className="text-xs text-stone-500 dark:text-stone-400">
             {progressSummary.allSubmitted
               ? "All 3 speaking topics evaluated and saved to localStorage."
               : `Submitted ${progressSummary.submittedCount} of ${progressSummary.total} topics. Submit each topic individually above or submit all remaining.`}
@@ -812,7 +841,7 @@ export function SpeakingSection({
               <button
                 type="button"
                 onClick={handleSubmitAll}
-                className="rounded-xl border border-violet-600 bg-violet-600 px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-violet-700 dark:border-violet-500 dark:bg-violet-600 dark:hover:bg-violet-500"
+                className="rounded-xl border border-[#6e3556] bg-[#6e3556] px-5 py-2.5 text-xs font-semibold text-white shadow-xs transition-all hover:bg-[#542741] dark:border-[#c97da8] dark:bg-[#b56291]"
               >
                 Submit All Remaining
               </button>
@@ -820,7 +849,7 @@ export function SpeakingSection({
             <button
               type="button"
               onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-violet-500 hover:text-violet-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:hover:border-violet-400 dark:hover:text-violet-300"
+              className="rounded-xl border border-stone-300 bg-white px-5 py-2.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#6e3556] hover:text-[#4f243d] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-200 dark:hover:border-[#c97da8] dark:hover:text-[#e6b8d2]"
             >
               Reset & Randomize Section
             </button>
