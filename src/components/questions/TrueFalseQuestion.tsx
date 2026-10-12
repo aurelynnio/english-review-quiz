@@ -16,6 +16,7 @@ export interface TrueFalseQuestionProps {
   submitted: boolean;
   evidence?: string;
   headerBadge?: string;
+  preContent?: React.ReactNode;
   reverseOptions?: boolean;
   onSelect: (value: boolean) => void;
   onSubmit?: () => void;
@@ -30,6 +31,7 @@ export function TrueFalseQuestion({
   submitted,
   evidence,
   headerBadge,
+  preContent,
   reverseOptions = false,
   onSelect,
   onSubmit,
@@ -87,6 +89,8 @@ export function TrueFalseQuestion({
           )}
         </div>
       </div>
+
+      {preContent && <div className="mb-4">{preContent}</div>}
 
       <p className="mb-5 text-[15px] font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">
         {statement}

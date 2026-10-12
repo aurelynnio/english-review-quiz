@@ -25,6 +25,7 @@ export interface ReorderWordsQuestionProps {
   submitted: boolean;
   note?: string;
   headerBadge?: string;
+  preContent?: React.ReactNode;
   onChangeSelectedIds: (ids: string[]) => void;
   onSubmit?: () => void;
   onReset?: () => void;
@@ -41,6 +42,7 @@ export function ReorderWordsQuestion({
   submitted,
   note,
   headerBadge,
+  preContent,
   onChangeSelectedIds,
   onSubmit,
   onReset,
@@ -114,6 +116,8 @@ export function ReorderWordsQuestion({
           )}
         </div>
       </div>
+
+      {preContent && <div className="mb-4">{preContent}</div>}
 
       <div className="mb-4 flex flex-col justify-between gap-2 sm:flex-row sm:items-baseline">
         <p className="text-sm text-neutral-700 dark:text-neutral-300">

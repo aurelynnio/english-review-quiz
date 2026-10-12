@@ -8,6 +8,7 @@ export interface FlashcardItem {
   frontTitle?: string;
   frontText: string;
   frontHint?: string;
+  imageUrl?: string;
   backAnswer: string;
   backNote?: string;
 }
@@ -116,6 +117,15 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
             }}
             className="flex min-h-[220px] cursor-pointer flex-col justify-center rounded-2xl border border-indigo-200/70 bg-indigo-50/25 p-8 text-left transition-all hover:border-indigo-300 hover:bg-indigo-50/40 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/35"
           >
+            {currentCard.imageUrl && (
+              <div className="mb-4 flex justify-center rounded-xl border border-neutral-200/80 bg-white p-3 dark:border-neutral-700 dark:bg-white">
+                <img
+                  src={currentCard.imageUrl}
+                  alt={currentCard.frontText}
+                  className="max-h-48 w-auto object-contain"
+                />
+              </div>
+            )}
             {!isFlipped ? (
               <div className="space-y-3">
                 {currentCard.frontTitle && (
@@ -258,6 +268,16 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
                       {flipped ? "Hide Answer" : "Reveal Answer"}
                     </button>
                   </div>
+
+                  {card.imageUrl && (
+                    <div className="mb-3 flex justify-center rounded-lg border border-neutral-200/80 bg-white p-2.5 dark:border-neutral-700 dark:bg-white">
+                      <img
+                        src={card.imageUrl}
+                        alt={card.frontText}
+                        className="max-h-36 w-auto object-contain"
+                      />
+                    </div>
+                  )}
 
                   {card.frontTitle && (
                     <p className="mb-1 text-xs font-medium text-neutral-500 dark:text-neutral-400">

@@ -84,8 +84,17 @@ function SignPlaque({ sign }: { sign: SignQuestion }) {
         </span>
         <span className="font-mono">{sign.imageFile}</span>
       </div>
-      <div className="py-3 text-center text-base font-semibold tracking-wide text-neutral-900 dark:text-neutral-100">
-        {sign.signText}
+      <div className="mt-3 flex flex-col items-center gap-3">
+        <div className="flex w-full max-w-md justify-center rounded-xl border border-neutral-200/80 bg-white p-3.5 shadow-2xs dark:border-neutral-700 dark:bg-white">
+          <img
+            src={`/${sign.imageFile}`}
+            alt={sign.title}
+            className="max-h-52 w-auto object-contain"
+          />
+        </div>
+        <div className="text-center text-sm font-semibold tracking-wide text-neutral-900 dark:text-neutral-100">
+          {sign.signText}
+        </div>
       </div>
     </div>
   );
@@ -163,6 +172,7 @@ export function SignsSection({
         numberLabel: `Sign ${s.number}`,
         leftText: s.title,
         rightText: s.correctAnswer,
+        imageUrl: `/${s.imageFile}`,
       })),
     [randomizedSigns]
   );
@@ -186,6 +196,7 @@ export function SignsSection({
         frontHint: `Options: ${(shuffledOptionsMap[s.id] || s.options).join(
           " | "
         )}`,
+        imageUrl: `/${s.imageFile}`,
         backAnswer: s.correctAnswer,
       })),
     [randomizedSigns, shuffledOptionsMap]
@@ -434,6 +445,7 @@ export function SignsSection({
                   key={sign.id}
                   indexLabel={indexLabel}
                   headerBadge="True / False"
+                  preContent={<SignPlaque sign={sign} />}
                   statement={tf.statement}
                   selectedValue={tfSelections[sign.id]}
                   correctAnswer={tf.isTrue}
@@ -454,6 +466,7 @@ export function SignsSection({
                   key={sign.id}
                   indexLabel={indexLabel}
                   headerBadge="Reorder Words"
+                  preContent={<SignPlaque sign={sign} />}
                   clueText={sign.title}
                   targetSentence={sign.correctAnswer}
                   availableTokens={reorderTokensMap[sign.id] || []}
@@ -474,6 +487,7 @@ export function SignsSection({
                   key={sign.id}
                   indexLabel={indexLabel}
                   headerBadge="Type the Answer"
+                  preContent={<SignPlaque sign={sign} />}
                   originalSentence={sign.title}
                   userAnswer={typedAnswers[sign.id] || ""}
                   modelAnswer={sign.correctAnswer}

@@ -19,6 +19,7 @@ export interface TypeAnswerQuestionProps {
   note?: string;
   submitted: boolean;
   headerBadge?: string;
+  preContent?: React.ReactNode;
   placeholder?: string;
   onChange: (value: string) => void;
   onSubmit?: () => void;
@@ -35,6 +36,7 @@ export function TypeAnswerQuestion({
   note,
   submitted,
   headerBadge,
+  preContent,
   placeholder = "Type the transformed sentence...",
   onChange,
   onSubmit,
@@ -92,6 +94,8 @@ export function TypeAnswerQuestion({
           )}
         </div>
       </div>
+
+      {preContent && <div className="mb-4">{preContent}</div>}
 
       <div className="mb-4 flex flex-col justify-between gap-3 sm:flex-row sm:items-baseline">
         <p className="text-[15px] font-medium leading-relaxed text-neutral-900 dark:text-neutral-100">

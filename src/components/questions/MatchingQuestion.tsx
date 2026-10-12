@@ -7,6 +7,7 @@ export interface MatchingPair {
   numberLabel: string;
   leftText: string;
   rightText: string;
+  imageUrl?: string;
   note?: string;
 }
 
@@ -125,6 +126,16 @@ export function MatchingQuestion({
                     </span>
                   )}
                 </div>
+
+                {pair.imageUrl && (
+                  <div className="my-2.5 flex justify-center rounded-lg border border-neutral-200/80 bg-white p-2.5 dark:border-neutral-700 dark:bg-white">
+                    <img
+                      src={pair.imageUrl}
+                      alt={pair.leftText}
+                      className="max-h-36 w-auto object-contain"
+                    />
+                  </div>
+                )}
 
                 <p className="text-sm font-medium text-neutral-900 dark:text-neutral-100">
                   {pair.leftText}
