@@ -25,6 +25,7 @@ export interface SpeakingTopic {
   modelAnswer: string;
   highlightedTerm: string;
   followUpQuestions: string[];
+  followUpSampleAnswers?: string[];
 }
 
 export interface MultipleChoiceItem {
@@ -214,12 +215,26 @@ export const SPEAKING_TOPICS: SpeakingTopic[] = [
     modelAnswer:
       "I would like to talk about Tao Đàn Park, the park I like most. It is in the center of Ho Chi Minh City, about ten minutes from my house. I often visit it on weekends, and I went there last Sunday morning. The park is very big and green. There are tall old trees, nice walking paths, and many flower gardens. It also has a children’s playground and some benches. I like it because the air is fresh and quiet. It helps me relax after a busy week. I also enjoy walking around the park and taking photos.",
     followUpQuestions: [
-      "Do you often go to parks?",
-      "What do people usually do in a park?",
-      "Are there many parks in your city?",
-      "Do you prefer parks or the beach? Why?",
-      "Why are parks important in a city?",
-      "Will you visit this park again in the future?",
+      "Which park do you like visiting the most, and where is it?",
+      "How often do you visit this park, and when did you last go there?",
+      "What does the park look like? What can you see there?",
+      "Why do you like visiting this park?",
+      "What do you usually do when you go to this park?",
+      "Who do you usually go to this park with?",
+      "How do you usually get to the park from your house?",
+      "What time of day do you like visiting this park the most?",
+      "Is it free to enter this park?",
+    ],
+    followUpSampleAnswers: [
+      "I like Tao Đàn Park the most. It is in the center of Ho Chi Minh City, about ten minutes from my house.",
+      "I often visit it on weekends, and I went there last Sunday morning.",
+      "The park is very big and green. There are tall old trees, nice walking paths, many flower gardens, a children’s playground, and some benches.",
+      "I like it because the air is fresh and quiet. It helps me relax after a busy week.",
+      "I enjoy walking around the park and taking photos.",
+      "I usually go there with my friends, or sometimes I go alone to relax.",
+      "I usually go there by motorbike because it takes only ten minutes from my house.",
+      "I like going there in the early morning because the weather is cool and the air is very fresh.",
+      "Yes, it is free to enter. I only pay a small fee to park my motorbike.",
     ],
   },
   {
@@ -230,12 +245,26 @@ export const SPEAKING_TOPICS: SpeakingTopic[] = [
     modelAnswer:
       "I would like to talk about the time I spent a lot of money on something. Last year, I bought a MacBook Air M2 for my study. I bought it in August, before my new school year started. I got it from the Apple store in Vincom Center in Ho Chi Minh City. It cost me about twenty-five million dong, which was a lot for me. I spent so much money because my old laptop was very slow and often broke down. I really needed a good one for my online classes and homework.",
     followUpQuestions: [
-      "Do you often spend a lot of money on things?",
-      "Do you like shopping? Why or why not?",
-      "What is the most expensive thing you have ever bought?",
-      "Do you usually save money or spend it?",
-      "How do you decide if something is worth the money?",
-      "Do you prefer shopping online or in a store?",
+      "What did you spend a lot of money on, and when did you buy it?",
+      "Where did you buy it?",
+      "How much did it cost you?",
+      "Why did you decide to spend so much money on it?",
+      "What do you use this new laptop for?",
+      "Where did you get the money to buy this laptop?",
+      "Who went with you to the store to buy it?",
+      "How did you feel when you bought it?",
+      "Are you happy with your new laptop now?",
+    ],
+    followUpSampleAnswers: [
+      "Last year, I bought a MacBook Air M2 in August, before my new school year started.",
+      "I got it from the Apple store in Vincom Center in Ho Chi Minh City.",
+      "It cost me about twenty-five million dong, which was a lot for me.",
+      "I spent so much money because my old laptop was very slow and often broke down.",
+      "I really needed a good one for my study, online classes, and homework.",
+      "I saved money from my part-time job, and my parents also gave me some money to buy it.",
+      "I went to the store with my father so he could help me check the laptop.",
+      "I felt very excited and happy to have a good laptop for my new school year.",
+      "Yes, I am very happy with it because it runs very fast and the battery lasts all day.",
     ],
   },
   {
@@ -246,12 +275,26 @@ export const SPEAKING_TOPICS: SpeakingTopic[] = [
     modelAnswer:
       "I would like to talk about Nguyễn Bỉnh Khiêm Primary School, the school I went to when I was a child. It was in my old neighborhood in Ho Chi Minh City, about five minutes from my house. The school was not very big, but it was clean and friendly. There were small classrooms, a big yard, and many green trees. I learned math, Vietnamese, English, and drawing. My teachers were kind and helped me a lot. I felt very happy there because I had many good friends. I still remember it as a wonderful place.",
     followUpQuestions: [
-      "Do you remember your first teacher?",
-      "What subjects did you like most at school?",
-      "Do you still keep in touch with your childhood friends?",
-      "How is school different now compared to the past?",
-      "Did you enjoy going to school when you were young?",
-      "What is your favorite memory from that school?",
+      "What was the name of your childhood school, and where was it?",
+      "What did the school look like?",
+      "What subjects did you learn at that school?",
+      "What were your teachers like?",
+      "How did you feel when you studied there, and why?",
+      "How did you go to school every day when you were a child?",
+      "Which subject did you like the most at that school?",
+      "What did you and your friends usually do at break time?",
+      "Do you still keep in touch with your friends from that school?",
+    ],
+    followUpSampleAnswers: [
+      "It was Nguyễn Bỉnh Khiêm Primary School, in my old neighborhood in Ho Chi Minh City, about five minutes from my house.",
+      "The school was not very big, but it was clean and friendly. There were small classrooms, a big yard, and many green trees.",
+      "I learned math, Vietnamese, English, and drawing.",
+      "My teachers were kind and helped me a lot.",
+      "I felt very happy there because I had many good friends. I still remember it as a wonderful place.",
+      "My parents usually took me to school by motorbike, and sometimes I walked because it was near my house.",
+      "I liked drawing and English the most because they were very fun and easy for me.",
+      "At break time, we often played games, talked, and ate snacks together in the big school yard.",
+      "Yes, I still keep in touch with some of my close childhood friends on Facebook.",
     ],
   },
 ];

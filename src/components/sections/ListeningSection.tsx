@@ -1,20 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { LISTENING_SUBSECTIONS } from "@/data/questions";
+import { LISTENING_SUBSECTIONS, MultipleChoiceItem } from "@/data/questions";
 import { seededShuffle } from "@/utils/quizUtils";
 import { TrueFalseQuestion } from "@/components/questions/TrueFalseQuestion";
-import { MultipleChoiceQuestion } from "@/components/questions/MultipleChoiceQuestion";
-import {
-  FillInTheBlankQuestion,
-  isFillBlankCorrect,
-} from "@/components/questions/FillInTheBlankQuestion";
+import { isFillBlankCorrect } from "@/components/questions/FillInTheBlankQuestion";
 import {
   FlashcardDeck,
   FlashcardItem,
 } from "@/components/questions/FlashcardDeck";
 
 type ListeningMode = "standard" | "type-all-gaps" | "flashcard";
+
+const OPTION_LETTERS = ["A", "B", "C", "D"];
 
 const LISTENING_PALETTES = [
   {
@@ -97,17 +95,14 @@ export function ListeningSection({
         ? seededShuffle(sub.trueFalseItems, seed + sIdx * 31)
         : [];
       const shuffledMc = sub.mcItems
-        ? seededShuffle(sub.mcItems, seed + sIdx * 47)
+        ? [...sub.mcItems].sort((a, b) => a.number - b.number)
         : [];
       const mcOptionsMap: Record<string, string[]> = {};
-      shuffledMc.forEach((item, iIdx) => {
-        mcOptionsMap[item.id] = seededShuffle(
-          item.options,
-          seed + sIdx * 59 + iIdx * 11
-        );
+      shuffledMc.forEach((item) => {
+        mcOptionsMap[item.id] = item.options;
       });
       const shuffledFill = sub.fillBlankItems
-        ? seededShuffle(sub.fillBlankItems, seed + sIdx * 73)
+        ? [...sub.fillBlankItems].sort((a, b) => a.number - b.number)
         : [];
       const text16WordBank = sub.fillBlankItems
         ? seededShuffle(
@@ -268,6 +263,72 @@ export function ListeningSection({
     setSeed(Math.floor(Math.random() * 100000) + 1);
   };
 
+  const renderGapFillParagraph = (
+    para: string,
+    questionsByNumber: Record<number, MultipleChoiceItem>
+  ) => {
+    const parts = para.split(/(\(\d+\)\s*______)/g);
+    return parts.map((part, idx) => {
+      const match = part.match(/^\((\d+)\)\s*______$/);
+      if (!match) {
+        return <React.Fragment key={idx}>{part}</React.Fragment>;
+      }
+      const num = parseInt(match[1], 10);
+      const q = questionsByNumber[num];
+      if (!q) {
+        return <React.Fragment key={idx}>{part}</React.Fragment>;
+      }
+
+      const isSubmitted = Boolean(submittedIds[q.id]);
+      const chosenText =
+        activeMode === "type-all-gaps"
+          ? (gapTextAnswers[q.id] || "").trim()
+          : mcAnswers[q.id] || "";
+      const isCorrect =
+        isSubmitted &&
+        (activeMode === "type-all-gaps"
+          ? isFillBlankCorrect(gapTextAnswers[q.id] || "", q.correctAnswer)
+          : mcAnswers[q.id] === q.correctAnswer);
+
+      if (!isSubmitted) {
+        return (
+          <span
+            key={idx}
+            className={`mx-1 inline-flex items-baseline gap-1 rounded-md border px-2 py-0.5 font-mono text-xs font-bold transition-all ${
+              chosenText
+                ? "border-[#25416b] bg-[#25416b] text-white dark:border-[#6894d4] dark:bg-[#6894d4] dark:text-stone-950"
+                : "border-[#c5d4e8] bg-white/90 text-[#1b3152] dark:border-[#1e3559] dark:bg-stone-900 dark:text-[#acc4e8]"
+            }`}
+          >
+            <span>({num})</span>
+            <span>{chosenText || "______"}</span>
+          </span>
+        );
+      }
+
+      return (
+        <span
+          key={idx}
+          className={`mx-1 inline-flex items-baseline gap-1 rounded-md border px-2 py-0.5 font-mono text-xs font-bold ${
+            isCorrect
+              ? "border-emerald-600 bg-emerald-50 text-emerald-900 dark:border-emerald-500/70 dark:bg-emerald-950/60 dark:text-emerald-200"
+              : "border-rose-500 bg-rose-50 text-rose-900 dark:border-rose-500/70 dark:bg-rose-950/60 dark:text-rose-200"
+          }`}
+        >
+          <span>({num})</span>
+          <span className={isCorrect ? "" : "line-through"}>
+            {chosenText || "—"}
+          </span>
+          {!isCorrect && (
+            <span className="ml-0.5 font-bold text-emerald-700 dark:text-emerald-300">
+              [{q.correctAnswer}]
+            </span>
+          )}
+        </span>
+      );
+    });
+  };
+
   return (
     <section className="space-y-6">
       <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#9e3337] dark:border-l-[#d96266]">
@@ -282,9 +343,9 @@ export function ListeningSection({
                 6. Listening Practice
               </h2>
               <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-                Includes True/False verification with evidence notes and Gap-fill
-                exercises. Submit each question individually for immediate
-                feedback.
+                Includes True/False verification with evidence notes and compact
+                1 → 10 Cloze / Gap-fill exercises. Submit each question
+                individually for immediate feedback.
               </p>
             </div>
 
@@ -402,6 +463,14 @@ export function ListeningSection({
             const text16AllSubmitted =
               sub.fillBlankItems?.every((item) => submittedIds[item.id]) ??
               false;
+            const mcAllSubmitted =
+              (sub.shuffledMc.length > 0 &&
+                sub.shuffledMc.every((item) => submittedIds[item.id])) ??
+              false;
+            const mcByNumber: Record<number, MultipleChoiceItem> = {};
+            sub.shuffledMc.forEach((item) => {
+              mcByNumber[item.number] = item;
+            });
 
             return (
               <div
@@ -416,12 +485,52 @@ export function ListeningSection({
                       <span
                         className={`h-1.5 w-1.5 rounded-full ${palette.dot}`}
                       />
-                      {sub.subtitle}
+                      {sub.type === "gap-fill-mc"
+                        ? `${sub.subtitle} (1 → ${sub.shuffledMc.length})`
+                        : sub.subtitle}
                     </span>
                     <h3 className="font-display mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
                       {sub.title}
                     </h3>
                   </div>
+
+                  {sub.type === "gap-fill-mc" && (
+                    <div className="flex items-center gap-2">
+                      {mcAllSubmitted ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmittedIds((prev) => {
+                              const next = { ...prev };
+                              sub.shuffledMc.forEach((item) => {
+                                delete next[item.id];
+                              });
+                              return next;
+                            });
+                          }}
+                          className="rounded-xl border border-stone-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#25416b] hover:text-[#1b3152] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                        >
+                          Retry All (1→{sub.shuffledMc.length})
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmittedIds((prev) => {
+                              const next = { ...prev };
+                              sub.shuffledMc.forEach((item) => {
+                                next[item.id] = true;
+                              });
+                              return next;
+                            });
+                          }}
+                          className="rounded-xl border border-[#25416b] bg-[#25416b] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#1b3152] dark:border-[#6894d4] dark:bg-[#6894d4] dark:text-stone-950"
+                        >
+                          Submit All (1→{sub.shuffledMc.length})
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   {sub.type === "gap-fill-text" && (
                     <div className="flex flex-wrap items-center gap-2">
@@ -448,7 +557,7 @@ export function ListeningSection({
                           }}
                           className="rounded-xl border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:border-amber-500 hover:text-amber-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-amber-400 dark:hover:text-amber-300"
                         >
-                          Try Transcript Blanks Again
+                          Retry All (1→10)
                         </button>
                       ) : (
                         <button
@@ -464,25 +573,27 @@ export function ListeningSection({
                           }}
                           className="rounded-xl border border-amber-600 bg-amber-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400"
                         >
-                          Submit All 10 Blanks
+                          Submit All (1→10)
                         </button>
                       )}
                     </div>
                   )}
                 </div>
 
-                {/* Transcript / Context Paragraphs if present */}
+                {/* Transcript / Context Paragraphs with interactive inline (1) ______ badges */}
                 {sub.paragraphs && sub.paragraphs.length > 0 && (
                   <div
                     className={`space-y-2.5 rounded-xl border p-5 text-[15px] leading-relaxed text-neutral-800 dark:text-neutral-200 ${palette.transcriptBox}`}
                   >
                     {sub.paragraphs.map((p, idx) => (
-                      <p key={idx}>{p}</p>
+                      <p key={idx} className="leading-8">
+                        {renderGapFillParagraph(p, mcByNumber)}
+                      </p>
                     ))}
                   </div>
                 )}
 
-                {/* TEXT 16 Full Passage Interactive Context + Randomized Questions */}
+                {/* TEXT 16 Full Passage Interactive Context */}
                 {sub.fillBlankParagraphs && (
                   <div
                     className={`space-y-3 rounded-xl border p-5 text-[15px] leading-relaxed text-neutral-800 dark:text-neutral-200 ${palette.transcriptBox}`}
@@ -492,8 +603,8 @@ export function ListeningSection({
                         Full Transcript Context (TEXT 16: Cars)
                       </span>
                       <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
-                        Tip: Press Enter inside any blank to submit it
-                        immediately, or use the cards below.
+                        Tip: Gõ trực tiếp vào chỗ trống (1)→(10) trong đoạn văn
+                        hoặc ở bảng bên dưới rồi nhấn Enter.
                       </span>
                     </div>
                     {sub.fillBlankParagraphs.map((para, pIdx) => {
@@ -599,92 +710,358 @@ export function ListeningSection({
                   </div>
                 )}
 
-                {/* Gap-Fill Multiple Choice (or Typed Gap-Fill) */}
+                {/* Compact Cloze / Gap-Fill Multiple Choice Table (1 -> 10) like THE ART OF DRAWING */}
                 {sub.shuffledMc.length > 0 && (
-                  <div className="space-y-3 pt-2">
-                    {sub.shuffledMc.map((item, idx) => {
-                      const indexLabel = `Item ${idx + 1} of ${
-                        sub.shuffledMc.length
-                      } (Blank #${item.number})`;
+                  <div className="studio-subcard divide-y divide-stone-200/80 overflow-hidden rounded-xl border dark:divide-stone-800">
+                    {sub.shuffledMc.map((item) => {
+                      const opts = sub.mcOptionsMap[item.id] || item.options;
                       const isItemSubmitted = Boolean(submittedIds[item.id]);
 
                       if (activeMode === "type-all-gaps") {
+                        const userVal = gapTextAnswers[item.id] || "";
+                        const isCorrect =
+                          isItemSubmitted &&
+                          isFillBlankCorrect(userVal, item.correctAnswer);
+
                         return (
-                          <FillInTheBlankQuestion
+                          <div
                             key={item.id}
-                            indexLabel={indexLabel}
-                            headerBadge="Gap-Fill (Type)"
-                            prompt={item.prompt}
-                            userAnswer={gapTextAnswers[item.id] || ""}
-                            correctAnswer={item.correctAnswer}
-                            wordBank={
-                              sub.mcOptionsMap[item.id] || item.options
-                            }
-                            submitted={isItemSubmitted}
-                            onChange={(val) =>
-                              setGapTextAnswers((prev) => ({
-                                ...prev,
-                                [item.id]: val,
-                              }))
-                            }
-                            onSubmit={() => handleSubmitOne(item.id)}
-                            onReset={() => handleResetOne(item.id)}
-                          />
+                            className="flex flex-col gap-2.5 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <div className="flex flex-wrap items-center gap-2.5">
+                              <span
+                                className={`inline-flex h-7 w-9 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold ${palette.badge}`}
+                              >
+                                ({item.number})
+                              </span>
+                              <input
+                                type="text"
+                                disabled={isItemSubmitted}
+                                value={userVal}
+                                onChange={(e) =>
+                                  setGapTextAnswers((prev) => ({
+                                    ...prev,
+                                    [item.id]: e.target.value,
+                                  }))
+                                }
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "Enter" &&
+                                    !isItemSubmitted &&
+                                    userVal.trim()
+                                  ) {
+                                    e.preventDefault();
+                                    handleSubmitOne(item.id);
+                                  }
+                                }}
+                                placeholder={`Type word for (${item.number})...`}
+                                className={`w-40 rounded-lg border px-2.5 py-1 text-xs font-medium focus:outline-none ${
+                                  !isItemSubmitted
+                                    ? "border-stone-300 bg-white text-stone-900 focus:border-[#25416b] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
+                                    : isCorrect
+                                    ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-900 dark:border-emerald-500/70 dark:bg-emerald-950/50 dark:text-emerald-200"
+                                    : "border-rose-500 bg-rose-50 text-rose-900 line-through dark:border-rose-500/70 dark:bg-rose-950/50 dark:text-rose-200"
+                                }`}
+                              />
+                              <div className="flex flex-wrap items-center gap-1">
+                                {opts.map((opt) => (
+                                  <button
+                                    key={opt}
+                                    type="button"
+                                    disabled={isItemSubmitted}
+                                    onClick={() =>
+                                      setGapTextAnswers((prev) => ({
+                                        ...prev,
+                                        [item.id]: opt,
+                                      }))
+                                    }
+                                    className={`rounded-md border px-2 py-0.5 text-xs transition-all ${
+                                      userVal.trim().toLowerCase() ===
+                                      opt.toLowerCase()
+                                        ? "border-[#25416b] bg-[#25416b] font-semibold text-white dark:border-[#6894d4] dark:bg-[#6894d4] dark:text-stone-950"
+                                        : "border-stone-200 bg-white/80 text-stone-600 hover:border-stone-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                    }`}
+                                  >
+                                    {opt}
+                                  </button>
+                                ))}
+                              </div>
+                            </div>
+
+                            <div className="flex shrink-0 items-center gap-2 self-end sm:self-center">
+                              {isItemSubmitted && !isCorrect && (
+                                <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                                  Ans: {item.correctAnswer}
+                                </span>
+                              )}
+                              {isItemSubmitted ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleResetOne(item.id)}
+                                  className="rounded-lg border border-stone-300 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700 hover:border-stone-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                >
+                                  Retry
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  disabled={!userVal.trim()}
+                                  onClick={() => handleSubmitOne(item.id)}
+                                  className="rounded-lg border border-[#25416b] bg-[#25416b] px-2.5 py-1 text-xs font-semibold text-white disabled:opacity-40 dark:border-[#6894d4] dark:bg-[#6894d4] dark:text-stone-950"
+                                >
+                                  Check
+                                </button>
+                              )}
+                            </div>
+                          </div>
                         );
                       }
 
+                      const selectedOpt = mcAnswers[item.id];
+                      const isCorrect =
+                        isItemSubmitted && selectedOpt === item.correctAnswer;
+
                       return (
-                        <MultipleChoiceQuestion
+                        <div
                           key={item.id}
-                          indexLabel={indexLabel}
-                          headerBadge="Listening Gap-Fill"
-                          prompt={item.prompt}
-                          options={sub.mcOptionsMap[item.id] || item.options}
-                          selectedOption={mcAnswers[item.id]}
-                          correctAnswer={item.correctAnswer}
-                          submitted={isItemSubmitted}
-                          onSelect={(opt) =>
-                            setMcAnswers((prev) => ({
-                              ...prev,
-                              [item.id]: opt,
-                            }))
-                          }
-                          onSubmit={() => handleSubmitOne(item.id)}
-                          onReset={() => handleResetOne(item.id)}
-                        />
+                          className="flex flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center"
+                        >
+                          <span
+                            className={`inline-flex h-7 w-9 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold ${palette.badge}`}
+                          >
+                            {item.number}.
+                          </span>
+
+                          <div className="grid flex-1 grid-cols-2 gap-1.5 sm:grid-cols-4">
+                            {opts.map((opt, optIdx) => {
+                              const letter =
+                                OPTION_LETTERS[optIdx] || String(optIdx + 1);
+                              const isSelected = selectedOpt === opt;
+                              const isRightOpt = opt === item.correctAnswer;
+
+                              let btnClass =
+                                "border-stone-200/90 bg-white/90 text-stone-800 hover:border-[#25416b]/60 hover:bg-[#edf2f8]/50 dark:border-stone-800 dark:bg-stone-900/80 dark:text-stone-200 dark:hover:border-[#6894d4]/60";
+
+                              if (!isItemSubmitted && isSelected) {
+                                btnClass =
+                                  "border-[#25416b] bg-[#25416b] text-white shadow-2xs dark:border-[#6894d4] dark:bg-[#6894d4] dark:text-stone-950";
+                              } else if (isItemSubmitted) {
+                                if (isRightOpt) {
+                                  btnClass =
+                                    "border-emerald-600 bg-emerald-50/95 font-bold text-emerald-950 dark:border-emerald-500/80 dark:bg-emerald-950/60 dark:text-emerald-100";
+                                } else if (isSelected && !isRightOpt) {
+                                  btnClass =
+                                    "border-rose-500 bg-rose-50/90 text-rose-950 line-through dark:border-rose-500/80 dark:bg-rose-950/50 dark:text-rose-200";
+                                } else {
+                                  btnClass =
+                                    "border-stone-200/60 bg-stone-100/50 text-stone-400 opacity-65 dark:border-stone-800/60 dark:bg-stone-900/40 dark:text-stone-500";
+                                }
+                              }
+
+                              return (
+                                <button
+                                  key={opt}
+                                  type="button"
+                                  disabled={isItemSubmitted}
+                                  onClick={() =>
+                                    setMcAnswers((prev) => ({
+                                      ...prev,
+                                      [item.id]: opt,
+                                    }))
+                                  }
+                                  className={`flex items-center gap-2 rounded-lg border px-2.5 py-1.5 text-left text-xs font-medium transition-all ${btnClass}`}
+                                >
+                                  <span
+                                    className={`font-mono text-[11px] font-bold ${
+                                      !isItemSubmitted && isSelected
+                                        ? "text-white/90 dark:text-stone-950"
+                                        : isItemSubmitted && isRightOpt
+                                        ? "text-emerald-700 dark:text-emerald-300"
+                                        : "text-stone-400 dark:text-stone-500"
+                                    }`}
+                                  >
+                                    {letter}.
+                                  </span>
+                                  <span className="truncate">{opt}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          <div className="flex shrink-0 items-center justify-end gap-1.5 sm:w-24">
+                            {isItemSubmitted ? (
+                              <>
+                                <span
+                                  className={`font-mono text-xs font-bold ${
+                                    isCorrect
+                                      ? "text-emerald-700 dark:text-emerald-400"
+                                      : "text-rose-600 dark:text-rose-400"
+                                  }`}
+                                >
+                                  {isCorrect ? "✓" : "✗"}
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={() => handleResetOne(item.id)}
+                                  className="rounded-lg border border-stone-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-stone-700 transition-all hover:border-stone-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                >
+                                  Retry
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                type="button"
+                                disabled={!selectedOpt}
+                                onClick={() => handleSubmitOne(item.id)}
+                                className="rounded-lg border border-[#25416b] bg-[#25416b] px-2.5 py-1 text-[11px] font-semibold text-white transition-all hover:bg-[#1b3152] disabled:cursor-not-allowed disabled:opacity-35 dark:border-[#6894d4] dark:bg-[#6894d4] dark:text-stone-950"
+                              >
+                                Check
+                              </button>
+                            )}
+                          </div>
+                        </div>
                       );
                     })}
                   </div>
                 )}
 
-                {/* TEXT 16 Randomized Individual Fill-in-the-Blank Cards */}
+                {/* TEXT 16 Compact 1 -> 10 Fill-in-the-Blank Answer Table without repeated sentence cards */}
                 {sub.shuffledFill.length > 0 && (
-                  <div className="space-y-3 pt-2">
-                    {sub.shuffledFill.map((item, idx) => (
-                      <FillInTheBlankQuestion
-                        key={item.id}
-                        indexLabel={`Item ${idx + 1} of ${
-                          sub.shuffledFill.length
-                        } (${item.speaker} • Blank #${item.number})`}
-                        headerBadge="Fill in the Blank"
-                        prompt={`${item.beforeText} ______ ${item.afterText}`}
-                        userAnswer={gapTextAnswers[item.id] || ""}
-                        correctAnswer={item.correctAnswer}
-                        wordBank={
-                          showWordBankText16 ? sub.text16WordBank : undefined
-                        }
-                        submitted={Boolean(submittedIds[item.id])}
-                        note={`Full sentence: ${item.fullSentence}`}
-                        onChange={(val) =>
-                          setGapTextAnswers((prev) => ({
-                            ...prev,
-                            [item.id]: val,
-                          }))
-                        }
-                        onSubmit={() => handleSubmitOne(item.id)}
-                        onReset={() => handleResetOne(item.id)}
-                      />
-                    ))}
+                  <div className="space-y-3">
+                    {showWordBankText16 && (
+                      <div className="flex flex-wrap items-center gap-1.5 rounded-xl border border-amber-200/90 bg-amber-50/70 px-4 py-2.5 dark:border-amber-800/60 dark:bg-amber-950/30">
+                        <span className="mr-1 font-mono text-[11px] font-bold uppercase text-amber-800 dark:text-amber-300">
+                          Word Bank:
+                        </span>
+                        {sub.text16WordBank.map((w, wIdx) => (
+                          <span
+                            key={`${w}-${wIdx}`}
+                            className="rounded-md border border-amber-300/80 bg-white px-2 py-0.5 font-mono text-xs font-semibold text-amber-900 dark:border-amber-700/70 dark:bg-stone-900 dark:text-amber-200"
+                          >
+                            {w}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+
+                    <div className="studio-subcard divide-y divide-stone-200/80 overflow-hidden rounded-xl border dark:divide-stone-800">
+                      {sub.shuffledFill.map((item) => {
+                        const userVal = gapTextAnswers[item.id] || "";
+                        const isItemSubmitted = Boolean(submittedIds[item.id]);
+                        const isCorrect =
+                          isItemSubmitted &&
+                          isFillBlankCorrect(userVal, item.correctAnswer);
+
+                        return (
+                          <div
+                            key={item.id}
+                            className="flex flex-col gap-2 px-4 py-2.5 sm:flex-row sm:items-center sm:justify-between"
+                          >
+                            <div className="flex flex-wrap items-center gap-2.5">
+                              <span
+                                className={`inline-flex h-7 w-9 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold ${palette.badge}`}
+                              >
+                                {item.number}.
+                              </span>
+                              <span className="rounded-md border border-stone-200 bg-stone-100/80 px-2 py-0.5 font-mono text-[11px] font-semibold text-stone-600 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-300">
+                                {item.speaker}
+                              </span>
+                              <input
+                                type="text"
+                                disabled={isItemSubmitted}
+                                value={userVal}
+                                onChange={(e) =>
+                                  setGapTextAnswers((prev) => ({
+                                    ...prev,
+                                    [item.id]: e.target.value,
+                                  }))
+                                }
+                                onKeyDown={(e) => {
+                                  if (
+                                    e.key === "Enter" &&
+                                    !isItemSubmitted &&
+                                    userVal.trim()
+                                  ) {
+                                    e.preventDefault();
+                                    handleSubmitOne(item.id);
+                                  }
+                                }}
+                                placeholder={`Type word for (${item.number})...`}
+                                className={`w-44 rounded-lg border px-2.5 py-1 text-xs font-medium focus:outline-none ${
+                                  !isItemSubmitted
+                                    ? "border-stone-300 bg-white text-stone-900 focus:border-amber-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
+                                    : isCorrect
+                                    ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-900 dark:border-emerald-500/70 dark:bg-emerald-950/50 dark:text-emerald-200"
+                                    : "border-rose-500 bg-rose-50 text-rose-900 line-through dark:border-rose-500/70 dark:bg-rose-950/50 dark:text-rose-200"
+                                }`}
+                              />
+                              {showWordBankText16 && (
+                                <div className="flex flex-wrap items-center gap-1">
+                                  {sub.text16WordBank.map((opt, optIdx) => (
+                                    <button
+                                      key={`${opt}-${optIdx}`}
+                                      type="button"
+                                      disabled={isItemSubmitted}
+                                      onClick={() =>
+                                        setGapTextAnswers((prev) => ({
+                                          ...prev,
+                                          [item.id]: opt,
+                                        }))
+                                      }
+                                      className={`rounded-md border px-2 py-0.5 text-xs transition-all ${
+                                        userVal.trim().toLowerCase() ===
+                                        opt.toLowerCase()
+                                          ? "border-amber-600 bg-amber-600 font-semibold text-white dark:border-amber-500 dark:bg-amber-500 dark:text-stone-950"
+                                          : "border-stone-200 bg-white/80 text-stone-600 hover:border-amber-400 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                      }`}
+                                    >
+                                      {opt}
+                                    </button>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+
+                            <div className="flex shrink-0 items-center justify-end gap-2 self-end sm:self-center">
+                              {isItemSubmitted && !isCorrect && (
+                                <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                                  Ans: {item.correctAnswer}
+                                </span>
+                              )}
+                              {isItemSubmitted ? (
+                                <>
+                                  <span
+                                    className={`font-mono text-xs font-bold ${
+                                      isCorrect
+                                        ? "text-emerald-700 dark:text-emerald-400"
+                                        : "text-rose-600 dark:text-rose-400"
+                                    }`}
+                                  >
+                                    {isCorrect ? "✓" : "✗"}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleResetOne(item.id)}
+                                    className="rounded-lg border border-stone-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-stone-700 transition-all hover:border-stone-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                  >
+                                    Retry
+                                  </button>
+                                </>
+                              ) : (
+                                <button
+                                  type="button"
+                                  disabled={!userVal.trim()}
+                                  onClick={() => handleSubmitOne(item.id)}
+                                  className="rounded-lg border border-amber-600 bg-amber-600 px-2.5 py-1 text-[11px] font-semibold text-white transition-all hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-35 dark:border-amber-500 dark:bg-amber-500 dark:text-stone-950"
+                                >
+                                  Check
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>

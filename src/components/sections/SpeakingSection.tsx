@@ -786,11 +786,12 @@ export function SpeakingSection({
                   <div
                     className={`mb-3 text-xs font-semibold ${palette.modelLabel}`}
                   >
-                    Possible follow-up questions (Topic #{topic.topicNumber})
+                    Questions about your speech (Topic #{topic.topicNumber})
                   </div>
                   <div className="grid grid-cols-1 gap-2.5 md:grid-cols-2">
                     {topic.followUpQuestions.map((fq, fIdx) => {
                       const noteKey = `${topic.id}-fq-${fIdx}`;
+                      const sampleAns = topic.followUpSampleAnswers?.[fIdx];
                       return (
                         <div
                           key={noteKey}
@@ -804,6 +805,14 @@ export function SpeakingSection({
                             </span>
                             <span className="pt-0.5">{fq}</span>
                           </p>
+                          {showModelAnswer && sampleAns && (
+                            <p className="mb-2 rounded-lg border border-stone-200/80 bg-white/80 px-2.5 py-1.5 text-xs leading-relaxed text-stone-700 dark:border-stone-700/70 dark:bg-stone-900/70 dark:text-stone-300">
+                              <span className="font-semibold text-emerald-700 dark:text-emerald-400">
+                                Sample Answer:{" "}
+                              </span>
+                              {sampleAns}
+                            </p>
+                          )}
                           <input
                             type="text"
                             disabled={isTopicSubmitted}
@@ -814,7 +823,7 @@ export function SpeakingSection({
                                 [noteKey]: e.target.value,
                               }))
                             }
-                            placeholder="Optional: draft your follow-up answer..."
+                            placeholder="Optional: draft your answer from the speech..."
                             className={`w-full rounded-lg border border-neutral-200/90 bg-white px-3 py-1.5 text-xs text-neutral-800 placeholder:text-neutral-400 transition-all focus:bg-white focus:outline-none disabled:bg-neutral-100 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-200 dark:placeholder:text-neutral-500 dark:focus:bg-neutral-900 dark:disabled:bg-neutral-950 ${palette.focusBorder}`}
                           />
                         </div>
