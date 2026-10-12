@@ -1,6 +1,12 @@
 "use client";
 
 import React from "react";
+import {
+  getBadgeClasses,
+  getDotClasses,
+  getSubmitButtonClasses,
+  getTopBorderClasses,
+} from "@/utils/themeColors";
 
 export interface MultipleChoiceQuestionProps {
   indexLabel: string;
@@ -13,6 +19,8 @@ export interface MultipleChoiceQuestionProps {
   headerBadge?: string;
   preContent?: React.ReactNode;
   onSelect: (option: string) => void;
+  onSubmit?: () => void;
+  onReset?: () => void;
 }
 
 const OPTION_LETTERS = ["A", "B", "C", "D", "E", "F"];
@@ -28,19 +36,31 @@ export function MultipleChoiceQuestion({
   headerBadge,
   preContent,
   onSelect,
+  onSubmit,
+  onReset,
 }: MultipleChoiceQuestionProps) {
   const isCorrect = submitted && selectedOption === correctAnswer;
   const isUnanswered = submitted && !selectedOption;
+  const badgeLabel = headerBadge || "Multiple Choice";
+  const topBorder = getTopBorderClasses(badgeLabel);
+  const dotColor = getDotClasses(badgeLabel);
+  const badgeColor = getBadgeClasses(badgeLabel);
+  const submitBtnClass = getSubmitButtonClasses(badgeLabel);
 
   return (
-    <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
+    <div
+      className={`rounded-2xl border border-t-2 border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900 ${topBorder}`}
+    >
       <div className="mb-3.5 flex items-center justify-between gap-2 border-b border-neutral-100 pb-3 dark:border-neutral-800/80">
-        <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+        <span className="inline-flex items-center gap-2 text-xs font-semibold text-neutral-600 dark:text-neutral-300">
+          <span className={`h-2 w-2 rounded-full ${dotColor}`} />
           {indexLabel}
         </span>
         <div className="flex items-center gap-2">
           {headerBadge && (
-            <span className="rounded-full border border-neutral-200/80 bg-neutral-100/70 px-2.5 py-0.5 text-[11px] font-medium text-neutral-600 dark:border-neutral-700/80 dark:bg-neutral-800 dark:text-neutral-300">
+            <span
+              className={`rounded-full border px-2.5 py-0.5 text-[11px] font-semibold ${badgeColor}`}
+            >
               {headerBadge}
             </span>
           )}
@@ -74,11 +94,11 @@ export function MultipleChoiceQuestion({
           const isThisCorrect = option === correctAnswer;
 
           let buttonStyle =
-            "border-neutral-200/90 bg-neutral-50/40 text-neutral-800 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-200 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/50";
+            "border-neutral-200/90 bg-neutral-50/40 text-neutral-800 hover:border-sky-300 hover:bg-sky-50/40 dark:border-neutral-800 dark:bg-neutral-950/60 dark:text-neutral-200 dark:hover:border-sky-700/70 dark:hover:bg-sky-950/30";
 
           if (!submitted && isSelected) {
             buttonStyle =
-              "border-neutral-900 bg-neutral-900 text-white font-medium shadow-2xs dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900";
+              "border-sky-500 bg-sky-50/90 text-sky-950 font-semibold shadow-2xs dark:border-sky-500/90 dark:bg-sky-950/60 dark:text-sky-100";
           } else if (submitted) {
             if (isThisCorrect) {
               buttonStyle =
@@ -103,14 +123,14 @@ export function MultipleChoiceQuestion({
               }`}
             >
               <span
-                className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs font-medium ${
+                className={`mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border text-xs font-semibold ${
                   !submitted && isSelected
-                    ? "border-white/40 bg-white/15 text-white dark:border-neutral-900/30 dark:bg-neutral-900/15 dark:text-neutral-900"
+                    ? "border-sky-600 bg-sky-600 text-white dark:border-sky-400 dark:bg-sky-500 dark:text-neutral-950"
                     : submitted && isThisCorrect
                     ? "border-green-500 bg-green-100/70 text-green-800 dark:border-green-600 dark:bg-green-900/40 dark:text-green-300"
                     : submitted && isSelected && !isThisCorrect
                     ? "border-red-500 bg-red-100/70 text-red-800 dark:border-red-600 dark:bg-red-900/40 dark:text-red-300"
-                    : "border-neutral-300/80 bg-white text-neutral-500 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400"
+                    : "border-sky-200 bg-sky-50/80 text-sky-700 dark:border-sky-800/80 dark:bg-sky-950/60 dark:text-sky-300"
                 }`}
               >
                 {OPTION_LETTERS[idx] ?? idx + 1}
@@ -121,23 +141,51 @@ export function MultipleChoiceQuestion({
         })}
       </div>
 
+      {!submitted && onSubmit && (
+        <div className="mt-4 flex items-center justify-between gap-3 border-t border-neutral-100 pt-3.5 dark:border-neutral-800/80">
+          <span className="text-xs text-neutral-500 dark:text-neutral-400">
+            {selectedOption
+              ? "Option selected — click Submit to check your answer."
+              : "Select an option above, then click Submit."}
+          </span>
+          <button
+            type="button"
+            onClick={onSubmit}
+            className={`rounded-xl border px-4 py-1.5 text-xs font-semibold shadow-2xs transition-all ${submitBtnClass}`}
+          >
+            Submit Answer
+          </button>
+        </div>
+      )}
+
       {submitted && (
-        <div className="mt-4 border-t border-neutral-100 pt-3.5 text-xs text-neutral-700 dark:border-neutral-800/80 dark:text-neutral-300">
-          <div>
-            <span className="font-semibold text-neutral-900 dark:text-neutral-100">
-              Correct Answer:{" "}
-            </span>
-            <span className="font-medium text-green-700 dark:text-green-400">
-              {correctAnswer}
-            </span>
-          </div>
-          {note && (
-            <div className="mt-1 text-neutral-600 dark:text-neutral-400">
-              <span className="font-semibold text-neutral-800 dark:text-neutral-200">
-                Note:{" "}
+        <div className="mt-4 flex flex-wrap items-start justify-between gap-3 border-t border-neutral-100 pt-3.5 text-xs text-neutral-700 dark:border-neutral-800/80 dark:text-neutral-300">
+          <div className="space-y-1">
+            <div>
+              <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                Correct Answer:{" "}
               </span>
-              {note}
+              <span className="font-medium text-green-700 dark:text-green-400">
+                {correctAnswer}
+              </span>
             </div>
+            {note && (
+              <div className="text-neutral-600 dark:text-neutral-400">
+                <span className="font-semibold text-neutral-800 dark:text-neutral-200">
+                  Note:{" "}
+                </span>
+                {note}
+              </div>
+            )}
+          </div>
+          {onReset && (
+            <button
+              type="button"
+              onClick={onReset}
+              className="shrink-0 rounded-xl border border-neutral-200/90 bg-neutral-50/80 px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:border-neutral-400 hover:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-neutral-500 dark:hover:bg-neutral-800"
+            >
+              Try Again
+            </button>
           )}
         </div>
       )}

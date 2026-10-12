@@ -79,7 +79,7 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
           <button
             type="button"
             onClick={() => setViewAll((v) => !v)}
-            className="rounded-xl border border-neutral-900 bg-neutral-900 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-neutral-800 dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+            className="rounded-xl border border-indigo-600 bg-indigo-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-indigo-700 dark:border-indigo-500 dark:bg-indigo-600 dark:text-white dark:hover:bg-indigo-500"
           >
             {viewAll ? "Single Card View" : "Grid View (All Cards)"}
           </button>
@@ -87,12 +87,19 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
       </div>
 
       {!viewAll ? (
-        <div className="rounded-2xl border border-neutral-200/80 bg-white p-8 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
+        <div className="rounded-2xl border border-t-2 border-neutral-200/80 border-t-indigo-500/80 bg-white p-8 shadow-2xs dark:border-neutral-800/90 dark:border-t-indigo-400/80 dark:bg-neutral-900">
           <div className="mb-6 flex items-center justify-between border-b border-neutral-100 pb-3.5 dark:border-neutral-800/80">
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            <span className="inline-flex items-center gap-2 text-xs font-semibold text-indigo-700 dark:text-indigo-300">
+              <span className="h-2 w-2 rounded-full bg-indigo-500 dark:bg-indigo-400" />
               {currentCard.label} — Card {safeIndex + 1} of {cards.length}
             </span>
-            <span className="rounded-full border border-neutral-200/80 bg-neutral-100/70 px-3 py-0.5 text-xs font-medium text-neutral-600 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300">
+            <span
+              className={`rounded-full border px-3 py-0.5 text-xs font-semibold ${
+                isFlipped
+                  ? "border-green-300 bg-green-50 text-green-800 dark:border-green-700/80 dark:bg-green-950/60 dark:text-green-300"
+                  : "border-indigo-200/90 bg-indigo-50 text-indigo-700 dark:border-indigo-800 dark:bg-indigo-950/60 dark:text-indigo-300"
+              }`}
+            >
               {isFlipped ? "Back (Answer)" : "Front (Prompt)"}
             </span>
           </div>
@@ -107,12 +114,12 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
                 setIsFlipped((f) => !f);
               }
             }}
-            className="flex min-h-[220px] cursor-pointer flex-col justify-center rounded-2xl border border-neutral-200/80 bg-neutral-50/60 p-8 text-left transition-all hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-950/70 dark:hover:border-neutral-700 dark:hover:bg-neutral-950"
+            className="flex min-h-[220px] cursor-pointer flex-col justify-center rounded-2xl border border-indigo-200/70 bg-indigo-50/25 p-8 text-left transition-all hover:border-indigo-300 hover:bg-indigo-50/40 dark:border-indigo-900/50 dark:bg-indigo-950/20 dark:hover:border-indigo-700 dark:hover:bg-indigo-950/35"
           >
             {!isFlipped ? (
               <div className="space-y-3">
                 {currentCard.frontTitle && (
-                  <p className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+                  <p className="text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                     {currentCard.frontTitle}
                   </p>
                 )}
@@ -120,11 +127,11 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
                   {currentCard.frontText}
                 </p>
                 {currentCard.frontHint && (
-                  <p className="pt-2 text-xs text-neutral-600 dark:text-neutral-400">
+                  <p className="pt-2 text-xs font-medium text-amber-800 dark:text-amber-300">
                     {currentCard.frontHint}
                   </p>
                 )}
-                <p className="pt-4 text-xs text-neutral-400 dark:text-neutral-500">
+                <p className="pt-4 text-xs text-indigo-500/80 dark:text-indigo-400/70">
                   Click card to reveal answer
                 </p>
               </div>
@@ -174,7 +181,7 @@ export function FlashcardDeck({ cards, onShuffle }: FlashcardDeckProps) {
               <button
                 type="button"
                 onClick={() => setIsFlipped((f) => !f)}
-                className="rounded-xl border border-neutral-900 bg-neutral-900 px-4 py-2 text-xs font-medium text-white shadow-2xs transition-all hover:bg-neutral-800 dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                className="rounded-xl border border-indigo-600 bg-indigo-600 px-4 py-2 text-xs font-medium text-white shadow-2xs transition-all hover:bg-indigo-700 dark:border-indigo-500 dark:bg-indigo-600 dark:text-white dark:hover:bg-indigo-500"
               >
                 {isFlipped ? "Show Prompt" : "Flip Card"}
               </button>

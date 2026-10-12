@@ -16,6 +16,49 @@ import {
 
 type ListeningMode = "standard" | "type-all-gaps" | "flashcard";
 
+const LISTENING_PALETTES = [
+  {
+    topBorder: "border-t-4 border-t-violet-500 dark:border-t-violet-400",
+    badge:
+      "border-violet-200/80 bg-violet-50 text-violet-700 dark:border-violet-800/60 dark:bg-violet-950/50 dark:text-violet-300",
+    dot: "bg-violet-500 dark:bg-violet-400",
+    transcriptBox:
+      "border-violet-200/80 border-l-4 border-l-violet-500 bg-violet-50/35 dark:border-violet-900/50 dark:border-l-violet-400 dark:bg-violet-950/20",
+  },
+  {
+    topBorder: "border-t-4 border-t-sky-500 dark:border-t-sky-400",
+    badge:
+      "border-sky-200/80 bg-sky-50 text-sky-700 dark:border-sky-800/60 dark:bg-sky-950/50 dark:text-sky-300",
+    dot: "bg-sky-500 dark:bg-sky-400",
+    transcriptBox:
+      "border-sky-200/80 border-l-4 border-l-sky-500 bg-sky-50/35 dark:border-sky-900/50 dark:border-l-sky-400 dark:bg-sky-950/20",
+  },
+  {
+    topBorder: "border-t-4 border-t-amber-500 dark:border-t-amber-400",
+    badge:
+      "border-amber-200/80 bg-amber-50 text-amber-800 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-300",
+    dot: "bg-amber-500 dark:bg-amber-400",
+    transcriptBox:
+      "border-amber-200/80 border-l-4 border-l-amber-500 bg-amber-50/35 dark:border-amber-900/50 dark:border-l-amber-400 dark:bg-amber-950/20",
+  },
+  {
+    topBorder: "border-t-4 border-t-rose-500 dark:border-t-rose-400",
+    badge:
+      "border-rose-200/80 bg-rose-50 text-rose-700 dark:border-rose-800/60 dark:bg-rose-950/50 dark:text-rose-300",
+    dot: "bg-rose-500 dark:bg-rose-400",
+    transcriptBox:
+      "border-rose-200/80 border-l-4 border-l-rose-500 bg-rose-50/35 dark:border-rose-900/50 dark:border-l-rose-400 dark:bg-rose-950/20",
+  },
+  {
+    topBorder: "border-t-4 border-t-teal-500 dark:border-t-teal-400",
+    badge:
+      "border-teal-200/80 bg-teal-50 text-teal-700 dark:border-teal-800/60 dark:bg-teal-950/50 dark:text-teal-300",
+    dot: "bg-teal-500 dark:bg-teal-400",
+    transcriptBox:
+      "border-teal-200/80 border-l-4 border-l-teal-500 bg-teal-50/35 dark:border-teal-900/50 dark:border-l-teal-400 dark:bg-teal-950/20",
+  },
+];
+
 export function ListeningSection({
   globalReviewMode,
 }: {
@@ -23,7 +66,7 @@ export function ListeningSection({
 }) {
   const [seed, setSeed] = useState<number>(606);
   const [mode, setMode] = useState<ListeningMode>("standard");
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedIds, setSubmittedIds] = useState<Record<string, boolean>>({});
   const [showWordBankText16, setShowWordBankText16] = useState(false);
 
   const [tfAnswers, setTfAnswers] = useState<Record<string, boolean>>({});
@@ -115,19 +158,24 @@ export function ListeningSection({
 
   const scoreSummary = useMemo(() => {
     let total = 0;
+    let submittedCount = 0;
     let correct = 0;
 
     preparedSubsections.forEach((sub) => {
       sub.shuffledTf.forEach((item) => {
         total++;
-        if (submitted && tfAnswers[item.id] === item.correctAnswer) {
-          correct++;
+        if (submittedIds[item.id]) {
+          submittedCount++;
+          if (tfAnswers[item.id] === item.correctAnswer) {
+            correct++;
+          }
         }
       });
 
       sub.shuffledMc.forEach((item) => {
         total++;
-        if (submitted) {
+        if (submittedIds[item.id]) {
+          submittedCount++;
           if (activeMode === "type-all-gaps") {
             if (
               isFillBlankCorrect(
@@ -147,18 +195,23 @@ export function ListeningSection({
 
       sub.shuffledFill.forEach((item) => {
         total++;
-        if (
-          submitted &&
-          isFillBlankCorrect(gapTextAnswers[item.id] || "", item.correctAnswer)
-        ) {
-          correct++;
+        if (submittedIds[item.id]) {
+          submittedCount++;
+          if (
+            isFillBlankCorrect(
+              gapTextAnswers[item.id] || "",
+              item.correctAnswer
+            )
+          ) {
+            correct++;
+          }
         }
       });
     });
 
-    return { correct, total };
+    return { correct, submittedCount, total };
   }, [
-    submitted,
+    submittedIds,
     preparedSubsections,
     activeMode,
     tfAnswers,
@@ -166,8 +219,39 @@ export function ListeningSection({
     gapTextAnswers,
   ]);
 
+  const allSubmitted =
+    scoreSummary.total > 0 && scoreSummary.submittedCount === scoreSummary.total;
+
+  const handleSubmitOne = (id: string) => {
+    setSubmittedIds((prev) => ({ ...prev, [id]: true }));
+  };
+
+  const handleResetOne = (id: string) => {
+    setSubmittedIds((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  };
+
+  const handleSubmitAll = () => {
+    const next: Record<string, boolean> = {};
+    preparedSubsections.forEach((sub) => {
+      sub.shuffledTf.forEach((item) => {
+        next[item.id] = true;
+      });
+      sub.shuffledMc.forEach((item) => {
+        next[item.id] = true;
+      });
+      sub.shuffledFill.forEach((item) => {
+        next[item.id] = true;
+      });
+    });
+    setSubmittedIds(next);
+  };
+
   const handleRetry = () => {
-    setSubmitted(false);
+    setSubmittedIds({});
     setTfAnswers({});
     setMcAnswers({});
     setGapTextAnswers({});
@@ -176,18 +260,20 @@ export function ListeningSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 border-t-4 border-t-rose-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-rose-400 dark:bg-neutral-900">
         <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 md:flex-row md:items-center dark:border-neutral-800/80">
           <div>
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-rose-200/80 bg-rose-50 px-2.5 py-0.5 text-xs font-medium text-rose-700 dark:border-rose-800/60 dark:bg-rose-950/50 dark:text-rose-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-rose-500 dark:bg-rose-400" />
               Section 6 • Texts 2, 9, 16, 53 & 54 (50 Questions)
             </span>
-            <h2 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+            <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
               6. Listening Practice
             </h2>
             <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
               Includes True/False verification with evidence notes and Gap-fill
-              exercises (Multiple Choice & Fill in the Blanks).
+              exercises. Submit each question individually for immediate
+              feedback.
             </p>
           </div>
 
@@ -206,12 +292,12 @@ export function ListeningSection({
                   type="button"
                   onClick={() => {
                     setMode(tab.id);
-                    setSubmitted(false);
+                    setSubmittedIds({});
                   }}
                   className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
                     isSelected
-                      ? "border-neutral-900 bg-neutral-900 text-white shadow-2xs dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
-                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-neutral-300 hover:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
+                      ? "border-rose-600 bg-rose-600 text-white shadow-2xs dark:border-rose-500 dark:bg-rose-500 dark:text-white"
+                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-rose-300 hover:bg-rose-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-rose-700 dark:hover:bg-rose-950/40"
                   }`}
                 >
                   {tab.label}
@@ -221,31 +307,56 @@ export function ListeningSection({
           </div>
         </div>
 
-        {submitted && activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-neutral-200/90 bg-neutral-50/80 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950">
-            <div className="text-sm">
-              <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                Section Score:{" "}
-              </span>
-              <span
-                className={`font-semibold ${
-                  scoreSummary.correct === scoreSummary.total
-                    ? "text-green-700 dark:text-green-400"
-                    : "text-neutral-900 dark:text-neutral-100"
-                }`}
-              >
-                {scoreSummary.correct} / {scoreSummary.total} (
-                {Math.round((scoreSummary.correct / scoreSummary.total) * 100)}
-                %)
-              </span>
+        {activeMode !== "flashcard" && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-rose-200/80 bg-rose-50/50 px-4 py-3 dark:border-rose-800/60 dark:bg-rose-950/30">
+            <div className="flex flex-wrap items-center gap-4 text-sm">
+              <div>
+                <span className="font-medium text-neutral-600 dark:text-neutral-400">
+                  Progress:{" "}
+                </span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  {scoreSummary.submittedCount} / {scoreSummary.total} Submitted
+                </span>
+              </div>
+              {scoreSummary.submittedCount > 0 && (
+                <div>
+                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
+                    Score:{" "}
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      scoreSummary.correct === scoreSummary.submittedCount
+                        ? "text-green-700 dark:text-green-400"
+                        : "text-rose-700 dark:text-rose-300"
+                    }`}
+                  >
+                    {scoreSummary.correct} / {scoreSummary.submittedCount} (
+                    {Math.round(
+                      (scoreSummary.correct / scoreSummary.submittedCount) * 100
+                    )}
+                    %)
+                  </span>
+                </div>
+              )}
             </div>
-            <button
-              type="button"
-              onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-4 py-1.5 text-xs font-medium text-neutral-800 transition-all hover:border-neutral-900 hover:bg-neutral-900 hover:text-white dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:border-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900"
-            >
-              Retry & Randomize
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              {!allSubmitted && (
+                <button
+                  type="button"
+                  onClick={handleSubmitAll}
+                  className="rounded-xl border border-rose-600 bg-rose-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-rose-700 dark:border-rose-500 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
+                >
+                  Submit All Remaining
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="rounded-xl border border-rose-300 bg-white px-3.5 py-1.5 text-xs font-medium text-rose-700 transition-all hover:border-rose-600 hover:bg-rose-600 hover:text-white dark:border-rose-700 dark:bg-neutral-900 dark:text-rose-300 dark:hover:border-rose-500 dark:hover:bg-rose-500 dark:hover:text-white"
+              >
+                Reset & Randomize
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -257,233 +368,327 @@ export function ListeningSection({
         />
       ) : (
         <div className="space-y-8">
-          {preparedSubsections.map((sub, sIdx) => (
-            <div
-              key={sub.id}
-              className="space-y-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-3.5 dark:border-neutral-800/80">
-                <div>
-                  <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                    {sub.subtitle}
-                  </span>
-                  <h3 className="mt-0.5 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                    {sub.title}
-                  </h3>
-                </div>
+          {preparedSubsections.map((sub, sIdx) => {
+            const palette =
+              LISTENING_PALETTES[sIdx % LISTENING_PALETTES.length];
+            const text16AllSubmitted =
+              sub.fillBlankItems?.every((item) => submittedIds[item.id]) ??
+              false;
 
-                {sub.type === "gap-fill-text" && !submitted && (
-                  <button
-                    type="button"
-                    onClick={() => setShowWordBankText16((w) => !w)}
-                    className="rounded-xl border border-neutral-200/90 bg-neutral-50/70 px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:border-neutral-300 hover:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
-                  >
-                    {showWordBankText16
-                      ? "Hide Shuffled Word Bank"
-                      : "Show Shuffled Word Bank"}
-                  </button>
-                )}
-              </div>
-
-              {/* Transcript / Context Paragraphs if present */}
-              {sub.paragraphs && sub.paragraphs.length > 0 && (
-                <div className="space-y-2.5 rounded-xl border border-neutral-200/80 bg-neutral-50/70 p-5 text-[15px] leading-relaxed text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/70 dark:text-neutral-200">
-                  {sub.paragraphs.map((p, idx) => (
-                    <p key={idx}>{p}</p>
-                  ))}
-                </div>
-              )}
-
-              {/* TEXT 16 Full Passage Interactive Context + Randomized Questions */}
-              {sub.fillBlankParagraphs && (
-                <div className="space-y-3 rounded-xl border border-neutral-200/80 bg-neutral-50/70 p-5 text-[15px] leading-relaxed text-neutral-800 dark:border-neutral-800 dark:bg-neutral-950/70 dark:text-neutral-200">
-                  <div className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                    Full Transcript Context (TEXT 16: Cars)
+            return (
+              <div
+                key={sub.id}
+                className={`space-y-4 rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900 ${palette.topBorder}`}
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-100 pb-3.5 dark:border-neutral-800/80">
+                  <div>
+                    <span
+                      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-medium ${palette.badge}`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${palette.dot}`}
+                      />
+                      {sub.subtitle}
+                    </span>
+                    <h3 className="mt-1.5 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                      {sub.title}
+                    </h3>
                   </div>
-                  {sub.fillBlankParagraphs.map((para, pIdx) => (
-                    <p key={pIdx}>
-                      <strong className="font-semibold text-neutral-900 dark:text-neutral-100">
-                        {para.speaker}:{" "}
-                      </strong>
-                      {para.segments.map((seg, segIdx) => {
-                        if (!seg.blankNumber) {
-                          return <span key={segIdx}>{seg.text}</span>;
-                        }
-                        const itemId = `t16-${seg.blankNumber}`;
-                        const userVal = gapTextAnswers[itemId] || "";
-                        const isRight =
-                          submitted &&
-                          isFillBlankCorrect(userVal, seg.answer || "");
-                        return (
-                          <span
-                            key={segIdx}
-                            className="mx-1 inline-flex items-baseline gap-1"
-                          >
-                            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
-                              ({seg.blankNumber})
-                            </span>
-                            <input
-                              type="text"
-                              disabled={submitted}
-                              value={userVal}
-                              onChange={(e) =>
-                                setGapTextAnswers((prev) => ({
-                                  ...prev,
-                                  [itemId]: e.target.value,
-                                }))
-                              }
-                              placeholder="..."
-                              className={`w-28 rounded-lg border px-2.5 py-0.5 text-xs transition-all focus:outline-none ${
-                                !submitted
-                                  ? "border-neutral-300 bg-white text-neutral-900 placeholder:text-neutral-400 focus:border-neutral-500 focus:bg-white dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-neutral-500 dark:focus:bg-neutral-900"
-                                  : isRight
-                                  ? "border-green-400 bg-green-50 font-semibold text-green-900 dark:border-green-700 dark:bg-green-950/60 dark:text-green-200"
-                                  : "border-red-400 bg-red-50 text-red-900 line-through dark:border-red-700 dark:bg-red-950/60 dark:text-red-200"
-                              }`}
-                            />
-                            {submitted && !isRight && (
-                              <span className="text-xs font-semibold text-green-700 dark:text-green-400">
-                                [{seg.answer}]
-                              </span>
-                            )}
-                          </span>
-                        );
-                      })}
-                    </p>
-                  ))}
+
+                  {sub.type === "gap-fill-text" && (
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setShowWordBankText16((w) => !w)}
+                        className="rounded-xl border border-amber-300/90 bg-amber-50/70 px-3.5 py-1.5 text-xs font-medium text-amber-800 transition-all hover:border-amber-400 hover:bg-amber-100/70 dark:border-amber-800/70 dark:bg-amber-950/40 dark:text-amber-300 dark:hover:border-amber-700 dark:hover:bg-amber-900/50"
+                      >
+                        {showWordBankText16
+                          ? "Hide Shuffled Word Bank"
+                          : "Show Shuffled Word Bank"}
+                      </button>
+                      {text16AllSubmitted ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmittedIds((prev) => {
+                              const next = { ...prev };
+                              sub.fillBlankItems?.forEach((item) => {
+                                delete next[item.id];
+                              });
+                              return next;
+                            });
+                          }}
+                          className="rounded-xl border border-neutral-300 bg-white px-3.5 py-1.5 text-xs font-medium text-neutral-700 transition-all hover:border-amber-500 hover:text-amber-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-amber-400 dark:hover:text-amber-300"
+                        >
+                          Try Transcript Blanks Again
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmittedIds((prev) => {
+                              const next = { ...prev };
+                              sub.fillBlankItems?.forEach((item) => {
+                                next[item.id] = true;
+                              });
+                              return next;
+                            });
+                          }}
+                          className="rounded-xl border border-amber-600 bg-amber-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400"
+                        >
+                          Submit All 10 Blanks
+                        </button>
+                      )}
+                    </div>
+                  )}
                 </div>
-              )}
 
-              {/* True / False Questions */}
-              {sub.shuffledTf.length > 0 && (
-                <div className="space-y-3 pt-2">
-                  {sub.shuffledTf.map((item, idx) => (
-                    <TrueFalseQuestion
-                      key={item.id}
-                      indexLabel={`Item ${idx + 1} of ${
-                        sub.shuffledTf.length
-                      } (Statement #${item.number})`}
-                      headerBadge="True / False"
-                      statement={item.statement}
-                      selectedValue={tfAnswers[item.id]}
-                      correctAnswer={item.correctAnswer}
-                      submitted={submitted}
-                      evidence={item.evidence}
-                      reverseOptions={(seed + sIdx + idx) % 2 === 1}
-                      onSelect={(val) =>
-                        setTfAnswers((prev) => ({ ...prev, [item.id]: val }))
-                      }
-                    />
-                  ))}
-                </div>
-              )}
+                {/* Transcript / Context Paragraphs if present */}
+                {sub.paragraphs && sub.paragraphs.length > 0 && (
+                  <div
+                    className={`space-y-2.5 rounded-xl border p-5 text-[15px] leading-relaxed text-neutral-800 dark:text-neutral-200 ${palette.transcriptBox}`}
+                  >
+                    {sub.paragraphs.map((p, idx) => (
+                      <p key={idx}>{p}</p>
+                    ))}
+                  </div>
+                )}
 
-              {/* Gap-Fill Multiple Choice (or Typed Gap-Fill) */}
-              {sub.shuffledMc.length > 0 && (
-                <div className="space-y-3 pt-2">
-                  {sub.shuffledMc.map((item, idx) => {
-                    const indexLabel = `Item ${idx + 1} of ${
-                      sub.shuffledMc.length
-                    } (Blank #${item.number})`;
-
-                    if (activeMode === "type-all-gaps") {
+                {/* TEXT 16 Full Passage Interactive Context + Randomized Questions */}
+                {sub.fillBlankParagraphs && (
+                  <div
+                    className={`space-y-3 rounded-xl border p-5 text-[15px] leading-relaxed text-neutral-800 dark:text-neutral-200 ${palette.transcriptBox}`}
+                  >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-amber-800 dark:text-amber-300">
+                        Full Transcript Context (TEXT 16: Cars)
+                      </span>
+                      <span className="text-[11px] text-neutral-500 dark:text-neutral-400">
+                        Tip: Press Enter inside any blank to submit it
+                        immediately, or use the cards below.
+                      </span>
+                    </div>
+                    {sub.fillBlankParagraphs.map((para, pIdx) => {
+                      const isKate = para.speaker
+                        .toLowerCase()
+                        .includes("kate");
                       return (
-                        <FillInTheBlankQuestion
+                        <p key={pIdx} className="leading-8">
+                          <span
+                            className={`mr-2 inline-block rounded-md border px-2 py-0.5 text-xs font-semibold ${
+                              isKate
+                                ? "border-sky-200 bg-sky-100/80 text-sky-800 dark:border-sky-800/70 dark:bg-sky-900/50 dark:text-sky-300"
+                                : "border-amber-200 bg-amber-100/80 text-amber-800 dark:border-amber-800/70 dark:bg-amber-900/50 dark:text-amber-300"
+                            }`}
+                          >
+                            {para.speaker}
+                          </span>
+                          {para.segments.map((seg, segIdx) => {
+                            if (!seg.blankNumber) {
+                              return <span key={segIdx}>{seg.text}</span>;
+                            }
+                            const itemId = `t16-${seg.blankNumber}`;
+                            const userVal = gapTextAnswers[itemId] || "";
+                            const isBlankSubmitted = Boolean(
+                              submittedIds[itemId]
+                            );
+                            const isRight =
+                              isBlankSubmitted &&
+                              isFillBlankCorrect(userVal, seg.answer || "");
+                            return (
+                              <span
+                                key={segIdx}
+                                className="mx-1 inline-flex items-baseline gap-1"
+                              >
+                                <span className="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                                  ({seg.blankNumber})
+                                </span>
+                                <input
+                                  type="text"
+                                  disabled={isBlankSubmitted}
+                                  value={userVal}
+                                  onChange={(e) =>
+                                    setGapTextAnswers((prev) => ({
+                                      ...prev,
+                                      [itemId]: e.target.value,
+                                    }))
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (
+                                      e.key === "Enter" &&
+                                      !isBlankSubmitted
+                                    ) {
+                                      e.preventDefault();
+                                      handleSubmitOne(itemId);
+                                    }
+                                  }}
+                                  placeholder="..."
+                                  className={`w-28 rounded-lg border px-2.5 py-0.5 text-xs transition-all focus:outline-none ${
+                                    !isBlankSubmitted
+                                      ? "border-amber-300/90 bg-white text-neutral-900 placeholder:text-neutral-400 focus:border-amber-500 focus:bg-white dark:border-amber-800/70 dark:bg-neutral-900 dark:text-neutral-100 dark:placeholder:text-neutral-500 dark:focus:border-amber-500 dark:focus:bg-neutral-900"
+                                      : isRight
+                                      ? "border-green-400 bg-green-50 font-semibold text-green-900 dark:border-green-700 dark:bg-green-950/60 dark:text-green-200"
+                                      : "border-red-400 bg-red-50 text-red-900 line-through dark:border-red-700 dark:bg-red-950/60 dark:text-red-200"
+                                  }`}
+                                />
+                                {isBlankSubmitted && !isRight && (
+                                  <span className="text-xs font-semibold text-green-700 dark:text-green-400">
+                                    [{seg.answer}]
+                                  </span>
+                                )}
+                              </span>
+                            );
+                          })}
+                        </p>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* True / False Questions */}
+                {sub.shuffledTf.length > 0 && (
+                  <div className="space-y-3 pt-2">
+                    {sub.shuffledTf.map((item, idx) => (
+                      <TrueFalseQuestion
+                        key={item.id}
+                        indexLabel={`Item ${idx + 1} of ${
+                          sub.shuffledTf.length
+                        } (Statement #${item.number})`}
+                        headerBadge="True / False"
+                        statement={item.statement}
+                        selectedValue={tfAnswers[item.id]}
+                        correctAnswer={item.correctAnswer}
+                        submitted={Boolean(submittedIds[item.id])}
+                        evidence={item.evidence}
+                        reverseOptions={(seed + sIdx + idx) % 2 === 1}
+                        onSelect={(val) =>
+                          setTfAnswers((prev) => ({ ...prev, [item.id]: val }))
+                        }
+                        onSubmit={() => handleSubmitOne(item.id)}
+                        onReset={() => handleResetOne(item.id)}
+                      />
+                    ))}
+                  </div>
+                )}
+
+                {/* Gap-Fill Multiple Choice (or Typed Gap-Fill) */}
+                {sub.shuffledMc.length > 0 && (
+                  <div className="space-y-3 pt-2">
+                    {sub.shuffledMc.map((item, idx) => {
+                      const indexLabel = `Item ${idx + 1} of ${
+                        sub.shuffledMc.length
+                      } (Blank #${item.number})`;
+                      const isItemSubmitted = Boolean(submittedIds[item.id]);
+
+                      if (activeMode === "type-all-gaps") {
+                        return (
+                          <FillInTheBlankQuestion
+                            key={item.id}
+                            indexLabel={indexLabel}
+                            headerBadge="Gap-Fill (Type)"
+                            prompt={item.prompt}
+                            userAnswer={gapTextAnswers[item.id] || ""}
+                            correctAnswer={item.correctAnswer}
+                            wordBank={
+                              sub.mcOptionsMap[item.id] || item.options
+                            }
+                            submitted={isItemSubmitted}
+                            onChange={(val) =>
+                              setGapTextAnswers((prev) => ({
+                                ...prev,
+                                [item.id]: val,
+                              }))
+                            }
+                            onSubmit={() => handleSubmitOne(item.id)}
+                            onReset={() => handleResetOne(item.id)}
+                          />
+                        );
+                      }
+
+                      return (
+                        <MultipleChoiceQuestion
                           key={item.id}
                           indexLabel={indexLabel}
-                          headerBadge="Gap-Fill (Type)"
+                          headerBadge="Listening Gap-Fill"
                           prompt={item.prompt}
-                          userAnswer={gapTextAnswers[item.id] || ""}
+                          options={sub.mcOptionsMap[item.id] || item.options}
+                          selectedOption={mcAnswers[item.id]}
                           correctAnswer={item.correctAnswer}
-                          wordBank={sub.mcOptionsMap[item.id] || item.options}
-                          submitted={submitted}
-                          onChange={(val) =>
-                            setGapTextAnswers((prev) => ({
+                          submitted={isItemSubmitted}
+                          onSelect={(opt) =>
+                            setMcAnswers((prev) => ({
                               ...prev,
-                              [item.id]: val,
+                              [item.id]: opt,
                             }))
                           }
+                          onSubmit={() => handleSubmitOne(item.id)}
+                          onReset={() => handleResetOne(item.id)}
                         />
                       );
-                    }
+                    })}
+                  </div>
+                )}
 
-                    return (
-                      <MultipleChoiceQuestion
+                {/* TEXT 16 Randomized Individual Fill-in-the-Blank Cards */}
+                {sub.shuffledFill.length > 0 && (
+                  <div className="space-y-3 pt-2">
+                    {sub.shuffledFill.map((item, idx) => (
+                      <FillInTheBlankQuestion
                         key={item.id}
-                        indexLabel={indexLabel}
-                        headerBadge="Listening Gap-Fill"
-                        prompt={item.prompt}
-                        options={sub.mcOptionsMap[item.id] || item.options}
-                        selectedOption={mcAnswers[item.id]}
+                        indexLabel={`Item ${idx + 1} of ${
+                          sub.shuffledFill.length
+                        } (${item.speaker} • Blank #${item.number})`}
+                        headerBadge="Fill in the Blank"
+                        prompt={`${item.beforeText} ______ ${item.afterText}`}
+                        userAnswer={gapTextAnswers[item.id] || ""}
                         correctAnswer={item.correctAnswer}
-                        submitted={submitted}
-                        onSelect={(opt) =>
-                          setMcAnswers((prev) => ({ ...prev, [item.id]: opt }))
+                        wordBank={
+                          showWordBankText16 ? sub.text16WordBank : undefined
                         }
+                        submitted={Boolean(submittedIds[item.id])}
+                        note={`Full sentence: ${item.fullSentence}`}
+                        onChange={(val) =>
+                          setGapTextAnswers((prev) => ({
+                            ...prev,
+                            [item.id]: val,
+                          }))
+                        }
+                        onSubmit={() => handleSubmitOne(item.id)}
+                        onReset={() => handleResetOne(item.id)}
                       />
-                    );
-                  })}
-                </div>
-              )}
-
-              {/* TEXT 16 Randomized Individual Fill-in-the-Blank Cards */}
-              {sub.shuffledFill.length > 0 && (
-                <div className="space-y-3 pt-2">
-                  {sub.shuffledFill.map((item, idx) => (
-                    <FillInTheBlankQuestion
-                      key={item.id}
-                      indexLabel={`Item ${idx + 1} of ${
-                        sub.shuffledFill.length
-                      } (${item.speaker} • Blank #${item.number})`}
-                      headerBadge="Fill in the Blank"
-                      prompt={`${item.beforeText} ______ ${item.afterText}`}
-                      userAnswer={gapTextAnswers[item.id] || ""}
-                      correctAnswer={item.correctAnswer}
-                      wordBank={
-                        showWordBankText16 ? sub.text16WordBank : undefined
-                      }
-                      submitted={submitted}
-                      note={`Full sentence: ${item.fullSentence}`}
-                      onChange={(val) =>
-                        setGapTextAnswers((prev) => ({
-                          ...prev,
-                          [item.id]: val,
-                        }))
-                      }
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 
       {activeMode !== "flashcard" && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {submitted
-              ? "Listening answers locked. Correct answers and evidence notes are displayed above."
-              : "Complete the listening exercises above, then click Submit."}
+            {allSubmitted
+              ? "All 50 listening questions have been submitted. Click Try Again on any card or Reset & Randomize."
+              : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} listening questions. Submit each card individually or submit all remaining.`}
           </span>
           <div className="flex items-center gap-3">
-            {submitted ? (
+            {!allSubmitted && (
               <button
                 type="button"
-                onClick={handleRetry}
-                className="rounded-xl border border-neutral-900 bg-neutral-900 px-6 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-neutral-800 dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                onClick={handleSubmitAll}
+                className="rounded-xl border border-rose-600 bg-rose-600 px-5 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-rose-700 dark:border-rose-500 dark:bg-rose-500 dark:text-white dark:hover:bg-rose-400"
               >
-                Retry Listening Section
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setSubmitted(true)}
-                className="rounded-xl border border-neutral-900 bg-neutral-900 px-6 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-neutral-800 dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
-              >
-                Submit Listening Section
+                Submit All Remaining
               </button>
             )}
+            <button
+              type="button"
+              onClick={handleRetry}
+              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-rose-500 hover:text-rose-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-rose-400 dark:hover:text-rose-300"
+            >
+              Reset & Randomize
+            </button>
           </div>
         </div>
       )}

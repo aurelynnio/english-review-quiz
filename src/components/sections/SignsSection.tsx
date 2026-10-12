@@ -32,11 +32,56 @@ type SignsMode =
   | "type-the-answer"
   | "flashcard";
 
+const SIGN_PLAQUE_PALETTES = [
+  {
+    wrapper:
+      "border-amber-300/90 border-l-4 border-l-amber-500 bg-amber-50/50 dark:border-amber-800/70 dark:border-l-amber-400 dark:bg-amber-950/25",
+    headerBorder: "border-amber-200/70 dark:border-amber-800/50",
+    badge:
+      "bg-amber-100/90 text-amber-800 dark:bg-amber-900/50 dark:text-amber-300",
+  },
+  {
+    wrapper:
+      "border-sky-300/90 border-l-4 border-l-sky-500 bg-sky-50/50 dark:border-sky-800/70 dark:border-l-sky-400 dark:bg-sky-950/25",
+    headerBorder: "border-sky-200/70 dark:border-sky-800/50",
+    badge: "bg-sky-100/90 text-sky-800 dark:bg-sky-900/50 dark:text-sky-300",
+  },
+  {
+    wrapper:
+      "border-teal-300/90 border-l-4 border-l-teal-500 bg-teal-50/50 dark:border-teal-800/70 dark:border-l-teal-400 dark:bg-teal-950/25",
+    headerBorder: "border-teal-200/70 dark:border-teal-800/50",
+    badge:
+      "bg-teal-100/90 text-teal-800 dark:bg-teal-900/50 dark:text-teal-300",
+  },
+  {
+    wrapper:
+      "border-violet-300/90 border-l-4 border-l-violet-500 bg-violet-50/50 dark:border-violet-800/70 dark:border-l-violet-400 dark:bg-violet-950/25",
+    headerBorder: "border-violet-200/70 dark:border-violet-800/50",
+    badge:
+      "bg-violet-100/90 text-violet-800 dark:bg-violet-900/50 dark:text-violet-300",
+  },
+  {
+    wrapper:
+      "border-rose-300/90 border-l-4 border-l-rose-500 bg-rose-50/50 dark:border-rose-800/70 dark:border-l-rose-400 dark:bg-rose-950/25",
+    headerBorder: "border-rose-200/70 dark:border-rose-800/50",
+    badge:
+      "bg-rose-100/90 text-rose-800 dark:bg-rose-900/50 dark:text-rose-300",
+  },
+];
+
 function SignPlaque({ sign }: { sign: SignQuestion }) {
+  const palette =
+    SIGN_PLAQUE_PALETTES[(sign.number - 1) % SIGN_PLAQUE_PALETTES.length];
   return (
-    <div className="rounded-xl border border-neutral-300/90 bg-neutral-50/80 p-4 dark:border-neutral-700 dark:bg-neutral-950/80">
-      <div className="flex items-center justify-between border-b border-neutral-200/80 pb-2 text-[11px] font-medium text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
-        <span>Notice / Sign #{sign.number}</span>
+    <div className={`rounded-xl border p-4 ${palette.wrapper}`}>
+      <div
+        className={`flex items-center justify-between border-b pb-2 text-[11px] font-medium text-neutral-500 dark:text-neutral-400 ${palette.headerBorder}`}
+      >
+        <span
+          className={`rounded-md px-2 py-0.5 font-semibold ${palette.badge}`}
+        >
+          Notice / Sign #{sign.number}
+        </span>
         <span className="font-mono">{sign.imageFile}</span>
       </div>
       <div className="py-3 text-center text-base font-semibold tracking-wide text-neutral-900 dark:text-neutral-100">
@@ -53,7 +98,7 @@ export function SignsSection({
 }) {
   const [seed, setSeed] = useState<number>(404);
   const [mode, setMode] = useState<SignsMode>("multiple-choice");
-  const [submitted, setSubmitted] = useState(false);
+  const [submittedIds, setSubmittedIds] = useState<Record<string, boolean>>({});
 
   const [mcSelections, setMcSelections] = useState<Record<string, string>>({});
   const [tfSelections, setTfSelections] = useState<Record<string, boolean>>({});
@@ -183,26 +228,27 @@ export function SignsSection({
   };
 
   const scoreSummary = useMemo(() => {
-    if (!submitted) return { correct: 0, total: randomizedSigns.length };
+    let submittedCount = 0;
     let correct = 0;
 
-    if (activeMode === "matching") {
-      randomizedSigns.forEach((s) => {
-        if (evaluateSignItem(s, "matching")) correct++;
-      });
-    } else if (activeMode === "mixed") {
+    if (activeMode !== "flashcard") {
       randomizedSigns.forEach((s, idx) => {
-        if (evaluateSignItem(s, getMixedFormat(idx))) correct++;
-      });
-    } else if (activeMode !== "flashcard") {
-      randomizedSigns.forEach((s) => {
-        if (evaluateSignItem(s, activeMode)) correct++;
+        if (submittedIds[s.id]) {
+          submittedCount++;
+          const fmt =
+            activeMode === "mixed" ? getMixedFormat(idx) : activeMode;
+          if (evaluateSignItem(s, fmt)) correct++;
+        }
       });
     }
 
-    return { correct, total: randomizedSigns.length };
+    return {
+      correct,
+      submittedCount,
+      total: randomizedSigns.length,
+    };
   }, [
-    submitted,
+    submittedIds,
     activeMode,
     randomizedSigns,
     mcSelections,
@@ -212,8 +258,32 @@ export function SignsSection({
     matches,
   ]);
 
+  const allSubmitted =
+    randomizedSigns.length > 0 &&
+    scoreSummary.submittedCount === randomizedSigns.length;
+
+  const handleSubmitOne = (id: string) => {
+    setSubmittedIds((prev) => ({ ...prev, [id]: true }));
+  };
+
+  const handleResetOne = (id: string) => {
+    setSubmittedIds((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  };
+
+  const handleSubmitAll = () => {
+    const next: Record<string, boolean> = {};
+    randomizedSigns.forEach((s) => {
+      next[s.id] = true;
+    });
+    setSubmittedIds(next);
+  };
+
   const handleRetry = () => {
-    setSubmitted(false);
+    setSubmittedIds({});
     setMcSelections({});
     setTfSelections({});
     setTypedAnswers({});
@@ -224,18 +294,19 @@ export function SignsSection({
 
   return (
     <section className="space-y-6">
-      <div className="rounded-2xl border border-neutral-200/80 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
+      <div className="rounded-2xl border border-neutral-200/80 border-t-4 border-t-amber-500 bg-white p-6 shadow-2xs dark:border-neutral-800/90 dark:border-t-amber-400 dark:bg-neutral-900">
         <div className="flex flex-col justify-between gap-4 border-b border-neutral-100 pb-4 dark:border-neutral-800/80">
           <div>
-            <span className="text-xs font-medium text-neutral-500 dark:text-neutral-400">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-200/80 bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-800 dark:border-amber-800/60 dark:bg-amber-950/50 dark:text-amber-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-amber-500 dark:bg-amber-400" />
               Section 4 • Signs 1–10
             </span>
-            <h2 className="mt-1 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+            <h2 className="mt-1.5 text-xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
               4. Reading — Signs & Notices
             </h2>
             <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
-              Read each sign or notice carefully and identify its accurate
-              interpretation.
+              Read each sign or notice carefully and submit each question
+              individually for immediate feedback.
             </p>
           </div>
 
@@ -258,12 +329,12 @@ export function SignsSection({
                   type="button"
                   onClick={() => {
                     setMode(tab.id);
-                    setSubmitted(false);
+                    setSubmittedIds({});
                   }}
                   className={`rounded-xl border px-3.5 py-1.5 text-xs font-medium transition-all ${
                     isSelected
-                      ? "border-neutral-900 bg-neutral-900 text-white shadow-2xs dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900"
-                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-neutral-300 hover:bg-white dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
+                      ? "border-amber-600 bg-amber-600 text-white shadow-2xs dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950"
+                      : "border-neutral-200/90 bg-neutral-50/70 text-neutral-700 hover:border-amber-300 hover:bg-amber-50/50 dark:border-neutral-700 dark:bg-neutral-950 dark:text-neutral-300 dark:hover:border-amber-700 dark:hover:bg-amber-950/40"
                   }`}
                 >
                   {tab.label}
@@ -273,31 +344,56 @@ export function SignsSection({
           </div>
         </div>
 
-        {submitted && activeMode !== "flashcard" && (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-neutral-200/90 bg-neutral-50/80 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950">
-            <div className="text-sm">
-              <span className="font-medium text-neutral-600 dark:text-neutral-400">
-                Section Score:{" "}
-              </span>
-              <span
-                className={`font-semibold ${
-                  scoreSummary.correct === scoreSummary.total
-                    ? "text-green-700 dark:text-green-400"
-                    : "text-neutral-900 dark:text-neutral-100"
-                }`}
-              >
-                {scoreSummary.correct} / {scoreSummary.total} (
-                {Math.round((scoreSummary.correct / scoreSummary.total) * 100)}
-                %)
-              </span>
+        {activeMode !== "flashcard" && (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-amber-200/80 bg-amber-50/50 px-4 py-3 dark:border-amber-800/60 dark:bg-amber-950/30">
+            <div className="flex flex-wrap items-center gap-4 text-sm">
+              <div>
+                <span className="font-medium text-neutral-600 dark:text-neutral-400">
+                  Progress:{" "}
+                </span>
+                <span className="font-semibold text-neutral-900 dark:text-neutral-100">
+                  {scoreSummary.submittedCount} / {scoreSummary.total} Submitted
+                </span>
+              </div>
+              {scoreSummary.submittedCount > 0 && (
+                <div>
+                  <span className="font-medium text-neutral-600 dark:text-neutral-400">
+                    Score:{" "}
+                  </span>
+                  <span
+                    className={`font-semibold ${
+                      scoreSummary.correct === scoreSummary.submittedCount
+                        ? "text-green-700 dark:text-green-400"
+                        : "text-amber-700 dark:text-amber-300"
+                    }`}
+                  >
+                    {scoreSummary.correct} / {scoreSummary.submittedCount} (
+                    {Math.round(
+                      (scoreSummary.correct / scoreSummary.submittedCount) * 100
+                    )}
+                    %)
+                  </span>
+                </div>
+              )}
             </div>
-            <button
-              type="button"
-              onClick={handleRetry}
-              className="rounded-xl border border-neutral-300 bg-white px-4 py-1.5 text-xs font-medium text-neutral-800 transition-all hover:border-neutral-900 hover:bg-neutral-900 hover:text-white dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:border-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900"
-            >
-              Retry & Randomize
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              {!allSubmitted && (
+                <button
+                  type="button"
+                  onClick={handleSubmitAll}
+                  className="rounded-xl border border-amber-600 bg-amber-600 px-3.5 py-1.5 text-xs font-medium text-white shadow-2xs transition-all hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400"
+                >
+                  Submit All Remaining
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={handleRetry}
+                className="rounded-xl border border-amber-300 bg-white px-3.5 py-1.5 text-xs font-medium text-amber-800 transition-all hover:border-amber-600 hover:bg-amber-600 hover:text-white dark:border-amber-700 dark:bg-neutral-900 dark:text-amber-300 dark:hover:border-amber-500 dark:hover:bg-amber-500 dark:hover:text-neutral-950"
+              >
+                Reset & Randomize
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -313,10 +409,15 @@ export function SignsSection({
           pairs={matchingPairs}
           shuffledRightOptions={shuffledMatchingRight}
           userMatches={matches}
-          submitted={submitted}
+          submitted={allSubmitted}
+          submittedMap={submittedIds}
           onMatchChange={(pairId, rightText) =>
             setMatches((prev) => ({ ...prev, [pairId]: rightText }))
           }
+          onSubmitPair={handleSubmitOne}
+          onResetPair={handleResetOne}
+          onSubmitSet={handleSubmitAll}
+          onResetSet={() => setSubmittedIds({})}
         />
       ) : (
         <div className="space-y-4">
@@ -324,6 +425,7 @@ export function SignsSection({
             const fmt =
               activeMode === "mixed" ? getMixedFormat(idx) : activeMode;
             const indexLabel = `Item ${idx + 1} of ${randomizedSigns.length} (Sign ${sign.number})`;
+            const isItemSubmitted = Boolean(submittedIds[sign.id]);
 
             if (fmt === "true-false") {
               const tf = tfStatementsMap[sign.id];
@@ -335,11 +437,13 @@ export function SignsSection({
                   statement={tf.statement}
                   selectedValue={tfSelections[sign.id]}
                   correctAnswer={tf.isTrue}
-                  submitted={submitted}
+                  submitted={isItemSubmitted}
                   evidence={`Correct interpretation of ${sign.title}: "${sign.correctAnswer}"`}
                   onSelect={(val) =>
                     setTfSelections((prev) => ({ ...prev, [sign.id]: val }))
                   }
+                  onSubmit={() => handleSubmitOne(sign.id)}
+                  onReset={() => handleResetOne(sign.id)}
                 />
               );
             }
@@ -354,10 +458,12 @@ export function SignsSection({
                   targetSentence={sign.correctAnswer}
                   availableTokens={reorderTokensMap[sign.id] || []}
                   selectedTokenIds={reorderedIds[sign.id] || []}
-                  submitted={submitted}
+                  submitted={isItemSubmitted}
                   onChangeSelectedIds={(ids) =>
                     setReorderedIds((prev) => ({ ...prev, [sign.id]: ids }))
                   }
+                  onSubmit={() => handleSubmitOne(sign.id)}
+                  onReset={() => handleResetOne(sign.id)}
                 />
               );
             }
@@ -372,11 +478,13 @@ export function SignsSection({
                   userAnswer={typedAnswers[sign.id] || ""}
                   modelAnswer={sign.correctAnswer}
                   acceptedAnswers={[sign.correctAnswer]}
-                  submitted={submitted}
+                  submitted={isItemSubmitted}
                   placeholder="Type the correct meaning of this sign..."
                   onChange={(val) =>
                     setTypedAnswers((prev) => ({ ...prev, [sign.id]: val }))
                   }
+                  onSubmit={() => handleSubmitOne(sign.id)}
+                  onReset={() => handleResetOne(sign.id)}
                 />
               );
             }
@@ -391,10 +499,12 @@ export function SignsSection({
                 options={shuffledOptionsMap[sign.id] || sign.options}
                 selectedOption={mcSelections[sign.id]}
                 correctAnswer={sign.correctAnswer}
-                submitted={submitted}
+                submitted={isItemSubmitted}
                 onSelect={(opt) =>
                   setMcSelections((prev) => ({ ...prev, [sign.id]: opt }))
                 }
+                onSubmit={() => handleSubmitOne(sign.id)}
+                onReset={() => handleResetOne(sign.id)}
               />
             );
           })}
@@ -404,28 +514,27 @@ export function SignsSection({
       {activeMode !== "flashcard" && (
         <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-neutral-200/80 bg-white px-6 py-4 shadow-2xs dark:border-neutral-800/90 dark:bg-neutral-900">
           <span className="text-xs text-neutral-500 dark:text-neutral-400">
-            {submitted
-              ? "Answers are locked. Click Retry to randomize and practice again."
-              : "Complete all 10 sign questions above, then click Submit."}
+            {allSubmitted
+              ? "All 10 sign questions have been submitted. Click Try Again on any card or Reset & Randomize."
+              : `Submitted ${scoreSummary.submittedCount} of ${scoreSummary.total} signs. Submit each card individually or submit all remaining.`}
           </span>
           <div className="flex items-center gap-3">
-            {submitted ? (
+            {!allSubmitted && (
               <button
                 type="button"
-                onClick={handleRetry}
-                className="rounded-xl border border-neutral-900 bg-neutral-900 px-6 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-neutral-800 dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                onClick={handleSubmitAll}
+                className="rounded-xl border border-amber-600 bg-amber-600 px-5 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-amber-700 dark:border-amber-500 dark:bg-amber-500 dark:text-neutral-950 dark:hover:bg-amber-400"
               >
-                Retry Signs Section
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setSubmitted(true)}
-                className="rounded-xl border border-neutral-900 bg-neutral-900 px-6 py-2.5 text-xs font-medium text-white shadow-xs transition-all hover:bg-neutral-800 dark:border-neutral-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
-              >
-                Submit Signs Section
+                Submit All Remaining
               </button>
             )}
+            <button
+              type="button"
+              onClick={handleRetry}
+              className="rounded-xl border border-neutral-300 bg-white px-5 py-2.5 text-xs font-medium text-neutral-700 transition-all hover:border-amber-500 hover:text-amber-700 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-300 dark:hover:border-amber-400 dark:hover:text-amber-300"
+            >
+              Reset & Randomize
+            </button>
           </div>
         </div>
       )}
