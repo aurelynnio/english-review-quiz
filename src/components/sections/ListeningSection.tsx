@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { LISTENING_SUBSECTIONS, MultipleChoiceItem } from "@/data/questions";
 import { seededShuffle } from "@/utils/quizUtils";
-import { TrueFalseQuestion } from "@/components/questions/TrueFalseQuestion";
 import { isFillBlankCorrect } from "@/components/questions/FillInTheBlankQuestion";
 import {
   FlashcardDeck,
@@ -13,6 +12,13 @@ import {
 type ListeningMode = "standard" | "type-all-gaps" | "flashcard";
 
 const OPTION_LETTERS = ["A", "B", "C", "D"];
+
+function parseWrittenTrueFalse(raw: string): boolean | null {
+  const cleaned = raw.trim().toLowerCase();
+  if (cleaned === "true" || cleaned === "t") return true;
+  if (cleaned === "false" || cleaned === "f") return false;
+  return null;
+}
 
 const LISTENING_PALETTES = [
   {
@@ -77,7 +83,9 @@ export function ListeningSection({
   const [submittedIds, setSubmittedIds] = useState<Record<string, boolean>>({});
   const [showWordBankText16, setShowWordBankText16] = useState(false);
 
-  const [tfAnswers, setTfAnswers] = useState<Record<string, boolean>>({});
+  const [tfTextAnswers, setTfTextAnswers] = useState<Record<string, string>>(
+    {}
+  );
   const [mcAnswers, setMcAnswers] = useState<Record<string, string>>({});
   const [gapTextAnswers, setGapTextAnswers] = useState<Record<string, string>>(
     {}
@@ -90,9 +98,9 @@ export function ListeningSection({
   const activeMode: ListeningMode = globalReviewMode ? "flashcard" : mode;
 
   const preparedSubsections = useMemo(() => {
-    return LISTENING_SUBSECTIONS.map((sub, sIdx) => {
+    return LISTENING_SUBSECTIONS.map((sub) => {
       const shuffledTf = sub.trueFalseItems
-        ? seededShuffle(sub.trueFalseItems, seed + sIdx * 31)
+        ? [...sub.trueFalseItems].sort((a, b) => a.number - b.number)
         : [];
       const shuffledMc = sub.mcItems
         ? [...sub.mcItems].sort((a, b) => a.number - b.number)
@@ -171,7 +179,8 @@ export function ListeningSection({
         total++;
         if (submittedIds[item.id]) {
           submittedCount++;
-          if (tfAnswers[item.id] === item.correctAnswer) {
+          const parsed = parseWrittenTrueFalse(tfTextAnswers[item.id] || "");
+          if (parsed !== null && parsed === item.correctAnswer) {
             correct++;
           }
         }
@@ -219,7 +228,7 @@ export function ListeningSection({
     submittedIds,
     preparedSubsections,
     activeMode,
-    tfAnswers,
+    tfTextAnswers,
     mcAnswers,
     gapTextAnswers,
   ]);
@@ -257,7 +266,7 @@ export function ListeningSection({
 
   const handleRetry = () => {
     setSubmittedIds({});
-    setTfAnswers({});
+    setTfTextAnswers({});
     setMcAnswers({});
     setGapTextAnswers({});
     setSeed(Math.floor(Math.random() * 100000) + 1);
@@ -343,8 +352,8 @@ export function ListeningSection({
                 6. Listening Practice
               </h2>
               <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
-                Includes True/False verification with evidence notes and compact
-                1 → 10 Cloze / Gap-fill exercises. Submit each question
+                Includes written True/False verification with evidence notes and
+                compact 1 → 10 Cloze / Gap-fill exercises. Submit each question
                 individually for immediate feedback.
               </p>
             </div>
@@ -460,6 +469,10 @@ export function ListeningSection({
           {preparedSubsections.map((sub, sIdx) => {
             const palette =
               LISTENING_PALETTES[sIdx % LISTENING_PALETTES.length];
+            const tfAllSubmitted =
+              (sub.shuffledTf.length > 0 &&
+                sub.shuffledTf.every((item) => submittedIds[item.id])) ??
+              false;
             const text16AllSubmitted =
               sub.fillBlankItems?.every((item) => submittedIds[item.id]) ??
               false;
@@ -487,12 +500,52 @@ export function ListeningSection({
                       />
                       {sub.type === "gap-fill-mc"
                         ? `${sub.subtitle} (1 → ${sub.shuffledMc.length})`
+                        : sub.type === "true-false"
+                        ? `${sub.subtitle} • Write True / False (1 → ${sub.shuffledTf.length})`
                         : sub.subtitle}
                     </span>
                     <h3 className="font-display mt-2 text-xl font-bold text-stone-900 dark:text-stone-100">
                       {sub.title}
                     </h3>
                   </div>
+
+                  {sub.type === "true-false" && (
+                    <div className="flex items-center gap-2">
+                      {tfAllSubmitted ? (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmittedIds((prev) => {
+                              const next = { ...prev };
+                              sub.shuffledTf.forEach((item) => {
+                                delete next[item.id];
+                              });
+                              return next;
+                            });
+                          }}
+                          className="rounded-xl border border-stone-300 bg-white px-3.5 py-1.5 text-xs font-semibold text-stone-700 transition-all hover:border-[#6e3556] hover:text-[#4f243d] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                        >
+                          Retry All (1→{sub.shuffledTf.length})
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSubmittedIds((prev) => {
+                              const next = { ...prev };
+                              sub.shuffledTf.forEach((item) => {
+                                next[item.id] = true;
+                              });
+                              return next;
+                            });
+                          }}
+                          className="rounded-xl border border-[#6e3556] bg-[#6e3556] px-3.5 py-1.5 text-xs font-semibold text-white transition-all hover:bg-[#4f243d] dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                        >
+                          Submit All (1→{sub.shuffledTf.length})
+                        </button>
+                      )}
+                    </div>
+                  )}
 
                   {sub.type === "gap-fill-mc" && (
                     <div className="flex items-center gap-2">
@@ -684,29 +737,151 @@ export function ListeningSection({
                   </div>
                 )}
 
-                {/* True / False Questions */}
+                {/* Written True / False Questions Table (1 -> N) */}
                 {sub.shuffledTf.length > 0 && (
-                  <div className="space-y-3 pt-2">
-                    {sub.shuffledTf.map((item, idx) => (
-                      <TrueFalseQuestion
-                        key={item.id}
-                        indexLabel={`Item ${idx + 1} of ${
-                          sub.shuffledTf.length
-                        } (Statement #${item.number})`}
-                        headerBadge="True / False"
-                        statement={item.statement}
-                        selectedValue={tfAnswers[item.id]}
-                        correctAnswer={item.correctAnswer}
-                        submitted={Boolean(submittedIds[item.id])}
-                        evidence={item.evidence}
-                        reverseOptions={(seed + sIdx + idx) % 2 === 1}
-                        onSelect={(val) =>
-                          setTfAnswers((prev) => ({ ...prev, [item.id]: val }))
-                        }
-                        onSubmit={() => handleSubmitOne(item.id)}
-                        onReset={() => handleResetOne(item.id)}
-                      />
-                    ))}
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2 px-1 text-xs text-stone-500 dark:text-stone-400">
+                      <span>
+                        Gõ{" "}
+                        <strong className="font-mono text-stone-800 dark:text-stone-200">
+                          True
+                        </strong>{" "}
+                        /{" "}
+                        <strong className="font-mono text-stone-800 dark:text-stone-200">
+                          False
+                        </strong>{" "}
+                        (hoặc{" "}
+                        <strong className="font-mono text-stone-800 dark:text-stone-200">
+                          T
+                        </strong>{" "}
+                        /{" "}
+                        <strong className="font-mono text-stone-800 dark:text-stone-200">
+                          F
+                        </strong>
+                        ) vào ô bên phải mỗi câu rồi nhấn{" "}
+                        <kbd className="rounded border border-stone-300 bg-stone-100 px-1.5 py-0.5 font-mono text-[10px] dark:border-stone-700 dark:bg-stone-800">
+                          Enter
+                        </kbd>{" "}
+                        hoặc bấm <strong>Check</strong>.
+                      </span>
+                    </div>
+
+                    <div className="studio-subcard divide-y divide-stone-200/80 overflow-hidden rounded-xl border dark:divide-stone-800">
+                      {sub.shuffledTf.map((item) => {
+                        const userVal = tfTextAnswers[item.id] || "";
+                        const isItemSubmitted = Boolean(submittedIds[item.id]);
+                        const parsed = parseWrittenTrueFalse(userVal);
+                        const isCorrect =
+                          isItemSubmitted &&
+                          parsed !== null &&
+                          parsed === item.correctAnswer;
+                        const expectedLabel = item.correctAnswer
+                          ? "True (T)"
+                          : "False (F)";
+
+                        return (
+                          <div
+                            key={item.id}
+                            className="space-y-2 px-4 py-3 transition-colors"
+                          >
+                            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+                              <div className="flex items-start gap-2.5">
+                                <span
+                                  className={`mt-0.5 inline-flex h-7 w-9 shrink-0 items-center justify-center rounded-lg border font-mono text-xs font-bold ${palette.badge}`}
+                                >
+                                  {item.number}.
+                                </span>
+                                <p className="text-[14.5px] font-medium leading-relaxed text-stone-900 dark:text-stone-100">
+                                  {item.statement}
+                                </p>
+                              </div>
+
+                              <div className="flex shrink-0 items-center gap-2 self-end sm:self-center">
+                                <input
+                                  type="text"
+                                  disabled={isItemSubmitted}
+                                  value={userVal}
+                                  onChange={(e) =>
+                                    setTfTextAnswers((prev) => ({
+                                      ...prev,
+                                      [item.id]: e.target.value,
+                                    }))
+                                  }
+                                  onKeyDown={(e) => {
+                                    if (
+                                      e.key === "Enter" &&
+                                      !isItemSubmitted &&
+                                      userVal.trim()
+                                    ) {
+                                      e.preventDefault();
+                                      handleSubmitOne(item.id);
+                                    }
+                                  }}
+                                  placeholder="True / False (T/F)"
+                                  className={`w-36 rounded-lg border px-2.5 py-1 text-center font-mono text-xs font-semibold transition-all focus:outline-none ${
+                                    !isItemSubmitted
+                                      ? "border-stone-300 bg-white text-stone-900 placeholder:font-sans placeholder:font-normal placeholder:text-stone-400 focus:border-[#6e3556] dark:border-stone-700 dark:bg-stone-900 dark:text-stone-100"
+                                      : isCorrect
+                                      ? "border-emerald-600 bg-emerald-50 font-bold text-emerald-900 dark:border-emerald-500/70 dark:bg-emerald-950/50 dark:text-emerald-200"
+                                      : "border-rose-500 bg-rose-50 text-rose-900 line-through dark:border-rose-500/70 dark:bg-rose-950/50 dark:text-rose-200"
+                                  }`}
+                                />
+
+                                {isItemSubmitted ? (
+                                  <>
+                                    <span
+                                      className={`font-mono text-xs font-bold ${
+                                        isCorrect
+                                          ? "text-emerald-700 dark:text-emerald-400"
+                                          : "text-rose-600 dark:text-rose-400"
+                                      }`}
+                                    >
+                                      {isCorrect ? "✓" : "✗"}
+                                    </span>
+                                    {!isCorrect && (
+                                      <span className="font-mono text-xs font-bold text-emerald-700 dark:text-emerald-400">
+                                        [{expectedLabel}]
+                                      </span>
+                                    )}
+                                    <button
+                                      type="button"
+                                      onClick={() => handleResetOne(item.id)}
+                                      className="rounded-lg border border-stone-300 bg-white px-2.5 py-1 text-[11px] font-semibold text-stone-700 transition-all hover:border-stone-500 dark:border-stone-700 dark:bg-stone-900 dark:text-stone-300"
+                                    >
+                                      Retry
+                                    </button>
+                                  </>
+                                ) : (
+                                  <button
+                                    type="button"
+                                    disabled={!userVal.trim()}
+                                    onClick={() => handleSubmitOne(item.id)}
+                                    className="rounded-lg border border-[#6e3556] bg-[#6e3556] px-2.5 py-1 text-[11px] font-semibold text-white transition-all hover:bg-[#4f243d] disabled:cursor-not-allowed disabled:opacity-35 dark:border-[#c97da8] dark:bg-[#c97da8] dark:text-stone-950"
+                                  >
+                                    Check
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+
+                            {isItemSubmitted && item.evidence && (
+                              <div
+                                className={`ml-11 rounded-lg border px-3 py-1.5 text-xs leading-relaxed ${
+                                  isCorrect
+                                    ? "border-emerald-300/80 bg-emerald-50/70 text-emerald-950 dark:border-emerald-700/60 dark:bg-emerald-950/40 dark:text-emerald-200"
+                                    : "border-rose-300/80 bg-rose-50/70 text-stone-800 dark:border-rose-700/60 dark:bg-rose-950/40 dark:text-stone-200"
+                                }`}
+                              >
+                                <span className="font-semibold">
+                                  Evidence:{" "}
+                                </span>
+                                {item.evidence}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
 

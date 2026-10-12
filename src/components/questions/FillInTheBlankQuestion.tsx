@@ -28,19 +28,27 @@ export function isFillBlankCorrect(
   userAnswer: string,
   correctAnswer: string
 ): boolean {
-  const u = userAnswer
-    .trim()
-    .split(/\s+/)
-    .map(normalizeWord)
-    .filter(Boolean)
-    .join(" ");
-  const c = correctAnswer
-    .trim()
-    .split(/\s+/)
-    .map(normalizeWord)
-    .filter(Boolean)
-    .join(" ");
-  return u !== "" && u === c;
+  const normalizePhrase = (str: string) =>
+    str
+      .trim()
+      .split(/\s+/)
+      .map(normalizeWord)
+      .filter(Boolean)
+      .join(" ");
+
+  const u = normalizePhrase(userAnswer);
+  if (!u) return false;
+
+  const candidates = correctAnswer.split("/").map(normalizePhrase);
+  if (candidates.includes(u)) return true;
+
+  // Accept known HUTECH B1 answer key variants for TEXT 16 (Cars)
+  if (candidates.includes("popular") && u === "fashionable") return true;
+  if (candidates.includes("fashionable") && u === "popular") return true;
+  if (candidates.includes("1960") && u === "1960s") return true;
+  if (candidates.includes("1960s") && u === "1960") return true;
+
+  return false;
 }
 
 export function FillInTheBlankQuestion({

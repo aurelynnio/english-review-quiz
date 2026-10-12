@@ -1388,6 +1388,9 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
     title: "TEXT 53: Antarctica",
     subtitle: "Lecture True / False",
     type: "true-false",
+    paragraphs: [
+      "Another name for the South Pole is Antarctica. This is a continent, but no people live there. There’s a good reason for this. It’s the coldest, windiest place on Earth. The lowest temperature ever measured was in Antarctica, minus 88 degrees Celsius! Ninety-eight percent of the ground is permanently frozen, and the continent contains 87 percent of the world’s ice. Antarctica’s only human occupants are scientists. They go there to learn how Antarctica used to be millions of years ago, when it was located at the equator. Antarctica used to be connected to Australia, before all the continents on the planet shifted.",
+    ],
     trueFalseItems: [
       {
         id: "t53-tf-1",
@@ -1395,6 +1398,8 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
         statement:
           "The professor mainly discusses the history of Antarctica.",
         correctAnswer: false,
+        evidence:
+          "Bài nghe chủ yếu giới thiệu các đặc điểm địa lý và khí hậu khắc nghiệt của Nam Cực (lạnh nhất, nhiều gió nhất, -88°C, 98% đất đóng băng, chứa 87% băng thế giới), chứ không phải lịch sử Nam Cực.",
       },
       {
         id: "t53-tf-2",
@@ -1402,6 +1407,8 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
         statement:
           "88 percent of the world’s ice is contained in Antarctica.",
         correctAnswer: false,
+        evidence:
+          'Transcript: "The lowest temperature ever measured was in Antarctica, minus 88 degrees Celsius! ... and the continent contains 87 percent of the world’s ice." (Chứa 87% băng thế giới, còn 88 là nhiệt độ âm 88°C).',
       },
       {
         id: "t53-tf-3",
@@ -1409,18 +1416,24 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
         statement:
           "The professor emphasizes that Antarctica is cold by comparing Antarctica to Australia.",
         correctAnswer: false,
+        evidence:
+          'Transcript chỉ nhắc đến Australia ở câu cuối về sự dịch chuyển lục địa ("Antarctica used to be connected to Australia, before all the continents on the planet shifted"), không phải để so sánh độ lạnh.',
       },
       {
         id: "t53-tf-4",
         number: 4,
         statement: "Another name for the South Pole is Antarctica.",
-        correctAnswer: false,
+        correctAnswer: true,
+        evidence:
+          'Transcript (câu đầu tiên): "Another name for the South Pole is Antarctica."',
       },
       {
         id: "t53-tf-5",
         number: 5,
         statement: "Antarctica used to be connected to Australia.",
         correctAnswer: true,
+        evidence:
+          'Transcript (câu cuối): "Antarctica used to be connected to Australia, before all the continents on the planet shifted."',
       },
     ],
   },
@@ -1429,6 +1442,9 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
     title: "TEXT 54: Types of Plays",
     subtitle: "Lecture True / False",
     type: "true-false",
+    paragraphs: [
+      "If a play makes you laugh, it’s a comedy. Comedies have humorous characters and happy endings. A good example of a comedy is Shakespeare’s classic Much Ado About Nothing. Another popular style is called tragedy. Tragedies usually tell how a hero ruins his life, falling from good fortune to bad fortune because of a “tragic flaw” in character. One example is the play Ghosts, by Henrik Ibsen. Um, modern years have produced a third style, called tragicomedy. In tragicomedies, the play seems as though it will end in tragedy but instead has a humorous or unclear ending. An example is Saint Joan, by George Bernard Shaw.",
+    ],
     trueFalseItems: [
       {
         id: "t54-tf-1",
@@ -1436,6 +1452,8 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
         statement:
           "The professor mentions the play by Ibsen to present a new type of play.",
         correctAnswer: false,
+        evidence:
+          'Transcript: "Another popular style is called tragedy... One example is the play Ghosts, by Henrik Ibsen. Um, modern years have produced a third style, called tragicomedy." → Vở Ghosts của Ibsen là ví dụ cho bi kịch (tragedy) truyền thống, còn thể loại mới (modern years) là bi hài kịch (tragicomedy).',
       },
       {
         id: "t54-tf-2",
@@ -1443,24 +1461,32 @@ export const LISTENING_SUBSECTIONS: ListeningSubSection[] = [
         statement:
           "Three types of plays mentioned in the talk are thriller, comedy, and tragedy.",
         correctAnswer: false,
+        evidence:
+          "Transcript nhắc đến 3 thể loại kịch là: comedy, tragedy, và tragicomedy (không có thriller).",
       },
       {
         id: "t54-tf-3",
         number: 3,
         statement: "Saint Joan is an example of a tragicomedy.",
         correctAnswer: true,
+        evidence:
+          'Transcript: "In tragicomedies, the play seems as though it will end in tragedy but instead has a humorous or unclear ending. An example is Saint Joan, by George Bernard Shaw."',
       },
       {
         id: "t54-tf-4",
         number: 4,
         statement: "Comedies have humorous characters and happy endings.",
         correctAnswer: true,
+        evidence:
+          'Transcript: "Comedies have humorous characters and happy endings."',
       },
       {
         id: "t54-tf-5",
         number: 5,
         statement: "“Ghosts” is a play by George Bernard Shaw.",
         correctAnswer: false,
+        evidence:
+          'Transcript: "One example is the play Ghosts, by Henrik Ibsen... An example is Saint Joan, by George Bernard Shaw." (Ghosts là của Henrik Ibsen, còn George Bernard Shaw là tác giả của Saint Joan).',
       },
     ],
   },
