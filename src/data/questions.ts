@@ -34,6 +34,7 @@ export interface MultipleChoiceItem {
   options: string[];
   correctAnswer: string;
   note?: string;
+  evidenceQuote?: string;
 }
 
 export interface SignQuestion {
@@ -616,6 +617,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
         ],
         correctAnswer:
           "keep students better informed about what was happening at school.",
+        evidenceQuote:
+          "She felt the newspaper would help them learn more about school life, through articles on things like sports achievements and arts projects, which not all students know about if they're not taking part.",
+        note: 'Dẫn chứng (Đoạn 1): "She felt the newspaper would help them learn more about school life, through articles on things like sports achievements and arts projects, which not all students know about if they\'re not taking part." → Cô hiệu trưởng muốn giúp học sinh nắm bắt thông tin tốt hơn về các hoạt động ở trường.',
       },
       {
         id: "p1-q2",
@@ -628,6 +632,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
           "he liked the idea of being part of a team.",
         ],
         correctAnswer: "he had ideas about some work he could do for it.",
+        evidenceQuote:
+          "I'd always loved creative writing and drawing cartoons, which I thought would be perfect in the newspaper, so I signed up.",
+        note: 'Dẫn chứng (Đoạn 2): "I\'d always loved creative writing and drawing cartoons, which I thought would be perfect in the newspaper, so I signed up." → Michael tham gia vì cậu đã có sẵn ý tưởng về công việc mình có thể đóng góp cho tờ báo (viết sáng tạo và vẽ tranh biếm họa).',
       },
       {
         id: "p1-q3",
@@ -640,6 +647,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
           "worried he'd be late completing some of his writing.",
         ],
         correctAnswer: "delighted at the way his writing skills improved.",
+        evidenceQuote:
+          "Once I'd understood that, there was no stopping me - and after my first efforts, I developed quite a professional style, which was brilliant.",
+        note: 'Dẫn chứng (Đoạn 3): "Once I\'d understood that, there was no stopping me - and after my first efforts, I developed quite a professional style, which was brilliant." → Michael rất vui mừng ("brilliant") khi thấy kỹ năng viết của mình tiến bộ rõ rệt và chuyên nghiệp hơn.',
       },
       {
         id: "p1-q4",
@@ -652,6 +662,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
           "He's become better at making articles more accurate.",
         ],
         correctAnswer: "He's become better at making articles more accurate.",
+        evidenceQuote:
+          "We also correct mistakes in people's articles, which we all had to get used to, but we were soon doing it without thinking - and in our own schoolwork, too.",
+        note: 'Dẫn chứng (Đoạn 4): "We also correct mistakes in people\'s articles, which we all had to get used to, but we were soon doing it without thinking - and in our own schoolwork, too." → Michael đã trở nên thành thạo hơn trong việc sửa lỗi để các bài viết chính xác hơn.',
       },
       {
         id: "p1-q5",
@@ -665,6 +678,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
         ],
         correctAnswer:
           "I occasionally had problems finding the time to help out at Michael's school, but the students really seemed to like my suggestions.",
+        evidenceQuote:
+          "Dad often came along to give advice, which was popular with the students. It was difficult sometimes, if he was busy, but he learned a lot about the school that way.",
+        note: 'Dẫn chứng (Đoạn 2): "Dad often came along to give advice, which was popular with the students. It was difficult sometimes, if he was busy, but he learned a lot about the school that way." → Bố Michael đôi khi bận rộn khó thu xếp thời gian đến trường giúp, nhưng học sinh rất thích những lời khuyên của ông.',
       },
     ],
   },
@@ -693,6 +709,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
         ],
         correctAnswer:
           "he'd read some negative reports about where he was going.",
+        evidenceQuote:
+          "But then I saw some reviews of the trip my dad had booked for us, when no-one had seen any whales at all. So, in the end, I decided not to tell Olivia anything about my trip, in case it wasn't successful!",
+        note: 'Dẫn chứng (Đoạn 1): "But then I saw some reviews of the trip my dad had booked for us, when no-one had seen any whales at all. So, in the end, I decided not to tell Olivia anything about my trip, in case it wasn\'t successful!" → Jack đã đọc một số đánh giá tiêu cực về chuyến đi (không ai nhìn thấy cá voi) nên quyết định không kể với Olivia.',
       },
       {
         id: "p2-q2",
@@ -705,6 +724,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
           "was glad he'd persuaded his dad to come with him.",
         ],
         correctAnswer: "was proud to be the first person to see a whale.",
+        evidenceQuote:
+          "Then finally I saw something move under the water - a minke whale! So I felt like a hero for the rest of the trip!",
+        note: 'Dẫn chứng (Đoạn 2): "Then finally I saw something move under the water - a minke whale! So I felt like a hero for the rest of the trip!" → Jack rất tự hào ("felt like a hero") vì là người đầu tiên nhìn thấy cá voi thật trên tàu.',
       },
       {
         id: "p2-q3",
@@ -717,6 +739,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
           "delighted to see it had arrived with several others.",
         ],
         correctAnswer: "impressed that it moved through the water so easily.",
+        evidenceQuote:
+          "Yet, despite its size, it swam alongside us at speed, and with little effort.",
+        note: 'Dẫn chứng (Đoạn 3): "Yet, despite its size, it swam alongside us at speed, and with little effort." → Dù to lớn nhưng con cá voi bơi cạnh tàu rất nhanh và nhẹ nhàng ("with little effort"), khiến Jack ấn tượng.',
       },
       {
         id: "p2-q4",
@@ -730,6 +755,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
           "they preferred how deep the water was there.",
         ],
         correctAnswer: "they were attracted by the arrival of the visitors.",
+        evidenceQuote:
+          "But minkes are curious creatures, so they're more likely to approach tourist boats - which was why we were successful!",
+        note: 'Dẫn chứng (Đoạn 4): "But minkes are curious creatures, so they\'re more likely to approach tourist boats - which was why we were successful!" → Cá voi minke có tính tò mò nên bị thu hút bởi sự xuất hiện của tàu chở du khách.',
       },
       {
         id: "p2-q5",
@@ -743,6 +771,9 @@ export const READING_PASSAGES: ReadingPassage[] = [
         ],
         correctAnswer:
           "You were so sure our whale-watching trip would be a success, while I still had doubts – but you were right.",
+        evidenceQuote:
+          "Whales had recently appeared there again, and my grandparents were convinced we'd see some - so I was sure my trip would be as good as Olivia's!",
+        note: 'Dẫn chứng (Đoạn 1): "Whales had recently appeared there again, and my grandparents were convinced we\'d see some..." (kết hợp việc sau đó Jack nghi ngờ vì đọc review xấu) → Ông bà tin chắc chuyến đi sẽ thành công trong khi Jack còn nghi ngờ, và cuối cùng ông bà đã đúng.',
       },
     ],
   },
@@ -754,7 +785,7 @@ export const READING_PASSAGES: ReadingPassage[] = [
     paragraphs: [
       "Drawing has always been a very popular hobby. Young children draw with a pencil as (1) ______ as they can hold one. Drawing is often seen as a special skill, and it is (2) ______ that some people seem to draw perfect pictures without any effort. Yet drawing, like writing, can be (3) ______; you can draw accurately if you work really hard at it.",
       "Drawing is first (4) ______ all about looking carefully. It sounds easy to say that all you (5) ______ to do is look at things, but it really is that simple. The best way to draw a familiar (6) ______ is to imagine that you are looking at it for the first (7) ______.",
-      "Nowadays there are (8) ______ courses and materials available than ever before, which means that you can experiment to improve your skills. The only limit is your imagination.",
+      "Nowadays there are (8) ______ courses and materials available than ever before, (9) ______ means that you can experiment to improve your skills. The only (10) ______ is your imagination.",
     ],
     questions: [
       {
@@ -812,6 +843,20 @@ export const READING_PASSAGES: ReadingPassage[] = [
         prompt: "Blank (8)",
         options: ["more", "many", "plenty", "much"],
         correctAnswer: "more",
+      },
+      {
+        id: "p3-q9",
+        number: 9,
+        prompt: "Blank (9)",
+        options: ["who", "what", "where", "which"],
+        correctAnswer: "which",
+      },
+      {
+        id: "p3-q10",
+        number: 10,
+        prompt: "Blank (10)",
+        options: ["final", "end", "limit", "finish"],
+        correctAnswer: "limit",
       },
     ],
   },

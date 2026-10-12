@@ -297,6 +297,89 @@ export function ReadingComprehensionSection({
     });
   };
 
+  const renderComprehensionParagraph = (
+    para: string,
+    questions: MultipleChoiceItem[],
+    tfMap: Record<string, { statement: string; isTrue: boolean }>
+  ) => {
+    const activeMatches: {
+      start: number;
+      end: number;
+      q: MultipleChoiceItem;
+      qIdx: number;
+      isCorrect: boolean;
+    }[] = [];
+
+    questions.forEach((q, qIdx) => {
+      if (!submittedIds[q.id] || !q.evidenceQuote) return;
+      const pos = para.indexOf(q.evidenceQuote);
+      if (pos === -1) return;
+      const fmt = getQuestionFormat("comprehension", qIdx);
+      const isCorrect = evaluateQuestion(q, fmt, tfMap[q.id]);
+      activeMatches.push({
+        start: pos,
+        end: pos + q.evidenceQuote.length,
+        q,
+        qIdx,
+        isCorrect,
+      });
+    });
+
+    if (activeMatches.length === 0) {
+      return para;
+    }
+
+    activeMatches.sort((a, b) => a.start - b.start);
+
+    const nodes: React.ReactNode[] = [];
+    let cursor = 0;
+
+    activeMatches.forEach((m, idx) => {
+      if (m.start < cursor) return;
+      if (m.start > cursor) {
+        nodes.push(
+          <React.Fragment key={`txt-${idx}`}>
+            {para.slice(cursor, m.start)}
+          </React.Fragment>
+        );
+      }
+
+      nodes.push(
+        <mark
+          key={`ev-${m.q.id}`}
+          className={`mx-0.5 rounded-lg border px-1.5 py-0.5 font-medium text-inherit transition-all ${
+            m.isCorrect
+              ? "border-emerald-500/80 bg-emerald-100/90 text-emerald-950 dark:border-emerald-500/70 dark:bg-emerald-950/70 dark:text-emerald-100"
+              : "border-rose-400/90 bg-amber-100/90 text-stone-950 dark:border-rose-500/70 dark:bg-rose-950/60 dark:text-amber-100"
+          }`}
+        >
+          <span
+            className={`mr-1.5 inline-flex items-center gap-1 rounded px-1.5 py-0.5 font-mono text-[11px] font-bold uppercase ${
+              m.isCorrect
+                ? "bg-emerald-700 text-white dark:bg-emerald-500 dark:text-stone-950"
+                : "bg-rose-600 text-white dark:bg-rose-500 dark:text-white"
+            }`}
+          >
+            Câu #{m.q.number} {m.isCorrect ? "✓" : "✗"}
+          </span>
+          <span className="underline decoration-dotted underline-offset-4">
+            {para.slice(m.start, m.end)}
+          </span>
+        </mark>
+      );
+
+      cursor = m.end;
+    });
+
+    if (cursor < para.length) {
+      nodes.push(
+        <React.Fragment key="txt-end">{para.slice(cursor)}</React.Fragment>
+      );
+    }
+
+    return nodes;
+  };
+
   return (
     <section className="space-y-6">
       <div className="studio-card overflow-hidden rounded-2xl border border-l-4 border-l-[#1f5c44] dark:border-l-[#43a07a]">
@@ -313,7 +396,7 @@ export function ReadingComprehensionSection({
               <p className="mt-1 text-sm text-stone-600 dark:text-stone-400">
                 Includes Passage 1 (Our School Newspaper), Passage 2
                 (Whale-Watching Trip), and Passage 3 (The Art of Drawing — Cloze
-                Test 1→8). Submit each question individually for immediate
+                Test 1→10). Submit each question individually for immediate
                 feedback.
               </p>
             </div>
@@ -439,6 +522,14 @@ export function ReadingComprehensionSection({
               passage.type === "cloze" &&
               passage.shuffledQuestions.every((q) => submittedIds[q.id]);
 
+            const submittedComprehensionQuestions =
+              passage.type === "comprehension"
+                ? passage.shuffledQuestions
+                    .map((q, qIdx) => ({ q, qIdx }))
+                    .filter(({ q }) => Boolean(submittedIds[q.id]))
+                    .sort((a, b) => a.q.number - b.q.number)
+                : [];
+
             return (
               <div
                 key={passage.id}
@@ -516,12 +607,76 @@ export function ReadingComprehensionSection({
                       <p key={paraIdx} className="leading-8">
                         {passage.type === "cloze"
                           ? renderClozeParagraph(para, questionsByNumber)
-                          : para}
+                          : renderComprehensionParagraph(
+                              para,
+                              passage.shuffledQuestions,
+                              passage.tfMap
+                            )}
                       </p>
                     ))}
+
+                    {/* Top Evidence Summary Box inside the Reading Passage when questions are submitted */}
+                    {submittedComprehensionQuestions.length > 0 && (
+                      <div className="mt-4 space-y-2 border-t border-stone-300/70 pt-3.5 text-xs dark:border-stone-700/80">
+                        <div className="font-mono text-[11px] font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300">
+                          Dẫn chứng trong bài đọc (
+                          {submittedComprehensionQuestions.length}/
+                          {passage.shuffledQuestions.length} câu đã nộp):
+                        </div>
+                        <div className="space-y-2">
+                          {submittedComprehensionQuestions.map(
+                            ({ q, qIdx }) => {
+                              const fmt = getQuestionFormat(
+                                "comprehension",
+                                qIdx
+                              );
+                              const isCorrect = evaluateQuestion(
+                                q,
+                                fmt,
+                                passage.tfMap[q.id]
+                              );
+                              return (
+                                <div
+                                  key={`top-ev-${q.id}`}
+                                  className={`rounded-xl border px-3.5 py-2.5 leading-relaxed ${
+                                    isCorrect
+                                      ? "border-emerald-400/80 bg-emerald-50/85 text-emerald-950 dark:border-emerald-600/70 dark:bg-emerald-950/50 dark:text-emerald-100"
+                                      : "border-rose-400/80 bg-rose-50/85 text-stone-900 dark:border-rose-600/70 dark:bg-rose-950/50 dark:text-rose-100"
+                                  }`}
+                                >
+                                  <div className="flex flex-wrap items-center gap-2 font-semibold">
+                                    <span
+                                      className={`inline-flex items-center gap-1 rounded px-2 py-0.5 font-mono text-[11px] font-bold ${
+                                        isCorrect
+                                          ? "bg-emerald-700 text-white dark:bg-emerald-500 dark:text-stone-950"
+                                          : "bg-rose-600 text-white dark:bg-rose-500 dark:text-white"
+                                      }`}
+                                    >
+                                      Câu #{q.number} •{" "}
+                                      {isCorrect ? "✓ Đúng" : "✗ Sai"}
+                                    </span>
+                                    <span className="text-stone-900 dark:text-stone-100">
+                                      Đáp án đúng:{" "}
+                                      <strong className="text-emerald-800 dark:text-emerald-300">
+                                        {q.correctAnswer}
+                                      </strong>
+                                    </span>
+                                  </div>
+                                  {q.note && (
+                                    <p className="mt-1 text-stone-700 dark:text-stone-200">
+                                      {q.note}
+                                    </p>
+                                  )}
+                                </div>
+                              );
+                            }
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
 
-                  {/* Compact Cloze Questions (1 -> 8) without repeating sentence prompts */}
+                  {/* Compact Cloze Questions (1 -> 10) without repeating sentence prompts */}
                   {passage.type === "cloze" && activeMode !== "true-false" ? (
                     <div className="studio-subcard divide-y divide-stone-200/80 overflow-hidden rounded-xl border dark:divide-stone-800">
                       {passage.shuffledQuestions.map((q, qIdx) => {
@@ -627,7 +782,7 @@ export function ReadingComprehensionSection({
                           );
                         }
 
-                        // Compact Multiple Choice Row (1 -> 8)
+                        // Compact Multiple Choice Row (1 -> 10)
                         const selectedOpt = mcSelections[q.id];
                         const isCorrect =
                           isItemSubmitted && selectedOpt === q.correctAnswer;
@@ -739,9 +894,9 @@ export function ReadingComprehensionSection({
                         const fmt = getQuestionFormat(passage.type, qIdx);
                         const indexLabel = `${
                           passage.title.split(":")[0]
-                        } • Item ${qIdx + 1} of ${
+                        } • Câu #${q.number} (Item ${qIdx + 1} of ${
                           passage.shuffledQuestions.length
-                        } (Original #${q.number})`;
+                        })`;
                         const isItemSubmitted = Boolean(submittedIds[q.id]);
 
                         if (fmt === "fill-in-the-blank") {
@@ -755,6 +910,7 @@ export function ReadingComprehensionSection({
                               correctAnswer={q.correctAnswer}
                               wordBank={passage.optionsMap[q.id] || q.options}
                               submitted={isItemSubmitted}
+                              note={q.note}
                               onChange={(val) =>
                                 setFillInputs((prev) => ({
                                   ...prev,
@@ -778,7 +934,11 @@ export function ReadingComprehensionSection({
                               selectedValue={tfSelections[q.id]}
                               correctAnswer={tf.isTrue}
                               submitted={isItemSubmitted}
-                              evidence={`Correct answer: "${q.correctAnswer}"`}
+                              evidence={
+                                q.note
+                                  ? `${q.note} (Đáp án đúng: "${q.correctAnswer}")`
+                                  : `Correct answer: "${q.correctAnswer}"`
+                              }
                               onSelect={(val) =>
                                 setTfSelections((prev) => ({
                                   ...prev,
@@ -801,6 +961,7 @@ export function ReadingComprehensionSection({
                             selectedOption={mcSelections[q.id]}
                             correctAnswer={q.correctAnswer}
                             submitted={isItemSubmitted}
+                            note={q.note}
                             onSelect={(opt) =>
                               setMcSelections((prev) => ({
                                 ...prev,

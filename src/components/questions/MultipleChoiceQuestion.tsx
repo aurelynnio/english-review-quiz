@@ -162,7 +162,7 @@ export function MultipleChoiceQuestion({
 
       {submitted && (
         <div className="mt-5 flex flex-wrap items-start justify-between gap-3 border-t border-stone-200/70 pt-4 text-xs text-stone-700 dark:border-stone-800/80 dark:text-stone-300">
-          <div className="space-y-1">
+          <div className="flex-1 space-y-2">
             <div>
               <span className="font-semibold text-stone-900 dark:text-stone-100">
                 Correct Answer:{" "}
@@ -172,11 +172,17 @@ export function MultipleChoiceQuestion({
               </span>
             </div>
             {note && (
-              <div className="text-stone-600 dark:text-stone-400">
-                <span className="font-semibold text-stone-800 dark:text-stone-200">
-                  Note:{" "}
+              <div
+                className={`rounded-xl border px-3.5 py-2.5 leading-relaxed ${
+                  isCorrect
+                    ? "border-emerald-300/80 bg-emerald-50/70 text-emerald-950 dark:border-emerald-700/60 dark:bg-emerald-950/40 dark:text-emerald-100"
+                    : "border-amber-300/90 bg-amber-50/80 text-stone-800 dark:border-amber-700/60 dark:bg-amber-950/40 dark:text-amber-100"
+                }`}
+              >
+                <span className="mr-1.5 inline-block rounded bg-stone-900/10 px-1.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider dark:bg-white/10">
+                  Dẫn chứng / Giải thích
                 </span>
-                {note}
+                <span>{note}</span>
               </div>
             )}
           </div>

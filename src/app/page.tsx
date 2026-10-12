@@ -82,7 +82,7 @@ const SECTION_NAV: {
     num: "05",
     label: "Reading",
     sublabel: "Passages & Cloze Test",
-    count: "18",
+    count: "20",
     dotClass: "bg-[#1f5c44] dark:bg-[#52b788]",
     activeClass:
       "border-[#1f5c44] bg-[#1f5c44] text-white shadow-sm dark:border-[#52b788] dark:bg-[#287255] dark:text-white",
@@ -106,7 +106,7 @@ const SECTION_NAV: {
     num: "ALL",
     label: "Full Workbook",
     sublabel: "All 6 Sections Combined",
-    count: "114",
+    count: "116",
     dotClass: "bg-stone-700 dark:bg-stone-300",
     activeClass:
       "border-stone-900 bg-stone-900 text-stone-50 shadow-sm dark:border-stone-200 dark:bg-stone-100 dark:text-stone-950",
