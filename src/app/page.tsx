@@ -1,279 +1,234 @@
 "use client";
 
-import React, { useState } from "react";
-import { DOCUMENT_HEADER } from "@/data/questions";
+import React, { useState, useEffect } from "react";
+import { HskWord, HSK_WORDS } from "@/data/hskWords";
+import {
+  UserStudyData,
+  loadStudyData,
+  getWordProgress,
+  isWordDueForReview,
+} from "@/utils/hskUtils";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { WritingSection } from "@/components/sections/WritingSection";
-import { SpeakingSection } from "@/components/sections/SpeakingSection";
-import { GrammarSection } from "@/components/sections/GrammarSection";
-import { SignsSection } from "@/components/sections/SignsSection";
-import { ReadingComprehensionSection } from "@/components/sections/ReadingComprehensionSection";
-import { ListeningSection } from "@/components/sections/ListeningSection";
+import { DictionarySection } from "@/components/hsk/DictionarySection";
+import { StudySection } from "@/components/hsk/StudySection";
+import { ReviewSection } from "@/components/hsk/ReviewSection";
+import { StatsSection } from "@/components/hsk/StatsSection";
+import { WordDetailModal } from "@/components/hsk/WordDetailModal";
 
-type SectionTab =
-  | "all"
-  | "writing"
-  | "speaking"
-  | "grammar"
-  | "signs"
-  | "reading"
-  | "listening";
+type MainTab = "dictionary" | "study" | "review" | "stats";
 
-const SECTION_NAV: {
-  id: SectionTab;
-  num: string;
-  label: string;
-  sublabel: string;
-  count: string;
-  dotClass: string;
-  activeClass: string;
-  badgeClass: string;
-}[] = [
-  {
-    id: "writing",
-    num: "01",
-    label: "Writing",
-    sublabel: "Sentence Transformation",
-    count: "10",
-    dotClass: "bg-[#b84a27] dark:bg-[#e07a5f]",
-    activeClass:
-      "border-[#b84a27] bg-[#b84a27] text-white shadow-sm dark:border-[#e07a5f] dark:bg-[#c85632] dark:text-white",
-    badgeClass:
-      "border border-[#e2bfb0] bg-[#faece6] text-[#8f3416] dark:border-[#6e3422] dark:bg-[#331911] dark:text-[#f3a68c]",
-  },
-  {
-    id: "speaking",
-    num: "02",
-    label: "Speaking",
-    sublabel: "Sample Topics & Recall",
-    count: "3",
-    dotClass: "bg-[#6e3556] dark:bg-[#d48ab8]",
-    activeClass:
-      "border-[#6e3556] bg-[#6e3556] text-white shadow-sm dark:border-[#d48ab8] dark:bg-[#824066] dark:text-white",
-    badgeClass:
-      "border border-[#d9bdd0] bg-[#f6ebf2] text-[#662b50] dark:border-[#5c2c4a] dark:bg-[#2b1423] dark:text-[#e6a5ce]",
-  },
-  {
-    id: "grammar",
-    num: "03",
-    label: "Grammar",
-    sublabel: "Multiple Choice & Mixed",
-    count: "23",
-    dotClass: "bg-[#25416b] dark:bg-[#7ca5de]",
-    activeClass:
-      "border-[#25416b] bg-[#25416b] text-white shadow-sm dark:border-[#7ca5de] dark:bg-[#31558a] dark:text-white",
-    badgeClass:
-      "border border-[#bccce3] bg-[#eaeff7] text-[#1d3961] dark:border-[#2c4469] dark:bg-[#132033] dark:text-[#98bae8]",
-  },
-  {
-    id: "signs",
-    num: "04",
-    label: "Signs & Notices",
-    sublabel: "Visual Interpretation",
-    count: "10",
-    dotClass: "bg-[#b47b28] dark:bg-[#e0a96d]",
-    activeClass:
-      "border-[#9e6919] bg-[#a36c1d] text-white shadow-sm dark:border-[#e0a96d] dark:bg-[#b57922] dark:text-white",
-    badgeClass:
-      "border border-[#e3cc9e] bg-[#fbf2df] text-[#7c5110] dark:border-[#664919] dark:bg-[#2e210b] dark:text-[#f0c775]",
-  },
-  {
-    id: "reading",
-    num: "05",
-    label: "Reading",
-    sublabel: "Passages & Cloze Test",
-    count: "20",
-    dotClass: "bg-[#1f5c44] dark:bg-[#52b788]",
-    activeClass:
-      "border-[#1f5c44] bg-[#1f5c44] text-white shadow-sm dark:border-[#52b788] dark:bg-[#287255] dark:text-white",
-    badgeClass:
-      "border border-[#b7d3c4] bg-[#e6f2ec] text-[#184e38] dark:border-[#285440] dark:bg-[#12291f] dark:text-[#86d9b3]",
-  },
-  {
-    id: "listening",
-    num: "06",
-    label: "Listening",
-    sublabel: "True/False & Gap-Fills",
-    count: "50",
-    dotClass: "bg-[#9e3337] dark:bg-[#e57373]",
-    activeClass:
-      "border-[#9e3337] bg-[#9e3337] text-white shadow-sm dark:border-[#e57373] dark:bg-[#b03c40] dark:text-white",
-    badgeClass:
-      "border border-[#e3bfc0] bg-[#faebeb] text-[#8c262b] dark:border-[#662629] dark:bg-[#301214] dark:text-[#f29d9f]",
-  },
-  {
-    id: "all",
-    num: "ALL",
-    label: "Full Workbook",
-    sublabel: "All 6 Sections Combined",
-    count: "116",
-    dotClass: "bg-stone-700 dark:bg-stone-300",
-    activeClass:
-      "border-stone-900 bg-stone-900 text-stone-50 shadow-sm dark:border-stone-200 dark:bg-stone-100 dark:text-stone-950",
-    badgeClass:
-      "border border-stone-300 bg-stone-200/70 text-stone-800 dark:border-stone-700 dark:bg-stone-800 dark:text-stone-200",
-  },
-];
+export default function HskApp() {
+  const [studyData, setStudyData] = useState<UserStudyData>({
+    words: {},
+    streakDays: 1,
+    lastActiveDate: "",
+    totalReviewsCompleted: 0,
+  });
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<MainTab>("dictionary");
+  const [selectedWord, setSelectedWord] = useState<HskWord | null>(null);
+  const [presetWords, setPresetWords] = useState<HskWord[] | null>(null);
 
-export default function HomePage() {
-  const [activeTab, setActiveTab] = useState<SectionTab>("writing");
-  const [globalReviewMode, setGlobalReviewMode] = useState<boolean>(false);
+  // Initialize data on client mount
+  useEffect(() => {
+    setMounted(true);
+    const loaded = loadStudyData();
+    setStudyData(loaded);
+  }, []);
+
+  const handleUpdateStudyData = (nextData: UserStudyData) => {
+    setStudyData(nextData);
+  };
+
+  // Launch direct practice session from another tab
+  const handleLaunchPractice = (words: HskWord[]) => {
+    setPresetWords(words);
+    setActiveTab("study");
+  };
+
+  // Counts for badge indicators
+  const dueCount = mounted
+    ? HSK_WORDS.filter((w) => isWordDueForReview(getWordProgress(studyData, w.id))).length
+    : 0;
+
+  const masteredCount = mounted
+    ? HSK_WORDS.filter((w) => getWordProgress(studyData, w.id).status === "mastered").length
+    : 0;
+
+  const mistakesCount = mounted
+    ? HSK_WORDS.filter((w) => getWordProgress(studyData, w.id).mistakeCount > 0).length
+    : 0;
 
   return (
-    <div className="min-h-screen">
-      {/* Editorial Top Masthead */}
-      <header className="studio-header border-b backdrop-blur-md">
-        <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
-          {/* Top Utility Bar: Edition Tag + Theme/Style Controls */}
-          <div className="flex flex-col justify-between gap-4 border-b border-stone-300/60 pb-5 lg:flex-row lg:items-center dark:border-stone-800/80">
-            <div className="flex items-center gap-2.5">
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#d9c7b2] bg-[#f4eadc] px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-widest text-[#7d3b1e] dark:border-[#47382c] dark:bg-[#261e18] dark:text-[#e89978]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#b84a27] dark:bg-[#e07a5f]" />
-                Active Recall Atelier
-              </span>
-              <span className="hidden font-mono text-xs text-stone-500 sm:inline dark:text-stone-400">
-                116 Curated Items • 6 Modules
-              </span>
+    <div className="studio-shell min-h-screen">
+      {/* Top Main Navigation Header */}
+      <header className="studio-header sticky top-0 z-40 border-b backdrop-blur-md transition-colors">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+          {/* Logo & Branding */}
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[#b84a27] font-serif text-xl font-extrabold text-white shadow-xs dark:bg-[#d46543]">
+              华
             </div>
-
-            <div className="flex flex-wrap items-center gap-2">
-              <ThemeToggle />
-              <button
-                type="button"
-                onClick={() => setGlobalReviewMode((prev) => !prev)}
-                className={`rounded-xl border px-3.5 py-2 text-xs font-semibold transition-all ${
-                  globalReviewMode
-                    ? "border-[#b84a27] bg-[#b84a27] text-white shadow-xs dark:border-[#e07a5f] dark:bg-[#c85632] dark:text-white"
-                    : "studio-card text-stone-700 hover:border-stone-400 dark:text-stone-200 dark:hover:border-stone-600"
-                }`}
-              >
-                {globalReviewMode ? "Flashcard Deck: ON" : "Flashcard Deck: OFF"}
-              </button>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="font-serif text-lg font-bold tracking-tight text-stone-900 dark:text-stone-100 sm:text-xl">
+                  HSK 3.0 词汇宝典
+                </h1>
+                <span className="hidden rounded-full border border-amber-300 bg-amber-50 px-2 py-0.5 text-2xs font-bold text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-300 sm:inline-block">
+                  Cấp 1 — 3 • 1000 Từ
+                </span>
+              </div>
+              <p className="text-2xs text-stone-500 dark:text-stone-400">
+                Tra từ điển • Học Flashcard & Trắc nghiệm • Ôn tập Spaced Repetition
+              </p>
             </div>
           </div>
 
-          {/* Editorial Title Block */}
-          <div className="mt-6 space-y-2">
-            <h1 className="font-display text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl dark:text-stone-100">
-              {DOCUMENT_HEADER.title}
-            </h1>
-            <p className="font-mono text-xs font-semibold uppercase tracking-wider text-[#943719] dark:text-[#e89978]">
-              {DOCUMENT_HEADER.subtitle}
-            </p>
-            <p className="max-w-3xl text-sm leading-relaxed text-stone-600 dark:text-stone-400">
-              {DOCUMENT_HEADER.description}
-            </p>
-          </div>
+          {/* Right Header Stats & Controls */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {mounted && (
+              <div className="hidden items-center gap-2 rounded-xl border border-stone-200/80 bg-white/60 px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-2xs dark:border-stone-800 dark:bg-stone-900/60 dark:text-stone-300 md:flex">
+                <span className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  Đã thuộc {masteredCount} / 1000
+                </span>
+                <span className="text-stone-300 dark:text-stone-700">|</span>
+                <span className="inline-flex items-center gap-1 text-amber-600 dark:text-amber-400">
+                  🔥 {studyData.streakDays || 1} ngày
+                </span>
+              </div>
+            )}
 
-          {/* Architectural Section Bento Grid */}
-          <nav
-            aria-label="Sections"
-            className="mt-7 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-4"
-          >
-            {SECTION_NAV.map((item) => {
-              const isCurrent = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => setActiveTab(item.id)}
-                  className={`group flex items-center justify-between rounded-xl border px-3.5 py-3 text-left transition-all ${
-                    isCurrent
-                      ? item.activeClass
-                      : "studio-card hover:border-stone-400 dark:hover:border-stone-600"
-                  }`}
-                >
-                  <div className="min-w-0 pr-2">
-                    <div className="flex items-center gap-1.5">
-                      <span
-                        className={`h-2 w-2 shrink-0 rounded-full ${
-                          isCurrent ? "bg-current opacity-90" : item.dotClass
-                        }`}
-                      />
-                      <span
-                        className={`font-mono text-[10px] font-semibold uppercase tracking-wider ${
-                          isCurrent
-                            ? "opacity-80"
-                            : "text-stone-500 dark:text-stone-400"
-                        }`}
-                      >
-                        Sec {item.num}
-                      </span>
-                    </div>
-                    <div
-                      className={`mt-0.5 truncate text-xs font-semibold ${
-                        isCurrent
-                          ? ""
-                          : "text-stone-900 dark:text-stone-100"
-                      }`}
-                    >
-                      {item.label}
-                    </div>
-                    <div
-                      className={`truncate text-[11px] ${
-                        isCurrent
-                          ? "opacity-85"
-                          : "text-stone-500 dark:text-stone-400"
-                      }`}
-                    >
-                      {item.sublabel}
-                    </div>
-                  </div>
-                  <span
-                    className={`shrink-0 rounded-lg px-2 py-0.5 font-mono text-[11px] font-semibold ${
-                      isCurrent
-                        ? "bg-black/15 text-current dark:bg-white/20"
-                        : item.badgeClass
-                    }`}
-                  >
-                    {item.count}
-                  </span>
-                </button>
-              );
-            })}
-          </nav>
+            <ThemeToggle />
+          </div>
+        </div>
+
+        {/* Navigation Tabs Bar */}
+        <div className="border-t border-stone-200/60 dark:border-stone-800/80">
+          <div className="mx-auto flex max-w-7xl items-center gap-1 overflow-x-auto px-4 py-2 sm:px-6">
+            {/* Tab 1: Dictionary / 查词 */}
+            <button
+              type="button"
+              onClick={() => setActiveTab("dictionary")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all shrink-0 ${
+                activeTab === "dictionary"
+                  ? "border border-[#b84a27] bg-[#b84a27] text-white shadow-2xs dark:border-[#e06d48] dark:bg-[#d46543] dark:text-white"
+                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-200"
+              }`}
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <span>查词 • Tra từ điển (1000)</span>
+            </button>
+
+            {/* Tab 2: Study / 背单词 */}
+            <button
+              type="button"
+              onClick={() => setActiveTab("study")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all shrink-0 ${
+                activeTab === "study"
+                  ? "border border-[#b84a27] bg-[#b84a27] text-white shadow-2xs dark:border-[#e06d48] dark:bg-[#d46543] dark:text-white"
+                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-200"
+              }`}
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              </svg>
+              <span>背单词 • Học Flashcard & Quiz</span>
+            </button>
+
+            {/* Tab 3: Review / 复习 */}
+            <button
+              type="button"
+              onClick={() => setActiveTab("review")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all shrink-0 ${
+                activeTab === "review"
+                  ? "border border-[#b84a27] bg-[#b84a27] text-white shadow-2xs dark:border-[#e06d48] dark:bg-[#d46543] dark:text-white"
+                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-200"
+              }`}
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+              </svg>
+              <span>复习 • 智能复习 & Sổ lỗi</span>
+              {dueCount > 0 && (
+                <span className="rounded-full bg-amber-500 px-1.5 py-0.2 text-2xs font-extrabold text-white">
+                  {dueCount}
+                </span>
+              )}
+              {mistakesCount > 0 && dueCount === 0 && (
+                <span className="rounded-full bg-red-500 px-1.5 py-0.2 text-2xs font-extrabold text-white">
+                  {mistakesCount}
+                </span>
+              )}
+            </button>
+
+            {/* Tab 4: Stats / 统计 */}
+            <button
+              type="button"
+              onClick={() => setActiveTab("stats")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-bold transition-all shrink-0 ${
+                activeTab === "stats"
+                  ? "border border-[#b84a27] bg-[#b84a27] text-white shadow-2xs dark:border-[#e06d48] dark:bg-[#d46543] dark:text-white"
+                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-200"
+              }`}
+            >
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+              <span>学习统计 • Thống kê & Sao lưu</span>
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="mx-auto max-w-5xl space-y-12 px-4 py-10 sm:px-6 lg:px-8">
-        {(activeTab === "writing" || activeTab === "all") && (
-          <WritingSection globalReviewMode={globalReviewMode} />
+      {/* Main Container Area */}
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
+        {activeTab === "dictionary" && (
+          <DictionarySection
+            studyData={studyData}
+            onUpdateStudyData={handleUpdateStudyData}
+            onSelectWord={(word) => setSelectedWord(word)}
+            onPracticeWords={handleLaunchPractice}
+          />
         )}
 
-        {(activeTab === "speaking" || activeTab === "all") && (
-          <SpeakingSection globalReviewMode={globalReviewMode} />
+        {activeTab === "study" && (
+          <StudySection
+            studyData={studyData}
+            onUpdateStudyData={handleUpdateStudyData}
+            onSelectWord={(word) => setSelectedWord(word)}
+            presetWords={presetWords}
+            onClearPreset={() => setPresetWords(null)}
+          />
         )}
 
-        {(activeTab === "grammar" || activeTab === "all") && (
-          <GrammarSection globalReviewMode={globalReviewMode} />
+        {activeTab === "review" && (
+          <ReviewSection
+            studyData={studyData}
+            onUpdateStudyData={handleUpdateStudyData}
+            onSelectWord={(word) => setSelectedWord(word)}
+            onStartReviewSession={handleLaunchPractice}
+          />
         )}
 
-        {(activeTab === "signs" || activeTab === "all") && (
-          <SignsSection globalReviewMode={globalReviewMode} />
-        )}
-
-        {(activeTab === "reading" || activeTab === "all") && (
-          <ReadingComprehensionSection globalReviewMode={globalReviewMode} />
-        )}
-
-        {(activeTab === "listening" || activeTab === "all") && (
-          <ListeningSection globalReviewMode={globalReviewMode} />
+        {activeTab === "stats" && (
+          <StatsSection
+            studyData={studyData}
+            onUpdateStudyData={handleUpdateStudyData}
+          />
         )}
       </main>
 
-      {/* Editorial Footer */}
-      <footer className="studio-header mt-16 border-t">
-        <div className="mx-auto flex max-w-5xl flex-col items-start justify-between gap-2 px-4 py-6 text-xs text-stone-500 sm:flex-row sm:items-center sm:px-6 lg:px-8 dark:text-stone-400">
-          <span className="font-mono text-[11px]">
-            SOURCE: CONTENT.MD • 6 SECTIONS • 116 ACTIVE RECALL ITEMS
-          </span>
-          <span>
-            Multiple Choice • True/False • Fill Blank • Type Answer • Flashcard
-            • Matching • Reorder Words • Error Spotting
-          </span>
-        </div>
-      </footer>
+      {/* Word Detail Modal */}
+      <WordDetailModal
+        word={selectedWord}
+        onClose={() => setSelectedWord(null)}
+        studyData={studyData}
+        onUpdateStudyData={handleUpdateStudyData}
+        onStartWordPractice={(word) => handleLaunchPractice([word])}
+      />
     </div>
   );
 }

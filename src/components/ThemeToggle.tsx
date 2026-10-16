@@ -3,80 +3,28 @@
 import React, { useEffect, useState } from "react";
 
 export type ThemeMode = "light" | "dark";
-export type DesignStyle = "atelier" | "botanical" | "kyoto" | "brutalist";
 
-const THEME_STORAGE_KEY = "english_review_theme";
-const STYLE_STORAGE_KEY = "english_review_style";
-
-const DESIGN_STYLES: {
-  id: DesignStyle;
-  label: string;
-  swatchPrimary: string;
-  swatchSecondary: string;
-}[] = [
-  {
-    id: "atelier",
-    label: "Atelier",
-    swatchPrimary: "bg-[#b84a27]",
-    swatchSecondary: "bg-[#2d6a4f]",
-  },
-  {
-    id: "botanical",
-    label: "Botanical",
-    swatchPrimary: "bg-[#1f5c44]",
-    swatchSecondary: "bg-[#b47b28]",
-  },
-  {
-    id: "kyoto",
-    label: "Kyoto Ink",
-    swatchPrimary: "bg-[#25416b]",
-    swatchSecondary: "bg-[#c84b31]",
-  },
-  {
-    id: "brutalist",
-    label: "Neo-Brutal",
-    swatchPrimary: "bg-[#1e1d1b] dark:bg-[#e09f3e]",
-    swatchSecondary: "bg-[#2b4c7e]",
-  },
-];
+const THEME_STORAGE_KEY = "hsk_app_theme_mode";
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<ThemeMode>("light");
-  const [style, setStyle] = useState<DesignStyle>("atelier");
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
     try {
-      const saved = window.localStorage.getItem(
-        THEME_STORAGE_KEY
-      ) as ThemeMode | null;
+      const saved = window.localStorage.getItem(THEME_STORAGE_KEY) as ThemeMode | null;
       if (saved === "dark" || saved === "light") {
         setTheme(saved);
         document.documentElement.classList.toggle("dark", saved === "dark");
       } else {
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         const initial: ThemeMode = prefersDark ? "dark" : "light";
         setTheme(initial);
         document.documentElement.classList.toggle("dark", initial === "dark");
       }
-
-      const savedStyle = window.localStorage.getItem(
-        STYLE_STORAGE_KEY
-      ) as DesignStyle | null;
-      if (
-        savedStyle &&
-        ["atelier", "botanical", "kyoto", "brutalist"].includes(savedStyle)
-      ) {
-        setStyle(savedStyle);
-        document.documentElement.setAttribute("data-style", savedStyle);
-      } else {
-        document.documentElement.setAttribute("data-style", "atelier");
-      }
     } catch {
-      // Fallback if localStorage is unavailable
+      // Fallback
     }
   }, []);
 
@@ -86,87 +34,62 @@ export function ThemeToggle() {
     try {
       window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
     } catch {
-      // Ignore storage write errors
+      // Ignore
     }
   };
 
-  const applyStyle = (nextStyle: DesignStyle) => {
-    setStyle(nextStyle);
-    document.documentElement.setAttribute("data-style", nextStyle);
-    try {
-      window.localStorage.setItem(STYLE_STORAGE_KEY, nextStyle);
-    } catch {
-      // Ignore storage write errors
-    }
+  const toggleTheme = () => {
+    applyTheme(theme === "light" ? "dark" : "light");
   };
+
+  if (!mounted) {
+    return (
+      <div className="h-9 w-20 rounded-xl border border-stone-200/60 bg-stone-100/50 dark:border-stone-800 dark:bg-stone-900/50" />
+    );
+  }
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {/* Studio Design Style Picker */}
-      <div
-        role="group"
-        aria-label="Design style selection"
-        className="studio-subcard inline-flex items-center gap-1 rounded-xl border p-1"
-      >
-        {DESIGN_STYLES.map((item) => {
-          const isActive = mounted && style === item.id;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => applyStyle(item.id)}
-              aria-pressed={isActive}
-              className={`inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-all ${
-                isActive
-                  ? "studio-card font-semibold text-stone-900 dark:text-stone-100"
-                  : "text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200"
-              }`}
-            >
-              <span className="inline-flex items-center -space-x-1">
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ring-1 ring-white/80 dark:ring-black/60 ${item.swatchPrimary}`}
-                />
-                <span
-                  className={`h-2.5 w-2.5 rounded-full ring-1 ring-white/80 dark:ring-black/60 ${item.swatchSecondary}`}
-                />
-              </span>
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Light / Dark Mode Switch */}
-      <div
-        role="group"
-        aria-label="Color mode selection"
-        className="studio-subcard inline-flex items-center rounded-xl border p-1"
-      >
-        <button
-          type="button"
-          onClick={() => applyTheme("light")}
-          aria-pressed={mounted && theme === "light"}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-            mounted && theme === "light"
-              ? "studio-card font-semibold text-stone-900 dark:text-stone-100"
-              : "text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200"
-          }`}
-        >
-          Light
-        </button>
-        <button
-          type="button"
-          onClick={() => applyTheme("dark")}
-          aria-pressed={mounted && theme === "dark"}
-          className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all ${
-            mounted && theme === "dark"
-              ? "studio-card font-semibold text-stone-900 dark:text-stone-100"
-              : "text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-200"
-          }`}
-        >
-          Dark
-        </button>
-      </div>
-    </div>
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+      className="inline-flex items-center gap-2 rounded-xl border border-[#ded3c3] bg-[#ffffff] px-3 py-1.5 text-xs font-semibold text-[#1e1915] shadow-xs transition-all hover:border-[#b84a27] hover:text-[#b84a27] dark:border-[#382f28] dark:bg-[#1c1815] dark:text-[#f3ede4] dark:hover:border-[#e06d48] dark:hover:text-[#e06d48]"
+    >
+      {theme === "light" ? (
+        <>
+          <svg
+            className="h-4 w-4 text-amber-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+            />
+          </svg>
+          <span>浅色</span>
+        </>
+      ) : (
+        <>
+          <svg
+            className="h-4 w-4 text-indigo-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+            />
+          </svg>
+          <span>深色</span>
+        </>
+      )}
+    </button>
   );
 }

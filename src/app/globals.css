@@ -3,229 +3,67 @@
 @custom-variant dark (&:is(.dark, .dark *));
 
 @theme {
-  --font-display: var(--font-display), Georgia, Cambria, "Times New Roman",
-    serif;
-  --font-sans: var(--font-jakarta), -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Roboto, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, monospace;
+  --font-display: var(--font-display), Georgia, Cambria, "Times New Roman", serif;
+  --font-sans: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* ==========================================================================
-   1. ATELIER (Default — Warm Terracotta, Alabaster Parchment & Espresso)
+   FIXED UNIFIED DESIGN STYLE (Oriental Ink & Vermilion / 墨韵朱砂 · 典雅风格)
    ========================================================================== */
-:root,
-html[data-style="atelier"] {
-  --background: #f5efe6;
-  --foreground: #1e1915;
-  --surface-card: #fcfaf6;
-  --surface-muted: #efe7db;
-  --surface-header: rgba(252, 250, 246, 0.9);
-  --border-subtle: #ded3c3;
-  --border-strong: #c5b59f;
+:root {
+  --background: #f7f4ed;
+  --foreground: #1c1815;
+  --surface-card: #ffffff;
+  --surface-muted: #f0eae0;
+  --surface-header: rgba(247, 244, 237, 0.94);
+  --border-subtle: #e3dcce;
+  --border-strong: #c8bea9;
   --accent-primary: #b84a27;
   --accent-primary-fg: #ffffff;
-  --accent-soft: #faeae3;
+  --accent-soft: #fceedd;
   --accent-soft-border: #ebbfa9;
   --accent-text: #943719;
   --hero-gradient: radial-gradient(
       circle at 12% 0%,
-      rgba(184, 74, 39, 0.11),
+      rgba(184, 74, 39, 0.08),
       transparent 48%
     ),
     radial-gradient(
       circle at 88% 0%,
-      rgba(45, 106, 79, 0.09),
+      rgba(45, 106, 79, 0.06),
       transparent 48%
     );
-  --card-shadow: 0 2px 10px -2px rgba(30, 25, 21, 0.06),
-    0 1px 3px -1px rgba(30, 25, 21, 0.04);
+  --card-shadow: 0 2px 12px -2px rgba(30, 25, 21, 0.06),
+    0 1px 3px -1px rgba(30, 25, 21, 0.03);
   color-scheme: light;
 }
 
-html.dark,
-html.dark[data-style="atelier"] {
-  --background: #13100e;
-  --foreground: #f3ede4;
+html.dark {
+  --background: #12100e;
+  --foreground: #f4efe6;
   --surface-card: #1c1815;
-  --surface-muted: #25201c;
-  --surface-header: rgba(24, 20, 17, 0.9);
-  --border-subtle: #312a24;
-  --border-strong: #463c33;
+  --surface-muted: #26211c;
+  --surface-header: rgba(18, 16, 14, 0.94);
+  --border-subtle: #332b24;
+  --border-strong: #4d4036;
   --accent-primary: #e06d48;
   --accent-primary-fg: #140f0d;
-  --accent-soft: rgba(224, 109, 72, 0.14);
-  --accent-soft-border: rgba(224, 109, 72, 0.35);
+  --accent-soft: rgba(224, 109, 72, 0.16);
+  --accent-soft-border: rgba(224, 109, 72, 0.38);
   --accent-text: #f39a7d;
   --hero-gradient: radial-gradient(
       circle at 12% 0%,
-      rgba(224, 109, 72, 0.14),
+      rgba(224, 109, 72, 0.12),
       transparent 50%
     ),
     radial-gradient(
       circle at 88% 0%,
-      rgba(82, 183, 136, 0.1),
+      rgba(82, 183, 136, 0.08),
       transparent 50%
     );
-  --card-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.45);
+  --card-shadow: 0 4px 18px -4px rgba(0, 0, 0, 0.55);
   color-scheme: dark;
-}
-
-/* ==========================================================================
-   2. BOTANICAL (Nordic Pine, Sage Linen & Antique Brass)
-   ========================================================================== */
-html[data-style="botanical"] {
-  --background: #edf2ee;
-  --foreground: #14201a;
-  --surface-card: #f9fbf9;
-  --surface-muted: #e2ebe4;
-  --surface-header: rgba(249, 251, 249, 0.9);
-  --border-subtle: #cad8ce;
-  --border-strong: #acc2b2;
-  --accent-primary: #1f5c44;
-  --accent-primary-fg: #ffffff;
-  --accent-soft: #e1f0e9;
-  --accent-soft-border: #abd1bf;
-  --accent-text: #164633;
-  --hero-gradient: radial-gradient(
-      circle at 12% 0%,
-      rgba(31, 92, 68, 0.12),
-      transparent 48%
-    ),
-    radial-gradient(
-      circle at 88% 0%,
-      rgba(180, 123, 40, 0.1),
-      transparent 48%
-    );
-  --card-shadow: 0 2px 10px -2px rgba(20, 32, 26, 0.06),
-    0 1px 3px -1px rgba(20, 32, 26, 0.04);
-}
-
-html.dark[data-style="botanical"] {
-  --background: #0d1410;
-  --foreground: #e9f2ec;
-  --surface-card: #141f19;
-  --surface-muted: #1b2a22;
-  --surface-header: rgba(20, 31, 25, 0.9);
-  --border-subtle: #24382d;
-  --border-strong: #355242;
-  --accent-primary: #52b788;
-  --accent-primary-fg: #0b1611;
-  --accent-soft: rgba(82, 183, 136, 0.14);
-  --accent-soft-border: rgba(82, 183, 136, 0.35);
-  --accent-text: #80ed99;
-  --hero-gradient: radial-gradient(
-      circle at 12% 0%,
-      rgba(82, 183, 136, 0.15),
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 88% 0%,
-      rgba(224, 169, 109, 0.1),
-      transparent 50%
-    );
-  --card-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
-}
-
-/* ==========================================================================
-   3. KYOTO INK (Washi Paper, Deep Aizome Indigo & Vermilion Seal)
-   ========================================================================== */
-html[data-style="kyoto"] {
-  --background: #f2f0ea;
-  --foreground: #171d26;
-  --surface-card: #fbfaf7;
-  --surface-muted: #e6e3da;
-  --surface-header: rgba(251, 250, 247, 0.92);
-  --border-subtle: #d2cec2;
-  --border-strong: #b8b2a2;
-  --accent-primary: #25416b;
-  --accent-primary-fg: #ffffff;
-  --accent-soft: #e5ecf5;
-  --accent-soft-border: #b6c8e0;
-  --accent-text: #1c3354;
-  --hero-gradient: radial-gradient(
-      circle at 12% 0%,
-      rgba(37, 65, 107, 0.12),
-      transparent 48%
-    ),
-    radial-gradient(
-      circle at 88% 0%,
-      rgba(200, 75, 49, 0.1),
-      transparent 48%
-    );
-  --card-shadow: 0 2px 10px -2px rgba(23, 29, 38, 0.06),
-    0 1px 3px -1px rgba(23, 29, 38, 0.04);
-}
-
-html.dark[data-style="kyoto"] {
-  --background: #0e1218;
-  --foreground: #eceef2;
-  --surface-card: #161c26;
-  --surface-muted: #1e2633;
-  --surface-header: rgba(22, 28, 38, 0.92);
-  --border-subtle: #283344;
-  --border-strong: #394860;
-  --accent-primary: #7ca5de;
-  --accent-primary-fg: #0d131c;
-  --accent-soft: rgba(124, 165, 222, 0.15);
-  --accent-soft-border: rgba(124, 165, 222, 0.35);
-  --accent-text: #a5c4ef;
-  --hero-gradient: radial-gradient(
-      circle at 12% 0%,
-      rgba(124, 165, 222, 0.15),
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 88% 0%,
-      rgba(229, 107, 85, 0.11),
-      transparent 50%
-    );
-  --card-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.5);
-}
-
-/* ==========================================================================
-   4. ARCHITECTURAL NEO-BRUTAL (Crisp Ink Borders & Tactile Offset Shadows)
-   ========================================================================== */
-html[data-style="brutalist"] {
-  --background: #f4f1ea;
-  --foreground: #141413;
-  --surface-card: #ffffff;
-  --surface-muted: #eae5da;
-  --surface-header: rgba(255, 255, 255, 0.96);
-  --border-subtle: #262523;
-  --border-strong: #141413;
-  --accent-primary: #2b4c7e;
-  --accent-primary-fg: #ffffff;
-  --accent-soft: #e4ebf5;
-  --accent-soft-border: #141413;
-  --accent-text: #1c355c;
-  --hero-gradient: radial-gradient(
-    circle at 15% 0%,
-    rgba(217, 119, 6, 0.12),
-    transparent 45%
-  );
-  --card-shadow: 3px 3px 0px #1e1d1b;
-}
-
-html.dark[data-style="brutalist"] {
-  --background: #121316;
-  --foreground: #f4f3ef;
-  --surface-card: #1b1d22;
-  --surface-muted: #252830;
-  --surface-header: rgba(27, 29, 34, 0.96);
-  --border-subtle: #4b5262;
-  --border-strong: #6b7488;
-  --accent-primary: #e09f3e;
-  --accent-primary-fg: #121316;
-  --accent-soft: rgba(224, 159, 62, 0.15);
-  --accent-soft-border: #6b7488;
-  --accent-text: #f3c16f;
-  --hero-gradient: radial-gradient(
-    circle at 15% 0%,
-    rgba(224, 159, 62, 0.14),
-    transparent 45%
-  );
-  --card-shadow: 3px 3px 0px #060708;
 }
 
 body {
@@ -239,7 +77,7 @@ body {
   letter-spacing: -0.01em;
 }
 
-/* Studio Surface & Card overrides so every card adapts to the chosen style */
+/* Studio Surface & Card utility classes */
 .studio-shell {
   background-color: var(--background);
   color: var(--foreground);
@@ -261,4 +99,20 @@ body {
   border-color: var(--border-subtle);
 }
 
+/* 3D Flashcard flip utility classes */
+.perspective-1000 {
+  perspective: 1000px;
+}
 
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
